@@ -1,6 +1,15 @@
 # Visual Studio 2015 user specific files
 .vs/
 
+# Things
+Content/*
+!Content/Materials
+!Content/Meshes
+!Content/ProtoMaterials
+!Content/Sprites
+!Content/TDLevelTest.umap
+
+
 # Compiled Object files
 *.slo
 *.lo
