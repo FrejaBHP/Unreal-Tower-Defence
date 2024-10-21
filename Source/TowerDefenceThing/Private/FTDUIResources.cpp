@@ -26,9 +26,10 @@ void FTDUIResources::Shutdown() {
 	FSlateStyleRegistry::UnRegisterSlateStyle(*TDUIResources);
 
 	//Debugging
-	ensure(TDUIResources.IsUnique());
+	//ensure(TDUIResources.IsUnique());
 
 	//Removes reference to resources, decrements refcount, destroys resources if refcount=0
 	//Do this to all SharedPtrs on Shutdown() or SomethingSimilar() to avoid memory leak
 	TDUIResources.Reset();
+	UE_LOG(LogTemp, Warning, TEXT("Resource pointer unloaded"));
 }

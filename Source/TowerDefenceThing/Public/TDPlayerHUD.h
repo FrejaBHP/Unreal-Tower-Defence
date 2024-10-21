@@ -18,6 +18,7 @@ class TOWERDEFENCETHING_API ATDPlayerHUD : public AHUD {
 
 public:
 	ATDPlayerHUD();
+	virtual void BeginDestroy() override;
 	void ReceivedButtonInput(ESquareFunctionType, int32);
 
 	//UPROPERTY()

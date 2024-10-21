@@ -1,7 +1,7 @@
 // Dragons rule ok
 
-#include "TDAIController.h"
 #include "Components/TDEnemyMovementComponent.h"
+#include "TDAIController.h"
 
 UTDEnemyMovementComponent::UTDEnemyMovementComponent() {
 	NavAgentProps.bCanWalk = true;

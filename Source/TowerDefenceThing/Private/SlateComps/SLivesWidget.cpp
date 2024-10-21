@@ -23,4 +23,10 @@ void SLivesWidget::Construct(const FArguments& InArgs) {
 		]
 	];
 }
+
+SLivesWidget::~SLivesWidget() {
+	//free(livesPtr);
+	//livesPtr = nullptr;
+	UE_LOG(LogTemp, Warning, TEXT("Lives Widget members unloaded"));
+}
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

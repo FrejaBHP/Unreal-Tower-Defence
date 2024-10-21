@@ -1,9 +1,9 @@
 // Dragons rule ok
 
+#include "TDPlayerHUD.h"
 #include <TDGameInstance.h>
 #include "SlateComps/SLivesWidget.h"
 #include "SlateComps/SContextMenuSquareWidget.h"
-#include "TDPlayerHUD.h"
 
 ATDPlayerHUD::ATDPlayerHUD() {
 	
@@ -40,7 +40,7 @@ void ATDPlayerHUD::BeginPlay() {
 	}
 
 	if (BuildContextMenuPtr.IsValid()) {
-		BuildContextMenuPtr->GridPanelSquareArray[2][2]->SetImageBrushWithName("fireball_new_Brush");
+		BuildContextMenuPtr->GridPanelSquareArray[2][2]->SetImageBrushWithName("icon_fireball_Brush");
 
 		for (size_t i = 0; i < BuildContextMenuPtr->GridPanelSquareArray.Num(); i++) {
 			for (size_t j = 0; j < BuildContextMenuPtr->GridPanelSquareArray[i].Num(); j++) {
@@ -59,4 +59,11 @@ TObjectPtr<ATowerDefenceThingPlayerController> ATDPlayerHUD::GetPlayerOwner() {
 
 void ATDPlayerHUD::ReceivedButtonInput(ESquareFunctionType type, int32 id) {
 	GetPlayerOwner()->ConsumeHUDButtonInput(type, id);
+}
+
+void ATDPlayerHUD::BeginDestroy() {
+	TDUIResources.Reset();
+	//GEngine->GameViewport->RemoveAllViewportWidgets();
+
+	Super::BeginDestroy();
 }

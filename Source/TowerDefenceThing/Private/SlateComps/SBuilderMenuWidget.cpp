@@ -106,4 +106,13 @@ FReply SBuilderMenuWidget::IgnoreMouseInput(const FGeometry& MyGeometry, const F
 	return FReply::Handled();
 }
 
+SBuilderMenuWidget::~SBuilderMenuWidget() {
+	GridPanelSquareArray.Empty();
+	tdUIResources.Reset();
+
+	UE_LOG(LogTemp, Warning, TEXT("Context Menu Widget members unloaded"));
+	//GridPanelPtr.Reset();
+	//GridBorderPtr.Reset();
+}
+
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

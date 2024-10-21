@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#include "TDAIController.h"
 #include "Enemies/EnemyBasePawn.h"
+#include "TDAIController.h"
 
 // Sets default values
 AEnemyBasePawn::AEnemyBasePawn() {

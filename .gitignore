@@ -2,6 +2,7 @@
 .vs/
 
 # Things
+/old*
 Content/*
 !Content/Materials
 !Content/Meshes

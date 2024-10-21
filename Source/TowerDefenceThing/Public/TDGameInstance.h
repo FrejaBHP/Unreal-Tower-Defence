@@ -30,6 +30,7 @@ protected:
 
 private:
 	UTDGameInstance();
+	virtual void Shutdown() override;
 	void CatalogueFlipbooks();
 	void LoadFlipbooksAsync();
 

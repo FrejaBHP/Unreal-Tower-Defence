@@ -33,3 +33,8 @@ TSharedPtr<FSlateGameResources> UTDGameInstance::GetSlateGameResources() {
 void UTDGameInstance::LoadFlipbooksAsync() {
 	
 }
+
+void UTDGameInstance::Shutdown() {
+	TDUIResources.Shutdown();
+	Super::Shutdown();
+}

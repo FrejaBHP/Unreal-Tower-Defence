@@ -1,7 +1,7 @@
 // Dragons rule ok
 
-#include <TDGameInstance.h>
 #include "TDAIController.h"
+#include <TDGameInstance.h>
 
 ATDAIController::ATDAIController() {
 	bStartAILogicOnPossess = true;

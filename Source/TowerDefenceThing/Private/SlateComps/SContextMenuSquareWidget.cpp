@@ -64,4 +64,12 @@ void SContextMenuSquareWidget::SetSWData(SquareWidgetData newSWData) {
 	SetImageBrushWithName(SWData->brushName);
 }
 
+SContextMenuSquareWidget::~SContextMenuSquareWidget() {
+	tdUIResources.Reset();
+	//free(SWData);
+	//SWData = nullptr;
+
+	UE_LOG(LogTemp, Warning, TEXT("Square Widget members unloaded"));
+}
+
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

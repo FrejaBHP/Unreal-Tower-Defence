@@ -18,6 +18,7 @@ public:
 
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
+	~SBuilderMenuWidget();
 
 	TArray<TArray<TSharedPtr<SContextMenuSquareWidget>>> GridPanelSquareArray;
 	FReply IgnoreMouseInput(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent);
