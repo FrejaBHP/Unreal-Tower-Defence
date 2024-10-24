@@ -57,15 +57,11 @@ void UTDGameInstance::CatalogueFlipbooks() {
 }
 
 UPaperSprite* UTDGameInstance::GetSpriteByName(FString spriteName) {
-	UPaperSprite* spritePtr = SpriteMap[FName(*spriteName)];
-
-	return spritePtr;
+	return SpriteMap[FName(*spriteName)];
 }
 
 UPaperFlipbook* UTDGameInstance::GetFlipbookByName(FString flipbookName) {
-	UPaperFlipbook* flipbookPtr = FlipbookMap[FName(*flipbookName)];
-
-	return flipbookPtr;
+	return FlipbookMap[FName(*flipbookName)];
 }
 
 TSharedPtr<FSlateGameResources> UTDGameInstance::GetSlateGameResources() {
