@@ -7,21 +7,65 @@
 UTDGameInstance::UTDGameInstance() {
 	TDUIResources.Initialize();
 	Lives = 50;
+	SpriteLib = UObjectLibrary::CreateLibrary(UPaperSprite::StaticClass(), false, false);
+	FlipbookLib = UObjectLibrary::CreateLibrary(UPaperFlipbook::StaticClass(), false, false);
+
+	CatalogueSprites();
 	CatalogueFlipbooks();
 }
 
-void UTDGameInstance::CatalogueFlipbooks() {
-	FStreamableManager Streamable;
+void UTDGameInstance::Init() {
+	Super::Init();
+}
 
-	BasicEnemyFlipbookPath = "/Game/Sprites/Flipbooks/Enemies/dg_humans32_0_Flip";
-	
-	UObject* loadedObject = Streamable.LoadSynchronous(BasicEnemyFlipbookPath.TryLoad());
-	if (loadedObject != nullptr) {
-		BasicEnemyFlipbookPtr = Cast<UPaperFlipbook>(loadedObject);
+void UTDGameInstance::CatalogueSprites() {
+	TArray<FString> paths;
+	paths.Add("/Game/Sprites/Static/Enemies");
+	paths.Add("/Game/Sprites/Static/Towers");
+
+	SpriteLib->LoadAssetsFromPaths(paths);
+
+	if (SpriteLib->IsLibraryFullyLoaded()) {
+		SpriteLib->LoadAssetsFromAssetData();
+
+		TArray<UPaperSprite*> sprites;
+		SpriteLib->GetObjects(sprites);
+
+		for (auto& sprite : sprites) {
+			SpriteMap.Add(sprite->GetFName(), sprite);
+		}
 	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("Graphic can not be loaded"));
+}
+
+void UTDGameInstance::CatalogueFlipbooks() {
+	TArray<FString> paths;
+	paths.Add("/Game/Sprites/Flipbooks/Enemies");
+	//paths.Add("/Game/Sprites/Flipbooks/Towers");
+
+	FlipbookLib->LoadAssetsFromPaths(paths);
+
+	if (FlipbookLib->IsLibraryFullyLoaded()) {
+		FlipbookLib->LoadAssetsFromAssetData();
+
+		TArray<UPaperFlipbook*> flipbooks;
+		FlipbookLib->GetObjects(flipbooks);
+
+		for (auto& flipbook : flipbooks) {
+			FlipbookMap.Add(flipbook->GetFName(), flipbook);
+		}
 	}
+}
+
+UPaperSprite* UTDGameInstance::GetSpriteByName(FString spriteName) {
+	UPaperSprite* spritePtr = SpriteMap[FName(*spriteName)];
+
+	return spritePtr;
+}
+
+UPaperFlipbook* UTDGameInstance::GetFlipbookByName(FString flipbookName) {
+	UPaperFlipbook* flipbookPtr = FlipbookMap[FName(*flipbookName)];
+
+	return flipbookPtr;
 }
 
 TSharedPtr<FSlateGameResources> UTDGameInstance::GetSlateGameResources() {
@@ -30,11 +74,10 @@ TSharedPtr<FSlateGameResources> UTDGameInstance::GetSlateGameResources() {
 	return TDUIResources.GetSlateGameResources();
 }
 
-void UTDGameInstance::LoadFlipbooksAsync() {
-	
-}
-
 void UTDGameInstance::Shutdown() {
 	TDUIResources.Shutdown();
+	SpriteMap.Empty();
+	FlipbookMap.Empty();
+
 	Super::Shutdown();
 }

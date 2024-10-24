@@ -6,12 +6,8 @@
 #include "Enemies/EnemyBasePawn.h"
 #include "BasicEnemy.generated.h"
 
-/**
- * 
- */
 UCLASS()
-class TOWERDEFENCETHING_API ABasicEnemy : public AEnemyBasePawn
-{
+class TOWERDEFENCETHING_API ABasicEnemy : public AEnemyBasePawn {
 	GENERATED_BODY()
 	
 public:

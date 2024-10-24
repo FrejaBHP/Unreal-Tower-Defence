@@ -8,8 +8,13 @@ ATowerBasePawn::ATowerBasePawn() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	VisibleMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Mesh Component"));
-	VisibleMeshComponent->SetupAttachment(RootComponent);
+	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
+	RootComponent = BoxComponent;
+	BoxComponent->InitBoxExtent(FVector(100., 100., 100.));
+
+	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComponent"));
+	SpriteComponent->SetupAttachment(BoxComponent);
+	SpriteComponent->SetCastShadow(true);
 }
 
 // Called when the game starts or when spawned

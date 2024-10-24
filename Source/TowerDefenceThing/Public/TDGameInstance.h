@@ -4,8 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "PaperSprite.h"
 #include "PaperFlipbook.h"
 #include "SplinePath.h"
+#include "Engine/ObjectLibrary.h"
 #include "FTDUIResources.h"
 #include "TDGameInstance.generated.h"
 
@@ -14,6 +16,12 @@ class TOWERDEFENCETHING_API UTDGameInstance : public UGameInstance {
 	GENERATED_BODY()
 	
 public:
+	virtual void Init() override;
+	virtual void Shutdown() override;
+
+	UPaperSprite* GetSpriteByName(FString spriteName);
+	UPaperFlipbook* GetFlipbookByName(FString flipbookName);
+
 	TSharedPtr<FSlateGameResources> GetSlateGameResources();
 
 	UPROPERTY()
@@ -26,13 +34,19 @@ public:
 	int32 Lives;
 
 protected:
+	UObjectLibrary* SpriteLib{ nullptr };
+	UObjectLibrary* FlipbookLib{ nullptr };
+
+	TMap<FName, UPaperSprite*> SpriteMap;
+	TMap<FName, UPaperFlipbook*> FlipbookMap;
+
 	FTDUIResources TDUIResources;
 
 private:
 	UTDGameInstance();
-	virtual void Shutdown() override;
+	
+	void CatalogueSprites();
 	void CatalogueFlipbooks();
-	void LoadFlipbooksAsync();
 
 	FSoftObjectPath BasicEnemyFlipbookPath;
 };

@@ -12,7 +12,8 @@ ABasicEnemy::ABasicEnemy() {
 void ABasicEnemy::BeginPlay() {
 	Super::BeginPlay();
 
-	FlipbookPtr = Cast<UTDGameInstance>(GetGameInstance())->BasicEnemyFlipbookPtr;
+	//FlipbookPtr = Cast<UTDGameInstance>(GetGameInstance())->BasicEnemyFlipbookPtr;
+	FlipbookPtr = Cast<UTDGameInstance>(GetGameInstance())->GetFlipbookByName("dg_humans32_0_Flip");
 
 	if (FlipbookPtr != nullptr) {
 		VisibleFlipbook = FlipbookPtr.Get();
