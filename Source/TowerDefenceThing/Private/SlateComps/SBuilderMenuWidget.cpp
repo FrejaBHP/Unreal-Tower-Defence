@@ -9,10 +9,11 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SBuilderMenuWidget::Construct(const FArguments& InArgs) {
 	tdUIResources = InArgs._tdUIResources;
 
-	GridPanelSquareArray.SetNum(3);
-	GridPanelSquareArray[0].SetNum(4);
-	GridPanelSquareArray[1].SetNum(4);
-	GridPanelSquareArray[2].SetNum(4);
+	GridPanelSquareArray.SetNum(4);
+	GridPanelSquareArray[0].SetNum(3);
+	GridPanelSquareArray[1].SetNum(3);
+	GridPanelSquareArray[2].SetNum(3);
+	GridPanelSquareArray[3].SetNum(3);
 
 	ChildSlot
 	.HAlign(HAlign_Right)
@@ -35,25 +36,25 @@ void SBuilderMenuWidget::Construct(const FArguments& InArgs) {
 				
 				+ SUniformGridPanel::Slot(1, 0)
 				[
-					SAssignNew(GridPanelSquareArray[0][1], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[1][0], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
 				+ SUniformGridPanel::Slot(2, 0)
 				[
-					SAssignNew(GridPanelSquareArray[0][2], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[2][0], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
 				+ SUniformGridPanel::Slot(3, 0)
 				[
-					SAssignNew(GridPanelSquareArray[0][3], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[3][0], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
 				+ SUniformGridPanel::Slot(0, 1)
 				[
-					SAssignNew(GridPanelSquareArray[1][0], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[0][1], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
@@ -65,25 +66,25 @@ void SBuilderMenuWidget::Construct(const FArguments& InArgs) {
 
 				+ SUniformGridPanel::Slot(2, 1)
 				[
-					SAssignNew(GridPanelSquareArray[1][2], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[2][1], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
 				+ SUniformGridPanel::Slot(3, 1)
 				[
-					SAssignNew(GridPanelSquareArray[1][3], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[3][1], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
 				+ SUniformGridPanel::Slot(0, 2)
 				[
-					SAssignNew(GridPanelSquareArray[2][0], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[0][2], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
 				+ SUniformGridPanel::Slot(1, 2)
 				[
-					SAssignNew(GridPanelSquareArray[2][1], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[1][2], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 
@@ -95,7 +96,7 @@ void SBuilderMenuWidget::Construct(const FArguments& InArgs) {
 
 				+ SUniformGridPanel::Slot(3, 2)
 				[
-					SAssignNew(GridPanelSquareArray[2][3], SContextMenuSquareWidget)
+					SAssignNew(GridPanelSquareArray[3][2], SContextMenuSquareWidget)
 					.tdUIResources(tdUIResources)
 				]
 		]
@@ -107,12 +108,18 @@ FReply SBuilderMenuWidget::IgnoreMouseInput(const FGeometry& MyGeometry, const F
 }
 
 SBuilderMenuWidget::~SBuilderMenuWidget() {
-	GridPanelSquareArray.Empty();
-	tdUIResources.Reset();
+	for (size_t i = 0; i < GridPanelSquareArray.Num(); i++) {
+		for (size_t j = 0; j < GridPanelSquareArray[i].Num(); j++) {
+			GridPanelSquareArray[i][j].Reset();
+		}
+	}
 
-	UE_LOG(LogTemp, Warning, TEXT("Context Menu Widget members unloaded"));
-	//GridPanelPtr.Reset();
-	//GridBorderPtr.Reset();
+	tdUIResources.Reset();
+	GridPanelSquareArray.Empty();
+	GridPanelPtr.Reset();
+	GridBorderPtr.Reset();
+
+	//UE_LOG(LogTemp, Warning, TEXT("Context Menu Widget resources unloaded"));
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

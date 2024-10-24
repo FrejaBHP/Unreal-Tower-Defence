@@ -6,12 +6,12 @@
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SContextMenuSquareWidget::Construct(const FArguments& InArgs) {
-	SWData = new SquareWidgetData();
+	SWData = MakeUnique<SquareWidgetData>();
 
 	tdUIResources = InArgs._tdUIResources;
 	imageBrush.DrawAs = ESlateBrushDrawType::Image;
 
-	SetImageBrushWithName(SWData->brushName);
+	SetImageBrushWithName(SWData->BrushName);
 	
 	ChildSlot
 	[
@@ -40,36 +40,34 @@ FReply SContextMenuSquareWidget::OnMouseButtonDoubleClick(const FGeometry& MyGeo
 }
 
 const FSlateBrush* SContextMenuSquareWidget::GetImageBrushFromName(FName newBrushName) const {
-	return tdUIResources->GetBrush(newBrushName);
+	if (TSharedPtr<FSlateGameResources> lockedResources = tdUIResources.Pin()) {
+		return lockedResources->GetBrush(newBrushName);
+	}
+	else {
+		return &imageBrush; // ruh roh
+	}
 }
 
 void SContextMenuSquareWidget::SetImageBrushWithName(FName newBrushName) {
 	imageBrush = *GetImageBrushFromName(newBrushName);
 }
 
-void SContextMenuSquareWidget::SetSWData(SquareWidgetData newSWData) {
+void SContextMenuSquareWidget::SetSWData(const SquareWidgetData& newSWData) {
 	SWData->FunctionType = newSWData.FunctionType;
 	SWData->FunctionID = newSWData.FunctionID;
-	SWData->brushName = newSWData.brushName;
+	SWData->BrushName = newSWData.BrushName;
 	SWData->DesiredGridX = newSWData.DesiredGridX;
 	SWData->DesiredGridY = newSWData.DesiredGridY;
 
-	if (SWData->FunctionType == ESquareFunctionType::None) {
-		IsClickable = false;
-	}
-	else {
-		IsClickable = true;
-	}
+	IsClickable = ((SWData->FunctionType == ESquareFunctionType::None) ? false : true);
 
-	SetImageBrushWithName(SWData->brushName);
+	SetImageBrushWithName(SWData->BrushName);
 }
 
 SContextMenuSquareWidget::~SContextMenuSquareWidget() {
 	tdUIResources.Reset();
-	//free(SWData);
-	//SWData = nullptr;
 
-	UE_LOG(LogTemp, Warning, TEXT("Square Widget members unloaded"));
+	//UE_LOG(LogTemp, Warning, TEXT("Square Widget resources unloaded"));
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

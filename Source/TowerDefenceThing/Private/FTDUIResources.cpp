@@ -6,7 +6,7 @@
 void FTDUIResources::Initialize() {
 	if (!TDUIResources.IsValid()) {
 		TDUIResources = Create();
-		FSlateStyleRegistry::UnRegisterSlateStyle(*TDUIResources);
+		FSlateStyleRegistry::UnRegisterSlateStyle(*TDUIResources); // why
 		FSlateStyleRegistry::RegisterSlateStyle(*TDUIResources);
 		UE_LOG(LogTemp, Warning, TEXT("Resources initialised"));
 	}
@@ -31,5 +31,5 @@ void FTDUIResources::Shutdown() {
 	//Removes reference to resources, decrements refcount, destroys resources if refcount=0
 	//Do this to all SharedPtrs on Shutdown() or SomethingSimilar() to avoid memory leak
 	TDUIResources.Reset();
-	UE_LOG(LogTemp, Warning, TEXT("Resource pointer unloaded"));
+	//UE_LOG(LogTemp, Warning, TEXT("Resource pointer unloaded"));
 }

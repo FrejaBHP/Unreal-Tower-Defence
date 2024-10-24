@@ -13,7 +13,7 @@ public:
 	SLATE_BEGIN_ARGS(SBuilderMenuWidget) :
 		_tdUIResources()
 	{}
-	SLATE_ARGUMENT(TSharedPtr<FSlateGameResources>, tdUIResources)
+	SLATE_ARGUMENT(TWeakPtr<FSlateGameResources>, tdUIResources)
 	SLATE_END_ARGS()
 
 	/** Constructs this widget with InArgs */
@@ -27,5 +27,5 @@ protected:
 	TSharedPtr<SBorder> GridBorderPtr;
 	TSharedPtr<SUniformGridPanel> GridPanelPtr;
 	FSlateColorBrush brush = FSlateColorBrush(FLinearColor::Black);
-	TSharedPtr<FSlateGameResources> tdUIResources;
+	TWeakPtr<FSlateGameResources> tdUIResources;
 };

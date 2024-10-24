@@ -3,10 +3,6 @@
 
 #include "SlateComps/SquareWidgetData.h"
 
-SquareWidgetData::SquareWidgetData() {
-
-}
-
 SquareWidgetData::~SquareWidgetData() {
 
 }
