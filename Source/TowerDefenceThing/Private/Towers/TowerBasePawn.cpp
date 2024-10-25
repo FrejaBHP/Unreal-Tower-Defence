@@ -10,11 +10,16 @@ ATowerBasePawn::ATowerBasePawn() {
 
 	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("BoxComponent"));
 	RootComponent = BoxComponent;
-	BoxComponent->InitBoxExtent(FVector(100., 100., 100.));
+	BoxComponent->InitBoxExtent(FVector(50., 50., 50.));
+	BoxComponent->SetMobility(EComponentMobility::Stationary);
 
 	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("SpriteComponent"));
 	SpriteComponent->SetupAttachment(BoxComponent);
 	SpriteComponent->SetCastShadow(true);
+	SpriteComponent->SetMobility(EComponentMobility::Stationary);
+
+	FRotator rotator = { 0., 90., 0. };
+	SpriteComponent->AddRelativeRotation(rotator.Quaternion());
 }
 
 // Called when the game starts or when spawned

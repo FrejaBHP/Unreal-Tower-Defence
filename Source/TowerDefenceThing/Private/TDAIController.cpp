@@ -10,6 +10,11 @@ ATDAIController::ATDAIController() {
 void ATDAIController::OnPossess(APawn* InPawn) {
 	Super::OnPossess(InPawn);
 	PossBasePawn = Cast<AEnemyBasePawn>(GetPawn());
+
+	if (PossBasePawn) {
+		PossBasePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(PossBasePawn, PossBasePawn);
+	}
+
 	SplinePath = Cast<UTDGameInstance>(GetGameInstance())->EnemySplinePath;
 
 	TDPassedPoint(0);
@@ -25,14 +30,6 @@ void ATDAIController::Tick(float DeltaTime) {
 	if (flooredKeyValue > lastSplinePoint) { // If flooredKeyValue is higher, unit has passed goal point
 		TDPassedPoint(flooredKeyValue);
 	}
-
-	/*
-	GEngine->ClearOnScreenDebugMessages();
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Distance travelled: %f"), distance));
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Distance goal: %f"), distanceGoal));
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Input key value: %f"), inputKeyValue));
-	GEngine->AddOnScreenDebugMessage(-1, 1.0f, FColor::Yellow, FString::Printf(TEXT("Last spline point: %i"), lastSplinePoint));
-	*/
 }
 
 void ATDAIController::TDPassedPoint(uint8 pointIndex) {
@@ -63,12 +60,9 @@ void ATDAIController::TDMoveToSplinePoint(uint8 index) {
 	goalPos.Z = currentPos.Z;
 
 	FVector difference = goalPos - currentPos;
-	//UE_LOG(LogTemp, Display, TEXT("Moving to %f, %f, %f"), goalPos.X, goalPos.Y, goalPos.Z);
 	FVector normal = difference.GetSafeNormal();
 
 	GetPawn()->AddMovementInput(normal);
-
-	//UE_LOG(LogTemp, Display, TEXT("Moving in direction %f, %f, %f"), normal.X, normal.Y, normal.Z);
 }
 
 void ATDAIController::TDUpdateGoalsForPoint(uint8 index) {

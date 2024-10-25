@@ -12,7 +12,9 @@
 				"Engine",
 				"AIModule",
 				"Slate",
-				"SlateCore"
+				"SlateCore",
+				"EnhancedInput",
+				"GameplayAbilities"
 			]
 		}
 	],
@@ -23,6 +25,10 @@
 			"TargetAllowList": [
 				"Editor"
 			]
+		},
+		{
+			"Name": "GameplayAbilities",
+			"Enabled": true
 		}
 	]
 }

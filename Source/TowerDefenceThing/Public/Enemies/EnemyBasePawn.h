@@ -9,10 +9,13 @@
 #include <TDGameInstance.h>
 #include "Components/CapsuleComponent.h"
 #include "Components/TDEnemyMovementComponent.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
+#include "AttributeSets/BaseEnemyAttributes.h"
 #include "EnemyBasePawn.generated.h"
 
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn {
+class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IAbilitySystemInterface {
 	GENERATED_BODY()
 
 public:
@@ -30,12 +33,22 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UTDEnemyMovementComponent* PawnMovementComponent = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Abilities")
+	UAbilitySystemComponent* AbilitySystemComponent;
 	
 	UPROPERTY()
 	TSoftObjectPtr<UPaperFlipbook> FlipbookPtr = nullptr;
 
 	UPROPERTY()
 	UPaperFlipbook* VisibleFlipbook = nullptr;
+
+	UPROPERTY()
+	const UBaseEnemyAttributes* AttributeSet;
+
+	virtual void PossessedBy(AController* NewController);
+
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
 	// Called when the game starts or when spawned

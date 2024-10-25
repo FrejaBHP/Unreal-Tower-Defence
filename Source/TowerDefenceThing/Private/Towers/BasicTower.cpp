@@ -14,6 +14,12 @@ ABasicTower::ABasicTower() {
 void ABasicTower::BeginPlay() {
 	Super::BeginPlay();
 	
+	SpritePtr = Cast<UTDGameInstance>(GetGameInstance())->GetSpriteByName("statue_archer_Sprite");
+
+	if (SpritePtr != nullptr) {
+		VisibleSprite = SpritePtr.Get();
+		SpriteComponent->SetSprite(VisibleSprite);
+	}
 }
 
 // Called every frame

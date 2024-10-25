@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "SlateComps/SquareWidgetData.h"
+#include "Input/IMC_TD_Def.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
 #include "TowerDefenceThingPlayerController.generated.h"
@@ -21,6 +22,7 @@ class ATowerDefenceThingPlayerController : public APlayerController {
 
 public:
 	ATowerDefenceThingPlayerController();
+	virtual void BeginDestroy() override;
 
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -30,17 +32,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UNiagaraSystem* FXCursor;
 
-	/** MappingContext */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputMappingContext* DefaultMappingContext;
-	
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* SetDestinationClickAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UIMC_TD_Def* CustomMappingContext;
 
-	/** Jump Input Action */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category=Input, meta=(AllowPrivateAccess = "true"))
-	UInputAction* SetDestinationTouchAction;
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* LeftClickAction;
+
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* RightClickAction;
 
 	void ConsumeHUDButtonInput(ESquareFunctionType, int32);
 
