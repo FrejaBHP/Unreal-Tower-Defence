@@ -32,12 +32,15 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	UNiagaraSystem* FXCursor;
 
+	// Set in editor
 	UPROPERTY(EditAnywhere, Category = Input)
 	UIMC_TD_Def* CustomMappingContext;
 
+	// Set in editor
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* LeftClickAction;
 
+	// Set in editor
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* RightClickAction;
 
@@ -47,22 +50,25 @@ protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
+	APawn* SelectedPawnPtr = nullptr;
+
+	void HandleSelectedUnit();
+
 	virtual void SetupInputComponent() override;
 	
 	// To add mapping context
 	virtual void BeginPlay();
 
 	/** Input handlers for SetDestination action. */
-	void OnInputStarted();
+	void OnSelectInput();
+
+	void OnMoveInputStarted();
 	void OnSetDestinationTriggered();
 	void OnSetDestinationReleased();
-	void OnTouchTriggered();
-	void OnTouchReleased();
 
 private:
 	FVector CachedDestination;
 
-	bool bIsTouch; // Is it a touch device
 	float FollowTime; // For how long it has been pressed
 };
 

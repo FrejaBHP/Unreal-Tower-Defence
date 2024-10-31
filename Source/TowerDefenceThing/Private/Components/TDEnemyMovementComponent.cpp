@@ -1,6 +1,7 @@
 // Dragons rule ok
 
 #include "Components/TDEnemyMovementComponent.h"
+#include "Enemies/EnemyBasePawn.h"
 #include "TDAIController.h"
 
 UTDEnemyMovementComponent::UTDEnemyMovementComponent() {
@@ -19,8 +20,9 @@ void UTDEnemyMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 	}
 
 	const AController* Controller = GetPawnOwner()->GetController();
+	const AEnemyBasePawn* BasePawn = Cast<AEnemyBasePawn>(GetPawnOwner());
 
-	const FVector inputVelocity = GetPendingInputVector() * MaxSpeed; // Base speed later!
+	const FVector inputVelocity = GetPendingInputVector() * BasePawn->GetBaseAttributes()->GetSpeed(); // Base speed later!
 	if (!inputVelocity.IsZero()) {
 		Velocity = inputVelocity;
 	}

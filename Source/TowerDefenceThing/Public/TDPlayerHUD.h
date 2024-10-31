@@ -25,7 +25,7 @@ public:
 	FBuildCommandSignature BuildCommandDelegate;
 
 	const FSlateFontInfo fontinfo = FSlateFontInfo(FPaths::EngineContentDir() / TEXT("Slate/Fonts/Roboto-Medium.ttf"), 36);
-	FSlateFontInfo NewFont;
+	FSlateFontInfo BigFont;
 
 	TSharedPtr<SWidget> LivesWidgetPtr;
 	TSharedPtr<SBuilderMenuWidget> BuildContextMenuPtr;

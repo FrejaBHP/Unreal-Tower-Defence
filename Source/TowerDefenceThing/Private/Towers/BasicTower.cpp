@@ -8,6 +8,25 @@ ABasicTower::ABasicTower() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	AttackAttributes = CreateDefaultSubobject<UTowerAttackAttributes>(TEXT("Attack Attributes"));
+	ProjectileAttributes = CreateDefaultSubobject<UTowerProjectileAttributes>(TEXT("Projectile Attributes"));
+
+	Name = FName("Basic Tower");
+
+	TargetType = ETowerTargetType::Unit;
+	AttackType = ETowerAttackType::Projectile;
+
+	BaseAttributes->InitRange(700.f);
+	BaseAttributes->InitAttackRate(1.f);
+
+	AttackAttributes->InitMinDamage(6.f);
+	AttackAttributes->InitMaxDamage(8.f);
+	AttackAttributes->InitMaxTargets(1.f);
+	AttackAttributes->InitSplashRadius(0.f);
+	AttackAttributes->InitSplashPercentage(0.f);
+
+	ProjectileAttributes->InitChains(0.f);
+	ProjectileAttributes->InitSpeed(2000.f);
 }
 
 // Called when the game starts or when spawned
@@ -32,5 +51,13 @@ void ABasicTower::Tick(float DeltaTime) {
 void ABasicTower::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+UTowerAttackAttributes* ABasicTower::GetAttackAttributes() const {
+	return AttackAttributes;
+}
+
+UTowerProjectileAttributes* ABasicTower::GetProjectileAttributes() const {
+	return ProjectileAttributes;
 }
 

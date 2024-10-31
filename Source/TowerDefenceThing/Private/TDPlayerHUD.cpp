@@ -13,8 +13,8 @@ ATDPlayerHUD::ATDPlayerHUD() {
 void ATDPlayerHUD::BeginPlay() {
 	Super::BeginPlay();
 
-	NewFont = FStyleDefaults::GetFontInfo(); // HOLY SHIT
-	NewFont.Size = 48;
+	BigFont = FStyleDefaults::GetFontInfo(); // HOLY SHIT
+	BigFont.Size = 48;
 
 	LivesPtr = &Cast<UTDGameInstance>(GetGameInstance())->Lives;
 	TDUIResources = Cast<UTDGameInstance>(GetGameInstance())->GetSlateGameResources();
@@ -35,7 +35,7 @@ void ATDPlayerHUD::CreateLivesWidget() {
 	if (LivesPtr != nullptr) {
 		GEngine->GameViewport->AddViewportWidgetContent(
 			SAssignNew(LivesWidgetPtr, SLivesWidget)
-			.font(NewFont)
+			.font(BigFont)
 			.livesPtr(LivesPtr)
 		);
 	}
@@ -56,8 +56,6 @@ void ATDPlayerHUD::CreateContextMenuWidget() {
 	}
 
 	if (BuildContextMenuPtr.IsValid()) {
-		//BuildContextMenuPtr->GridPanelSquareArray[2][2]->SetImageBrushWithName("icon_fireball_Brush");
-
 		for (size_t i = 0; i < BuildContextMenuPtr->GridPanelSquareArray.Num(); i++) {
 			for (size_t j = 0; j < BuildContextMenuPtr->GridPanelSquareArray[i].Num(); j++) {
 				BuildContextMenuPtr->GridPanelSquareArray[i][j]->OnClicked.BindUObject(this, &ATDPlayerHUD::ReceivedButtonInput);

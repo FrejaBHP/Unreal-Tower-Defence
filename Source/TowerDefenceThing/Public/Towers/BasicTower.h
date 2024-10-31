@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "Towers/TowerBasePawn.h"
+#include "AttributeSets/TowerAttackAttributes.h"
+#include "AttributeSets/TowerProjectileAttributes.h"
 #include "BasicTower.generated.h"
 
 UCLASS()
@@ -14,13 +16,24 @@ public:
 	// Sets default values for this pawn's properties
 	ABasicTower();
 
+	// Called every frame
+	virtual void Tick(float DeltaTime) override;
+
+	UPROPERTY(VisibleAnywhere)
+	UTowerAttackAttributes* AttackAttributes;
+
+	UPROPERTY(VisibleAnywhere)
+	UTowerProjectileAttributes* ProjectileAttributes;
+
+	UTowerAttackAttributes* GetAttackAttributes() const;
+	UTowerProjectileAttributes* GetProjectileAttributes() const;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+	
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;

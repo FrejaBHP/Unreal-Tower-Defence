@@ -10,6 +10,8 @@
 #include "EnhancedInputComponent.h"
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "TDPlayerHUD.h"
+#include "GameplayTags.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -24,6 +26,8 @@ ATowerDefenceThingPlayerController::ATowerDefenceThingPlayerController() {
 void ATowerDefenceThingPlayerController::BeginPlay() {
 	// Call the base class  
 	Super::BeginPlay();
+
+	SelectedPawnPtr = GetPawn();
 }
 
 void ATowerDefenceThingPlayerController::SetupInputComponent() {
@@ -37,7 +41,9 @@ void ATowerDefenceThingPlayerController::SetupInputComponent() {
 
 	// Set up action bindings
 	if (UEnhancedInputComponent* EnhancedInputComponent = Cast<UEnhancedInputComponent>(InputComponent)) {
-		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this, &ATowerDefenceThingPlayerController::OnInputStarted);
+		EnhancedInputComponent->BindAction(LeftClickAction, ETriggerEvent::Started, this, &ATowerDefenceThingPlayerController::OnSelectInput);
+
+		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Started, this, &ATowerDefenceThingPlayerController::OnMoveInputStarted);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Triggered, this, &ATowerDefenceThingPlayerController::OnSetDestinationTriggered);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Completed, this, &ATowerDefenceThingPlayerController::OnSetDestinationReleased);
 		EnhancedInputComponent->BindAction(RightClickAction, ETriggerEvent::Canceled, this, &ATowerDefenceThingPlayerController::OnSetDestinationReleased);
@@ -47,7 +53,55 @@ void ATowerDefenceThingPlayerController::SetupInputComponent() {
 	}
 }
 
-void ATowerDefenceThingPlayerController::OnInputStarted() {
+void ATowerDefenceThingPlayerController::OnSelectInput() {
+	FHitResult Hit;
+	bool bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, true, Hit);
+
+	if (bHitSuccessful) {
+		AActor* tempActor = Hit.GetActor();
+
+		// If clicked actor implements IClickableUnit, grab it
+		if (tempActor != nullptr && tempActor->Implements<UClickableUnit>()) {
+			SelectedPawnPtr = Cast<APawn>(tempActor);
+			HandleSelectedUnit();
+		}
+	}
+	else if (GetPawn() != SelectedPawnPtr) {
+		SelectedPawnPtr = GetPawn();
+		HandleSelectedUnit();
+	}
+}
+
+void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
+	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr);
+	FName unitTagName = selectedUnit->GetUnitTypeTag().GetTagName();
+
+	if (unitTagName == FName("UnitTags.Tower")) {
+		UE_LOG(LogTemp, Warning, TEXT("Tower"));
+	}
+	else if (unitTagName == FName("UnitTags.Enemy")) {
+		UE_LOG(LogTemp, Warning, TEXT("Enemy"));
+	}
+	else if (unitTagName == FName("UnitTags.Player")) {
+		UE_LOG(LogTemp, Warning, TEXT("Player"));
+	}
+
+	/*
+	if (selectedUnit->HasGameplayTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Tower")))) {
+		UE_LOG(LogTemp, Warning, TEXT("Tower"));
+	}
+	else if (selectedUnit->HasGameplayTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Enemy")))) {
+		UE_LOG(LogTemp, Warning, TEXT("Enemy"));
+	}
+	else if (selectedUnit->HasGameplayTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Player")))) {
+		UE_LOG(LogTemp, Warning, TEXT("Player"));
+	}
+	*/
+
+	//GetHUD<ATDPlayerHUD>();
+}
+
+void ATowerDefenceThingPlayerController::OnMoveInputStarted() {
 	StopMovement();
 }
 
@@ -58,13 +112,7 @@ void ATowerDefenceThingPlayerController::OnSetDestinationTriggered() {
 	
 	// We look for the location in the world where the player has pressed the input
 	FHitResult Hit;
-	bool bHitSuccessful = false;
-	if (bIsTouch) {
-		bHitSuccessful = GetHitResultUnderFinger(ETouchIndex::Touch1, ECollisionChannel::ECC_Visibility, true, Hit);
-	}
-	else {
-		bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
-	}
+	bool bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_Visibility, true, Hit);
 
 	// If we hit a surface, cache the location
 	if (bHitSuccessful) {
@@ -88,17 +136,6 @@ void ATowerDefenceThingPlayerController::OnSetDestinationReleased() {
 	}
 
 	FollowTime = 0.f;
-}
-
-// Triggered every frame when the input is held down
-void ATowerDefenceThingPlayerController::OnTouchTriggered() {
-	bIsTouch = true;
-	OnSetDestinationTriggered();
-}
-
-void ATowerDefenceThingPlayerController::OnTouchReleased() {
-	bIsTouch = false;
-	OnSetDestinationReleased();
 }
 
 void ATowerDefenceThingPlayerController::ConsumeHUDButtonInput(ESquareFunctionType type, int32 id) {

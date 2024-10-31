@@ -12,10 +12,12 @@
 #include "AbilitySystemInterface.h"
 #include "AbilitySystemComponent.h"
 #include "AttributeSets/BaseEnemyAttributes.h"
+#include <GameplayTagContainer.h>
+#include "ClickableUnit.h"
 #include "EnemyBasePawn.generated.h"
 
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IAbilitySystemInterface {
+class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IAbilitySystemInterface, public IClickableUnit {
 	GENERATED_BODY()
 
 public:
@@ -24,6 +26,16 @@ public:
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
+
+	virtual void OnSelect() override;
+	virtual FGameplayTag GetUnitTypeTag() override;
+	virtual bool HasGameplayTag(FGameplayTag) override;
+	virtual FName GetUnitName() override;
+
+	FName Name;
+
+	UPROPERTY()
+	FGameplayTagContainer GameplayTags;
 
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* CapsuleComponent = nullptr;
@@ -43,12 +55,13 @@ public:
 	UPROPERTY()
 	UPaperFlipbook* VisibleFlipbook = nullptr;
 
-	UPROPERTY()
-	const UBaseEnemyAttributes* AttributeSet;
+	UPROPERTY(VisibleAnywhere)
+	UBaseEnemyAttributes* BaseAttributes;
 
 	virtual void PossessedBy(AController* NewController);
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UBaseEnemyAttributes* GetBaseAttributes() const;
 
 protected:
 	// Called when the game starts or when spawned

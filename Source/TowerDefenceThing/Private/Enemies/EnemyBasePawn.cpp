@@ -7,14 +7,17 @@
 AEnemyBasePawn::AEnemyBasePawn() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	GameplayTags.AddTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Enemy")));
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 	RootComponent = CapsuleComponent;
 	CapsuleComponent->InitCapsuleSize(50.f, 75.0f);
+	CapsuleComponent->SetCollisionProfileName(FName("TDUnit"));
 
 	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Visible Flipbook"));
 	FlipbookComponent->SetupAttachment(CapsuleComponent);
 	FlipbookComponent->SetCastShadow(true);
+	FlipbookComponent->SetCollisionProfileName(FName("NoCollision"));
 
 	FRotator rotator = { 0., 90., 0. };
 	FlipbookComponent->AddRelativeRotation(rotator.Quaternion());
@@ -31,7 +34,9 @@ AEnemyBasePawn::AEnemyBasePawn() {
 
 	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System"));
 	AbilitySystemComponent->SetIsReplicated(true);
-	
+
+	BaseAttributes = CreateDefaultSubobject<UBaseEnemyAttributes>(TEXT("Base Attributes"));
+
 	AIControllerClass = ATDAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 }
@@ -39,6 +44,12 @@ AEnemyBasePawn::AEnemyBasePawn() {
 // Called when the game starts or when spawned
 void AEnemyBasePawn::BeginPlay() {
 	Super::BeginPlay();
+
+	/*
+	if (!AttributeSet) {
+		AttributeSet = NewObject<UBaseEnemyAttributes>(this);
+	}
+	*/
 }
 
 // Called every frame
@@ -57,6 +68,31 @@ void AEnemyBasePawn::PossessedBy(AController* NewController) {
 	SetOwner(NewController);
 }
 
+void AEnemyBasePawn::OnSelect() {
+	
+}
+
+FGameplayTag AEnemyBasePawn::GetUnitTypeTag() {
+	return FGameplayTag::RequestGameplayTag(FName("UnitTags.Enemy"));
+}
+
+bool AEnemyBasePawn::HasGameplayTag(FGameplayTag tag) {
+	if (GameplayTags.HasTag(tag)) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
+FName AEnemyBasePawn::GetUnitName() {
+	return Name;
+}
+
 UAbilitySystemComponent* AEnemyBasePawn::GetAbilitySystemComponent() const {
 	return AbilitySystemComponent;
+}
+
+UBaseEnemyAttributes* AEnemyBasePawn::GetBaseAttributes() const {
+	return BaseAttributes;
 }

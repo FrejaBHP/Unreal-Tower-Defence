@@ -6,6 +6,11 @@
 ABasicEnemy::ABasicEnemy() {
 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
+	Name = FName("Basic Enemy");
+
+	BaseAttributes->InitMaxHealth(20.f);
+	BaseAttributes->InitHealth(BaseAttributes->GetMaxHealth());
+	BaseAttributes->InitSpeed(200.f);
 }
 
 // Called when the game starts or when spawned

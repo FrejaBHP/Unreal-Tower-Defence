@@ -8,10 +8,27 @@
 #include "PaperSpriteComponent.h"
 #include <TDGameInstance.h>
 #include "Components/BoxComponent.h"
+#include "AttributeSets/BaseTowerAttributes.h"
+#include "AbilitySystemInterface.h"
+#include "AbilitySystemComponent.h"
+#include <GameplayTagContainer.h>
+#include "ClickableUnit.h"
 #include "TowerBasePawn.generated.h"
 
+UENUM()
+enum class ETowerTargetType : int8 {
+	Unit,
+	Point
+};
+
+UENUM()
+enum class ETowerAttackType : int8 {
+	Projectile,
+	Instant
+};
+
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API ATowerBasePawn : public APawn {
+class TOWERDEFENCETHING_API ATowerBasePawn : public APawn, public IAbilitySystemInterface, public IClickableUnit {
 	GENERATED_BODY()
 
 public:
@@ -21,8 +38,26 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+	virtual void OnSelect() override;
+	virtual FGameplayTag GetUnitTypeTag() override;
+	virtual bool HasGameplayTag(FGameplayTag) override;
+	virtual FName GetUnitName() override;
+
+	FName Name;
+	ETowerTargetType TargetType;
+	ETowerAttackType AttackType;
+
+	UPROPERTY()
+	FGameplayTagContainer GameplayTags;
+
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxComponent = nullptr;
+
+	UPROPERTY(VisibleDefaultsOnly, Category = "Abilities")
+	UAbilitySystemComponent* AbilitySystemComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UBaseTowerAttributes* BaseAttributes;
 
 	UPROPERTY(VisibleAnywhere)
 	UPaperSpriteComponent* SpriteComponent = nullptr;
@@ -33,16 +68,8 @@ public:
 	UPROPERTY()
 	TSoftObjectPtr<UPaperSprite> SpritePtr = nullptr;
 
-	/*
-	UPROPERTY(VisibleAnywhere)
-	UPaperFlipbookComponent* FlipbookComponent = nullptr;
-
-	UPROPERTY()
-	TSoftObjectPtr<UPaperFlipbook> FlipbookPtr = nullptr;
-
-	UPROPERTY()
-	UPaperFlipbook* VisibleFlipbook = nullptr;
-	*/
+	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	UBaseTowerAttributes* GetBaseAttributes() const;
 
 protected:
 	// Called when the game starts or when spawned
