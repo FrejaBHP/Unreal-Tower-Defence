@@ -25,17 +25,14 @@ public:
 	TSharedPtr<FSlateGameResources> GetSlateGameResources();
 
 	UPROPERTY()
-	ASplinePath* EnemySplinePath = nullptr;
-
-	UPROPERTY()
-	UPaperFlipbook* BasicEnemyFlipbookPtr = nullptr;
+	ASplinePath* EnemySplinePath { nullptr };
 
 	UPROPERTY()
 	int32 Lives;
 
 protected:
-	UObjectLibrary* SpriteLib{ nullptr };
-	UObjectLibrary* FlipbookLib{ nullptr };
+	UObjectLibrary* SpriteLib { nullptr };
+	UObjectLibrary* FlipbookLib { nullptr };
 
 	TMap<FName, UPaperSprite*> SpriteMap;
 	TMap<FName, UPaperFlipbook*> FlipbookMap;
@@ -47,6 +44,4 @@ private:
 	
 	void CatalogueSprites();
 	void CatalogueFlipbooks();
-
-	FSoftObjectPath BasicEnemyFlipbookPath;
 };
