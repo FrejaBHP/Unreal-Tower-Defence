@@ -8,10 +8,8 @@ ABasicEnemy::ABasicEnemy() {
 	PrimaryActorTick.bCanEverTick = true;
 
 	Name = FName("Basic Enemy");
-
-	BaseAttributes->InitMaxHealth(20.f);
-	BaseAttributes->InitHealth(BaseAttributes->GetMaxHealth());
-	BaseAttributes->InitSpeed(200.f);
+	BaseAttributeSet->Health->InitMinMax(20.f, 0.f, 20.f);
+	BaseAttributeSet->Speed->InitMinMax(200.f, 50.f, 400.f);
 }
 
 // Called when the game starts or when spawned

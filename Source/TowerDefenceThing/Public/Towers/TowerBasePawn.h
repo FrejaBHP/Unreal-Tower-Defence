@@ -8,10 +8,8 @@
 #include "PaperSpriteComponent.h"
 #include <TDGameInstance.h>
 #include "Components/BoxComponent.h"
-#include "AttributeSets/BaseTowerAttributes.h"
-#include "AbilitySystemInterface.h"
-#include "AbilitySystemComponent.h"
-#include <GameplayTagContainer.h>
+#include "Components/CapsuleComponent.h"
+#include "Attributes/TowerBaseTDAttributes.h"
 #include "ClickableUnit.h"
 #include "TowerBasePawn.generated.h"
 
@@ -28,7 +26,7 @@ enum class ETowerAttackType : int8 {
 };
 
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API ATowerBasePawn : public APawn, public IAbilitySystemInterface, public IClickableUnit {
+class TOWERDEFENCETHING_API ATowerBasePawn : public APawn, public IClickableUnit {
 	GENERATED_BODY()
 
 public:
@@ -39,25 +37,21 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnSelect() override;
-	virtual FGameplayTag GetUnitTypeTag() override;
-	virtual bool HasGameplayTag(FGameplayTag) override;
+	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 
+	EUnitType UnitType { EUnitType::Tower };
 	FName Name;
+	TUniquePtr<TowerBaseTDAttributes> BaseAttributeSet = nullptr;
+
 	ETowerTargetType TargetType;
 	ETowerAttackType AttackType;
-
-	UPROPERTY()
-	FGameplayTagContainer GameplayTags;
 
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxComponent = nullptr;
 
-	UPROPERTY(VisibleDefaultsOnly, Category = "Abilities")
-	UAbilitySystemComponent* AbilitySystemComponent;
-
 	UPROPERTY(VisibleAnywhere)
-	UBaseTowerAttributes* BaseAttributes;
+	UCapsuleComponent* CapsuleComponent = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UPaperSpriteComponent* SpriteComponent = nullptr;
@@ -68,8 +62,7 @@ public:
 	UPROPERTY()
 	TSoftObjectPtr<UPaperSprite> SpritePtr = nullptr;
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UBaseTowerAttributes* GetBaseAttributes() const;
+	virtual void PossessedBy(AController* NewController);
 
 protected:
 	// Called when the game starts or when spawned

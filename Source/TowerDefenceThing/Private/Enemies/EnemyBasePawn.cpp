@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+
 #include "Enemies/EnemyBasePawn.h"
 #include "TDAIController.h"
 
@@ -7,7 +8,6 @@
 AEnemyBasePawn::AEnemyBasePawn() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
-	GameplayTags.AddTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Enemy")));
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 	RootComponent = CapsuleComponent;
@@ -32,10 +32,7 @@ AEnemyBasePawn::AEnemyBasePawn() {
 		PawnMovementComponent->bSnapToPlaneAtStart = true;
 	}
 
-	AbilitySystemComponent = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("Ability System"));
-	AbilitySystemComponent->SetIsReplicated(true);
-
-	BaseAttributes = CreateDefaultSubobject<UBaseEnemyAttributes>(TEXT("Base Attributes"));
+	BaseAttributeSet = MakeUnique<EnemyBaseTDAttributes>();
 
 	AIControllerClass = ATDAIController::StaticClass();
 	AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
@@ -44,12 +41,6 @@ AEnemyBasePawn::AEnemyBasePawn() {
 // Called when the game starts or when spawned
 void AEnemyBasePawn::BeginPlay() {
 	Super::BeginPlay();
-
-	/*
-	if (!AttributeSet) {
-		AttributeSet = NewObject<UBaseEnemyAttributes>(this);
-	}
-	*/
 }
 
 // Called every frame
@@ -59,12 +50,6 @@ void AEnemyBasePawn::Tick(float DeltaTime) {
 
 void AEnemyBasePawn::PossessedBy(AController* NewController) {
 	Super::PossessedBy(NewController);
-
-	if (AbilitySystemComponent) {
-		AbilitySystemComponent->InitAbilityActorInfo(this, this);
-	}
-
-	// ASC MixedMode replication requires that the ASC Owner's Owner be the Controller.
 	SetOwner(NewController);
 }
 
@@ -72,27 +57,10 @@ void AEnemyBasePawn::OnSelect() {
 	
 }
 
-FGameplayTag AEnemyBasePawn::GetUnitTypeTag() {
-	return FGameplayTag::RequestGameplayTag(FName("UnitTags.Enemy"));
-}
-
-bool AEnemyBasePawn::HasGameplayTag(FGameplayTag tag) {
-	if (GameplayTags.HasTag(tag)) {
-		return true;
-	}
-	else {
-		return false;
-	}
+EUnitType AEnemyBasePawn::GetUnitType() {
+	return UnitType;
 }
 
 FName AEnemyBasePawn::GetUnitName() {
 	return Name;
-}
-
-UAbilitySystemComponent* AEnemyBasePawn::GetAbilitySystemComponent() const {
-	return AbilitySystemComponent;
-}
-
-UBaseEnemyAttributes* AEnemyBasePawn::GetBaseAttributes() const {
-	return BaseAttributes;
 }

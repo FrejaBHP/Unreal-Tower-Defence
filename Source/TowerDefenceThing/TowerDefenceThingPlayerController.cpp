@@ -11,7 +11,6 @@
 #include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
 #include "TDPlayerHUD.h"
-#include "GameplayTags.h"
 #include "Engine/LocalPlayer.h"
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -74,29 +73,17 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 
 void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
 	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr);
-	FName unitTagName = selectedUnit->GetUnitTypeTag().GetTagName();
+	EUnitType unitType = selectedUnit->GetUnitType();
 
-	if (unitTagName == FName("UnitTags.Tower")) {
+	if (unitType == EUnitType::Tower) {
 		UE_LOG(LogTemp, Warning, TEXT("Tower"));
 	}
-	else if (unitTagName == FName("UnitTags.Enemy")) {
+	else if (unitType == EUnitType::Enemy) {
 		UE_LOG(LogTemp, Warning, TEXT("Enemy"));
 	}
-	else if (unitTagName == FName("UnitTags.Player")) {
+	else if (unitType == EUnitType::Player) {
 		UE_LOG(LogTemp, Warning, TEXT("Player"));
 	}
-
-	/*
-	if (selectedUnit->HasGameplayTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Tower")))) {
-		UE_LOG(LogTemp, Warning, TEXT("Tower"));
-	}
-	else if (selectedUnit->HasGameplayTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Enemy")))) {
-		UE_LOG(LogTemp, Warning, TEXT("Enemy"));
-	}
-	else if (selectedUnit->HasGameplayTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Player")))) {
-		UE_LOG(LogTemp, Warning, TEXT("Player"));
-	}
-	*/
 
 	//GetHUD<ATDPlayerHUD>();
 }

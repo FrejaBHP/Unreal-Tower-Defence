@@ -12,7 +12,6 @@ enum class ESquareFunctionType : int8 {
 };
 
 class TOWERDEFENCETHING_API SquareWidgetData {
-
 public:
 	ESquareFunctionType FunctionType { ESquareFunctionType::None };
 	int32 FunctionID { 0 };

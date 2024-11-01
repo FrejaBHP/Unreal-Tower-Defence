@@ -9,15 +9,12 @@
 #include <TDGameInstance.h>
 #include "Components/CapsuleComponent.h"
 #include "Components/TDEnemyMovementComponent.h"
-#include "AbilitySystemInterface.h"
-#include "AbilitySystemComponent.h"
-#include "AttributeSets/BaseEnemyAttributes.h"
-#include <GameplayTagContainer.h>
+#include "Attributes/EnemyBaseTDAttributes.h"
 #include "ClickableUnit.h"
 #include "EnemyBasePawn.generated.h"
 
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IAbilitySystemInterface, public IClickableUnit {
+class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IClickableUnit {
 	GENERATED_BODY()
 
 public:
@@ -28,14 +25,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnSelect() override;
-	virtual FGameplayTag GetUnitTypeTag() override;
-	virtual bool HasGameplayTag(FGameplayTag) override;
+	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 
+	EUnitType UnitType { EUnitType::Enemy };
 	FName Name;
-
-	UPROPERTY()
-	FGameplayTagContainer GameplayTags;
+	TUniquePtr<EnemyBaseTDAttributes> BaseAttributeSet = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
 	UCapsuleComponent* CapsuleComponent = nullptr;
@@ -45,9 +40,6 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UTDEnemyMovementComponent* PawnMovementComponent = nullptr;
-
-	UPROPERTY(VisibleDefaultsOnly, Category = "Abilities")
-	UAbilitySystemComponent* AbilitySystemComponent;
 	
 	UPROPERTY()
 	TSoftObjectPtr<UPaperFlipbook> FlipbookPtr = nullptr;
@@ -55,16 +47,10 @@ public:
 	UPROPERTY()
 	UPaperFlipbook* VisibleFlipbook = nullptr;
 
-	UPROPERTY(VisibleAnywhere)
-	UBaseEnemyAttributes* BaseAttributes;
-
 	virtual void PossessedBy(AController* NewController);
 
-	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
-	UBaseEnemyAttributes* GetBaseAttributes() const;
 
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
 };

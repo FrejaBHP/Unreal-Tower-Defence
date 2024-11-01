@@ -22,7 +22,7 @@ void UTDEnemyMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 	const AController* Controller = GetPawnOwner()->GetController();
 	const AEnemyBasePawn* BasePawn = Cast<AEnemyBasePawn>(GetPawnOwner());
 
-	const FVector inputVelocity = GetPendingInputVector() * BasePawn->GetBaseAttributes()->GetSpeed(); // Base speed later!
+	const FVector inputVelocity = GetPendingInputVector() * BasePawn->BaseAttributeSet->Speed->GetCurrentValue();
 	if (!inputVelocity.IsZero()) {
 		Velocity = inputVelocity;
 	}
@@ -46,10 +46,8 @@ void UTDEnemyMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 	DistanceTravelled += delta.Length();
 
 	UpdateComponentVelocity();
-
 }
 
 void UTDEnemyMovementComponent::Test(FVector from, FVector to) {
 	
 }
-

@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
-#include <GameplayTagContainer.h>
 #include "ClickableUnit.h"
 #include "TowerDefenceThingCharacter.generated.h"
 
@@ -19,14 +18,11 @@ public:
 	virtual void Tick(float DeltaSeconds) override;
 
 	virtual void OnSelect() override;
-	virtual FGameplayTag GetUnitTypeTag() override;
-	virtual bool HasGameplayTag(FGameplayTag) override;
+	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 
+	EUnitType UnitType { EUnitType::Player };
 	FName Name;
-
-	UPROPERTY()
-	FGameplayTagContainer GameplayTags;
 
 	/** Returns TopDownCameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }

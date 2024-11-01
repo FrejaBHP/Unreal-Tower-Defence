@@ -8,25 +8,28 @@ ABasicTower::ABasicTower() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AttackAttributes = CreateDefaultSubobject<UTowerAttackAttributes>(TEXT("Attack Attributes"));
-	ProjectileAttributes = CreateDefaultSubobject<UTowerProjectileAttributes>(TEXT("Projectile Attributes"));
+	AttackComponent = CreateDefaultSubobject<UTowerAttackComponent>(TEXT("Attack Component"));
+	AttackAttributeSet = MakeUnique<TowerAttackTDAttributes>();
+	ProjectileAttributeSet = MakeUnique<TowerProjectileTDAttributes>();
 
 	Name = FName("Basic Tower");
 
 	TargetType = ETowerTargetType::Unit;
 	AttackType = ETowerAttackType::Projectile;
 
-	BaseAttributes->InitRange(700.f);
-	BaseAttributes->InitAttackRate(1.f);
+	BaseAttributeSet->Range->Init(350.f);
+	BaseAttributeSet->AttackRate->Init(1.f);
 
-	AttackAttributes->InitMinDamage(6.f);
-	AttackAttributes->InitMaxDamage(8.f);
-	AttackAttributes->InitMaxTargets(1.f);
-	AttackAttributes->InitSplashRadius(0.f);
-	AttackAttributes->InitSplashPercentage(0.f);
+	AttackAttributeSet->MinDamage->Init(6.f);
+	AttackAttributeSet->MaxDamage->Init(8.f);
+	AttackAttributeSet->Targets->Init(1.f);
+	AttackAttributeSet->SplashRadius->Init(0.f);
+	AttackAttributeSet->SplashPercentage->Init(0.f);
 
-	ProjectileAttributes->InitChains(0.f);
-	ProjectileAttributes->InitSpeed(2000.f);
+	ProjectileAttributeSet->Chain->Init(0.f);
+	ProjectileAttributeSet->Speed->Init(1000.f);
+
+	CapsuleComponent->SetCapsuleSize(BaseAttributeSet->Range->GetBaseValue(), BaseAttributeSet->Range->GetBaseValue() + 100.f);
 }
 
 // Called when the game starts or when spawned
@@ -44,20 +47,9 @@ void ABasicTower::BeginPlay() {
 // Called every frame
 void ABasicTower::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
-
 }
 
 // Called to bind functionality to input
 void ABasicTower::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
 }
-
-UTowerAttackAttributes* ABasicTower::GetAttackAttributes() const {
-	return AttackAttributes;
-}
-
-UTowerProjectileAttributes* ABasicTower::GetProjectileAttributes() const {
-	return ProjectileAttributes;
-}
-

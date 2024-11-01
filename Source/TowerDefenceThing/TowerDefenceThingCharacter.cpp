@@ -15,9 +15,6 @@ ATowerDefenceThingCharacter::ATowerDefenceThingCharacter() {
 	// Set size for player capsule
 	GetCapsuleComponent()->InitCapsuleSize(42.f, 96.0f);
 
-	// Add gameplay tag
-	GameplayTags.AddTag(FGameplayTag::RequestGameplayTag(FName("UnitTags.Player")));
-
 	// Don't rotate character to camera direction
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationYaw = false;
@@ -57,17 +54,8 @@ void ATowerDefenceThingCharacter::OnSelect() {
 
 }
 
-FGameplayTag ATowerDefenceThingCharacter::GetUnitTypeTag() {
-	return FGameplayTag::RequestGameplayTag(FName("UnitTags.Player"));
-}
-
-bool ATowerDefenceThingCharacter::HasGameplayTag(FGameplayTag tag) {
-	if (GameplayTags.HasTag(tag)) {
-		return true;
-	}
-	else {
-		return false;
-	}
+EUnitType ATowerDefenceThingCharacter::GetUnitType() {
+	return UnitType;
 }
 
 FName ATowerDefenceThingCharacter::GetUnitName() {

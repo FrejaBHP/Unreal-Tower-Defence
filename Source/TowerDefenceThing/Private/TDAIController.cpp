@@ -11,10 +11,6 @@ void ATDAIController::OnPossess(APawn* InPawn) {
 	Super::OnPossess(InPawn);
 	PossBasePawn = Cast<AEnemyBasePawn>(GetPawn());
 
-	if (PossBasePawn) {
-		PossBasePawn->GetAbilitySystemComponent()->InitAbilityActorInfo(PossBasePawn, PossBasePawn);
-	}
-
 	SplinePath = Cast<UTDGameInstance>(GetGameInstance())->EnemySplinePath;
 
 	TDPassedPoint(0);
