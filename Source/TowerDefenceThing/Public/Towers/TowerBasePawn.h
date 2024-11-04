@@ -11,6 +11,8 @@
 #include "Components/CapsuleComponent.h"
 #include "Attributes/TowerBaseTDAttributes.h"
 #include "ClickableUnit.h"
+#include "EnemyUnit.h"
+#include "TowerUnit.h"
 #include "TowerBasePawn.generated.h"
 
 UENUM()
@@ -26,7 +28,7 @@ enum class ETowerAttackType : int8 {
 };
 
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API ATowerBasePawn : public APawn, public IClickableUnit {
+class TOWERDEFENCETHING_API ATowerBasePawn : public APawn, public IClickableUnit, public ITowerUnit {
 	GENERATED_BODY()
 
 public:
@@ -40,12 +42,24 @@ public:
 	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 
+	virtual bool TrySetTarget(AActor* target) override;
+	virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) override;
+
+	void GetNewTarget();
+	void TryAttackTarget();
+
 	EUnitType UnitType { EUnitType::Tower };
 	FName Name;
 	TUniquePtr<TowerBaseTDAttributes> BaseAttributeSet = nullptr;
 
 	ETowerTargetType TargetType;
 	ETowerAttackType AttackType;
+
+	TWeakObjectPtr<AActor> TowerTarget;
+	IEnemyUnit* TowerTargetInterface;
+	
+	bool HasTarget { false };
+	float AttackTimer { 0.f };
 
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxComponent = nullptr;
@@ -62,13 +76,15 @@ public:
 	UPROPERTY()
 	TSoftObjectPtr<UPaperSprite> SpritePtr = nullptr;
 
-	virtual void PossessedBy(AController* NewController);
-
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	void SetTarget(AActor* target);
+	virtual void AttackTarget();
+
 public:	
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+	virtual void PossessedBy(AController* NewController);
 };

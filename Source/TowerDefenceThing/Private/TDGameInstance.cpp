@@ -6,6 +6,8 @@
 
 UTDGameInstance::UTDGameInstance() {
 	TDUIResources.Initialize();
+	RandStream.GenerateNewSeed();
+
 	Lives = 50;
 	SpriteLib = UObjectLibrary::CreateLibrary(UPaperSprite::StaticClass(), false, false);
 	FlipbookLib = UObjectLibrary::CreateLibrary(UPaperFlipbook::StaticClass(), false, false);
@@ -21,6 +23,7 @@ void UTDGameInstance::Init() {
 void UTDGameInstance::CatalogueSprites() {
 	TArray<FString> paths;
 	paths.Add("/Game/Sprites/Static/Enemies");
+	paths.Add("/Game/Sprites/Static/Projectiles");
 	paths.Add("/Game/Sprites/Static/Towers");
 
 	SpriteLib->LoadAssetsFromPaths(paths);

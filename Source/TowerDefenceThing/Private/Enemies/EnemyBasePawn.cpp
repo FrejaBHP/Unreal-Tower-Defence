@@ -11,7 +11,7 @@ AEnemyBasePawn::AEnemyBasePawn() {
 
 	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 	RootComponent = CapsuleComponent;
-	CapsuleComponent->InitCapsuleSize(50.f, 75.0f);
+	CapsuleComponent->InitCapsuleSize(25.f, 75.0f);
 	CapsuleComponent->SetCollisionProfileName(FName("TDUnit"));
 
 	FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Visible Flipbook"));
@@ -63,4 +63,22 @@ EUnitType AEnemyBasePawn::GetUnitType() {
 
 FName AEnemyBasePawn::GetUnitName() {
 	return Name;
+}
+
+float AEnemyBasePawn::GetCurrentHealth() {
+	return BaseAttributeSet->Health->GetCurrentValue();
+}
+
+void AEnemyBasePawn::TakeDamage(float damage) {
+	// BASIC
+	float newValue = BaseAttributeSet->Health->GetCurrentValue() - damage;
+	BaseAttributeSet->Health->SetCurrentValue(newValue);
+	
+	if (!(BaseAttributeSet->Health->GetCurrentValue() > 0.f)) {
+		Die();
+	}
+}
+
+void AEnemyBasePawn::Die() {
+	Destroy();
 }

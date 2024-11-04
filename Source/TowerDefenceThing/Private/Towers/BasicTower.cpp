@@ -8,17 +8,17 @@ ABasicTower::ABasicTower() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	AttackComponent = CreateDefaultSubobject<UTowerAttackComponent>(TEXT("Attack Component"));
+	ProjectileComponent = CreateDefaultSubobject<UTowerProjectileComponent>(TEXT("Projectile Component"));
+
 	AttackAttributeSet = MakeUnique<TowerAttackTDAttributes>();
-	ProjectileAttributeSet = MakeUnique<TowerProjectileTDAttributes>();
 
 	Name = FName("Basic Tower");
 
 	TargetType = ETowerTargetType::Unit;
 	AttackType = ETowerAttackType::Projectile;
 
-	BaseAttributeSet->Range->Init(350.f);
 	BaseAttributeSet->AttackRate->Init(1.f);
+	BaseAttributeSet->Range->Init(350.f);
 
 	AttackAttributeSet->MinDamage->Init(6.f);
 	AttackAttributeSet->MaxDamage->Init(8.f);
@@ -26,8 +26,8 @@ ABasicTower::ABasicTower() {
 	AttackAttributeSet->SplashRadius->Init(0.f);
 	AttackAttributeSet->SplashPercentage->Init(0.f);
 
-	ProjectileAttributeSet->Chain->Init(0.f);
-	ProjectileAttributeSet->Speed->Init(1000.f);
+	ProjectileComponent->ProjectileAttributeSet->Chain->Init(0.f); // Currently unimplemented, keep it at 0
+	ProjectileComponent->ProjectileAttributeSet->Speed->Init(1000.f);
 
 	CapsuleComponent->SetCapsuleSize(BaseAttributeSet->Range->GetBaseValue(), BaseAttributeSet->Range->GetBaseValue() + 100.f);
 }
@@ -52,4 +52,15 @@ void ABasicTower::Tick(float DeltaTime) {
 // Called to bind functionality to input
 void ABasicTower::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent) {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+void ABasicTower::AttackTarget() {
+	ProjectileComponent->SpawnProjectile(TowerTarget);
+	Super::AttackTarget();
+}
+
+void ABasicTower::OnHitEnemy(TWeakObjectPtr<AActor> enemy) {
+	IEnemyUnit* enemyInterface = Cast<IEnemyUnit>(enemy);
+	float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
+	enemyInterface->TakeDamage(damage);
 }

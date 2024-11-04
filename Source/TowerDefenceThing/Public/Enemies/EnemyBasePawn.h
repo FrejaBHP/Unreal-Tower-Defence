@@ -11,10 +11,11 @@
 #include "Components/TDEnemyMovementComponent.h"
 #include "Attributes/EnemyBaseTDAttributes.h"
 #include "ClickableUnit.h"
+#include "EnemyUnit.h"
 #include "EnemyBasePawn.generated.h"
 
 UCLASS(Abstract)
-class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IClickableUnit {
+class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IClickableUnit, public IEnemyUnit {
 	GENERATED_BODY()
 
 public:
@@ -27,6 +28,9 @@ public:
 	virtual void OnSelect() override;
 	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
+
+	virtual float GetCurrentHealth() override;
+	virtual void TakeDamage(float damage) override;
 
 	EUnitType UnitType { EUnitType::Enemy };
 	FName Name;
@@ -53,4 +57,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
+
+	void Die();
 };

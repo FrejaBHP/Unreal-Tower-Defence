@@ -24,6 +24,8 @@ public:
 
 	TSharedPtr<FSlateGameResources> GetSlateGameResources();
 
+	FRandomStream RandStream;
+
 	UPROPERTY()
 	ASplinePath* EnemySplinePath { nullptr };
 
