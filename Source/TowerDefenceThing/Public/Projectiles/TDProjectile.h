@@ -11,6 +11,7 @@
 #include "TDProjectile.generated.h"
 
 DECLARE_DELEGATE_TwoParams(FProjectileHitSignature, ATDProjectile*, TWeakObjectPtr<AActor>);
+DECLARE_DELEGATE_OneParam(FProjectileSplashSignature, TArray<AActor*>);
 
 UCLASS()
 class TOWERDEFENCETHING_API ATDProjectile : public AActor {
@@ -21,14 +22,19 @@ public:
 	ATDProjectile();
 
 	FProjectileHitSignature ProjectileHitDelegate;
+	FProjectileSplashSignature ProjectileSplashDelegate;
 	void OnCollideWithTarget();
 
 	float Speed;
 	float RemainingChains;
+	float SplashRadius;
 	TWeakObjectPtr<AActor> Target;
 
 	UPROPERTY(VisibleAnywhere)
-	USphereComponent* SphereComponent;
+	USphereComponent* CollisionComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	USphereComponent* SplashComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UPaperSpriteComponent* SpriteComponent;

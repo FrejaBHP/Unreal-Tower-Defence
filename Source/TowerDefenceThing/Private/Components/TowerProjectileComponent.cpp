@@ -30,8 +30,10 @@ void UTowerProjectileComponent::SpawnProjectile(TWeakObjectPtr<AActor> target) {
 		ATDProjectile* newProjectile = World->SpawnActorDeferred<ATDProjectile>(ATDProjectile::StaticClass(), GetOwner()->GetActorTransform(), GetOwner());
 		newProjectile->Speed = ProjectileAttributeSet->Speed->GetCurrentValue();
 		newProjectile->RemainingChains = ProjectileAttributeSet->Chain->GetCurrentValue();
+		newProjectile->SplashRadius = OwnerTower->GetSplashRadius();
 		newProjectile->Target = target;
 		newProjectile->ProjectileHitDelegate.BindUObject(this, &UTowerProjectileComponent::OnProjectileHitTarget);
+		newProjectile->ProjectileSplashDelegate.BindUObject(this, &UTowerProjectileComponent::OnProjectileSplashTarget);
 
 		newProjectile->FinishSpawning(GetOwner()->GetActorTransform());
 	}
@@ -39,4 +41,8 @@ void UTowerProjectileComponent::SpawnProjectile(TWeakObjectPtr<AActor> target) {
 
 void UTowerProjectileComponent::OnProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target) {
 	OwnerTower->OnHitEnemy(target);
+}
+
+void UTowerProjectileComponent::OnProjectileSplashTarget(TArray<AActor*> splashedActors) {
+	OwnerTower->ApplySplashToEnemies(splashedActors);
 }

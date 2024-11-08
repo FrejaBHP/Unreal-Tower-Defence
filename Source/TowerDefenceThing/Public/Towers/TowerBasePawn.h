@@ -10,6 +10,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Attributes/TowerBaseTDAttributes.h"
+#include "Attributes/TowerAttackTDAttributes.h"
 #include "ClickableUnit.h"
 #include "EnemyUnit.h"
 #include "TowerUnit.h"
@@ -44,13 +45,24 @@ public:
 
 	virtual bool TrySetTarget(AActor* target) override;
 	virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) override;
+	virtual void ApplySplashToEnemies(TArray<AActor*> enemies) override;
+	virtual float GetSplashRadius() override;
 
 	void GetNewTarget();
 	void TryAttackTarget();
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, 
+		int32 OtherBodyIndex, bool bFromSweep,const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+	//OnComponentBeginOverlap.Broadcast(this, OtherActor, OtherComp, OtherOverlap.GetBodyIndex(), OtherOverlap.bFromSweep, OtherOverlap.OverlapInfo);
+
 	EUnitType UnitType { EUnitType::Tower };
 	FName Name;
 	TUniquePtr<TowerBaseTDAttributes> BaseAttributeSet = nullptr;
+	TUniquePtr<TowerAttackTDAttributes> AttackAttributeSet = nullptr;
 
 	ETowerTargetType TargetType;
 	ETowerAttackType AttackType;
@@ -60,6 +72,7 @@ public:
 	
 	bool HasTarget { false };
 	float AttackTimer { 0.f };
+	int EnemiesInRange { 0 };
 
 	UPROPERTY(VisibleAnywhere)
 	UBoxComponent* BoxComponent = nullptr;

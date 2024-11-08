@@ -10,8 +10,6 @@ ABasicTower::ABasicTower() {
 
 	ProjectileComponent = CreateDefaultSubobject<UTowerProjectileComponent>(TEXT("Projectile Component"));
 
-	AttackAttributeSet = MakeUnique<TowerAttackTDAttributes>();
-
 	Name = FName("Basic Tower");
 
 	TargetType = ETowerTargetType::Unit;
@@ -59,8 +57,12 @@ void ABasicTower::AttackTarget() {
 	Super::AttackTarget();
 }
 
+/*
 void ABasicTower::OnHitEnemy(TWeakObjectPtr<AActor> enemy) {
-	IEnemyUnit* enemyInterface = Cast<IEnemyUnit>(enemy);
-	float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
-	enemyInterface->TakeDamage(damage);
+	Super::OnHitEnemy(enemy);
 }
+
+void ABasicTower::ApplySplashToEnemies(TArray<AActor*> enemies) {
+	Super::ApplySplashToEnemies(enemies);
+}
+*/

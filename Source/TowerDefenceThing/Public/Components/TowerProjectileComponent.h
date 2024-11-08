@@ -20,6 +20,7 @@ public:
 
 	void SpawnProjectile(TWeakObjectPtr<AActor> target);
 	void OnProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target);
+	void OnProjectileSplashTarget(TArray<AActor*> splashedActors);
 
 	ITowerUnit* OwnerTower;
 

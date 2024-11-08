@@ -9,9 +9,11 @@
 #include <TDGameInstance.h>
 #include "Components/CapsuleComponent.h"
 #include "Components/TDEnemyMovementComponent.h"
+#include "Components/WidgetComponent.h"
 #include "Attributes/EnemyBaseTDAttributes.h"
 #include "ClickableUnit.h"
 #include "EnemyUnit.h"
+#include "SlateComps/SEnemyHealthBar.h"
 #include "EnemyBasePawn.generated.h"
 
 UCLASS(Abstract)
@@ -37,13 +39,18 @@ public:
 	TUniquePtr<EnemyBaseTDAttributes> BaseAttributeSet = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
-	UCapsuleComponent* CapsuleComponent = nullptr;
+	UCapsuleComponent* CapsuleComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UPaperFlipbookComponent* FlipbookComponent = nullptr;
+	UPaperFlipbookComponent* FlipbookComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UTDEnemyMovementComponent* PawnMovementComponent = nullptr;
+	UTDEnemyMovementComponent* PawnMovementComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	UWidgetComponent* HealthBarWidgetComponent;
+
+	TSharedPtr<SEnemyHealthBar> HealthBarWidgetPtr;
 	
 	UPROPERTY()
 	TSoftObjectPtr<UPaperFlipbook> FlipbookPtr = nullptr;

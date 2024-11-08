@@ -19,4 +19,6 @@ class TOWERDEFENCETHING_API ITowerUnit {
 public:
 	virtual bool TrySetTarget(AActor* target) = 0;
 	virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) = 0;
+	virtual void ApplySplashToEnemies(TArray<AActor*> enemies) = 0;
+	virtual float GetSplashRadius() = 0;
 };

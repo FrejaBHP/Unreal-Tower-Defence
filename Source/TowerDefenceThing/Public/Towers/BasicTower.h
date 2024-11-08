@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Towers/TowerBasePawn.h"
 #include "Components/TowerProjectileComponent.h"
-#include "Attributes/TowerAttackTDAttributes.h"
 #include "BasicTower.generated.h"
 
 UCLASS()
@@ -15,10 +14,10 @@ class TOWERDEFENCETHING_API ABasicTower : public ATowerBasePawn {
 public:
 	// Sets default values for this pawn's properties
 	ABasicTower();
-	virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) override;
+	//virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) override;
+	//virtual void ApplySplashToEnemies(TArray<AActor*> enemies) override;
 
 	UTowerProjectileComponent* ProjectileComponent = nullptr;
-	TUniquePtr<TowerAttackTDAttributes> AttackAttributeSet = nullptr;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
