@@ -26,6 +26,10 @@ ATowerBasePawn::ATowerBasePawn() {
 	SpriteComponent->SetCastShadow(true);
 	SpriteComponent->SetMobility(EComponentMobility::Stationary);
 
+	AbilityComponent = CreateDefaultSubobject<UTDAbilityComponent>(TEXT("Abilities"));
+	AbilityComponent->SetupAttachment(BoxComponent);
+	AbilityComponent->SetMobility(EComponentMobility::Stationary);
+
 	FRotator rotator = { 0., 90., 0. };
 	SpriteComponent->AddRelativeRotation(rotator.Quaternion());
 
@@ -67,13 +71,13 @@ void ATowerBasePawn::OnOverlapBegin(UPrimitiveComponent* CapsComp, AActor* Other
 	int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult) {
 	EnemiesInRange++;
 
-	UE_LOG(LogTemp, Warning, TEXT("Enemy entered, now %i in range"), EnemiesInRange);
+	//UE_LOG(LogTemp, Warning, TEXT("Enemy entered, now %i in range"), EnemiesInRange);
 }
 
 void ATowerBasePawn::OnOverlapEnd(UPrimitiveComponent* CapsComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
 	EnemiesInRange--;
 
-	UE_LOG(LogTemp, Warning, TEXT("Enemy left, now %i in range"), EnemiesInRange);
+	//UE_LOG(LogTemp, Warning, TEXT("Enemy left, now %i in range"), EnemiesInRange);
 }
 
 void ATowerBasePawn::OnSelect() {
@@ -96,7 +100,7 @@ void ATowerBasePawn::GetNewTarget() {
 	TArray<AActor*> actorArray;
 	CapsuleComponent->GetOverlappingActors(actorArray);
 
-	UE_LOG(LogTemp, Warning, TEXT("Overlapping enemies: %i"), actorArray.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Overlapping enemies: %i"), actorArray.Num());
 
 	if (actorArray.Num() > 0) {
 		for (size_t i = 0; i < actorArray.Num(); i++) {
@@ -119,13 +123,13 @@ bool ATowerBasePawn::TrySetTarget(AActor* target) {
 }
 
 void ATowerBasePawn::SetTarget(AActor* target) {
-	UE_LOG(LogTemp, Warning, TEXT("Target set"));
+	//UE_LOG(LogTemp, Warning, TEXT("Target set"));
 	TowerTarget = target;
 	TowerTargetInterface = Cast<IEnemyUnit>(target);
 }
 
 void ATowerBasePawn::TryAttackTarget() {
-	UE_LOG(LogTemp, Warning, TEXT("Trying to attack target"));
+	//UE_LOG(LogTemp, Warning, TEXT("Trying to attack target"));
 	if (TowerTarget.IsValid() && GetHorizontalDistanceTo(TowerTarget.Get()) <= BaseAttributeSet->Range->GetCurrentValue() && TowerTargetInterface->GetCurrentHealth() > 0.f) {
 		AttackTarget();
 	}
@@ -139,17 +143,28 @@ void ATowerBasePawn::AttackTarget() {
 	AttackTimer = BaseAttributeSet->AttackRate->GetCurrentValue();
 }
 
-void ATowerBasePawn::OnHitEnemy(TWeakObjectPtr<AActor> enemy) {
+void ATowerBasePawn::OnHitEnemy(float damage, TWeakObjectPtr<AActor> enemy) {
 	IEnemyUnit* enemyInterface = Cast<IEnemyUnit>(enemy);
-	float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
+	ApplyTowerDamageToEnemy(damage, enemyInterface);
+}
+
+void ATowerBasePawn::ApplyTowerDamageToEnemy(float damage, IEnemyUnit* enemyInterface) {
 	enemyInterface->TakeDamage(damage);
 }
 
-void ATowerBasePawn::ApplySplashToEnemies(TArray<AActor*> enemies) {
+void ATowerBasePawn::OnSplashEnemies(TArray<AActor*> enemies) {
 	for (size_t i = 0; i < enemies.Num(); i++) {
 		IEnemyUnit* enemyInterface = Cast<IEnemyUnit>(enemies[i]);
-		float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
-		damage *= AttackAttributeSet->SplashPercentage->GetCurrentValue();
-		enemyInterface->TakeDamage(damage);
+		ApplyTowerSplashToEnemy(enemyInterface);
 	}
+}
+
+void ATowerBasePawn::ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface) {
+	float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
+	damage *= AttackAttributeSet->SplashPercentage->GetCurrentValue();
+	enemyInterface->TakeDamage(damage);
+}
+
+TWeakObjectPtr<AActor> ATowerBasePawn::GetTarget() {
+	return TowerTarget;
 }

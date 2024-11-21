@@ -14,6 +14,8 @@ UTDGameInstance::UTDGameInstance() {
 
 	CatalogueSprites();
 	CatalogueFlipbooks();
+
+	AManager = MakeUnique<AbilityManager>();
 }
 
 void UTDGameInstance::Init() {
@@ -43,6 +45,7 @@ void UTDGameInstance::CatalogueSprites() {
 void UTDGameInstance::CatalogueFlipbooks() {
 	TArray<FString> paths;
 	paths.Add("/Game/Sprites/Flipbooks/Enemies");
+	paths.Add("/Game/Sprites/Flipbooks/Projectiles");
 	//paths.Add("/Game/Sprites/Flipbooks/Towers");
 
 	FlipbookLib->LoadAssetsFromPaths(paths);

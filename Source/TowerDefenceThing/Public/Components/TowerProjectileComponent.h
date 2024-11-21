@@ -18,7 +18,9 @@ public:
 	// Sets default values for this component's properties
 	UTowerProjectileComponent();
 
-	void SpawnProjectile(TWeakObjectPtr<AActor> target);
+	FString ProjectileFlipbookName;
+
+	void SpawnProjectile(float damage, TWeakObjectPtr<AActor> target, FString projectileFlipbookName);
 	void OnProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target);
 	void OnProjectileSplashTarget(TArray<AActor*> splashedActors);
 

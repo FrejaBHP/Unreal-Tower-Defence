@@ -9,6 +9,7 @@
 #include "SplinePath.h"
 #include "Engine/ObjectLibrary.h"
 #include "FTDUIResources.h"
+#include "Abilities/AbilityManager.h"
 #include "TDGameInstance.generated.h"
 
 UCLASS()
@@ -23,6 +24,7 @@ public:
 	UPaperFlipbook* GetFlipbookByName(FString flipbookName);
 
 	TSharedPtr<FSlateGameResources> GetSlateGameResources();
+	TUniquePtr<AbilityManager> AManager = nullptr;
 
 	FRandomStream RandStream;
 

@@ -14,8 +14,11 @@ class TOWERDEFENCETHING_API ABasicTower : public ATowerBasePawn {
 public:
 	// Sets default values for this pawn's properties
 	ABasicTower();
+
 	//virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) override;
-	//virtual void ApplySplashToEnemies(TArray<AActor*> enemies) override;
+	//virtual void ApplyTowerDamageToEnemy(IEnemyUnit* enemyInterface) override;
+	//virtual void OnSplashEnemies(TArray<AActor*> enemies) override;
+	//virtual void ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface) override;
 
 	UTowerProjectileComponent* ProjectileComponent = nullptr;
 

@@ -24,10 +24,12 @@ void UTowerProjectileComponent::TickComponent(float DeltaTime, ELevelTick TickTy
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-void UTowerProjectileComponent::SpawnProjectile(TWeakObjectPtr<AActor> target) {
+void UTowerProjectileComponent::SpawnProjectile(float damage, TWeakObjectPtr<AActor> target, FString projectileFlipbookName) {
 	UWorld* World = GetWorld();
 	if (World) {
 		ATDProjectile* newProjectile = World->SpawnActorDeferred<ATDProjectile>(ATDProjectile::StaticClass(), GetOwner()->GetActorTransform(), GetOwner());
+		newProjectile->FlipbookName = projectileFlipbookName;
+		newProjectile->Damage = damage;
 		newProjectile->Speed = ProjectileAttributeSet->Speed->GetCurrentValue();
 		newProjectile->RemainingChains = ProjectileAttributeSet->Chain->GetCurrentValue();
 		newProjectile->SplashRadius = OwnerTower->GetSplashRadius();
@@ -40,9 +42,9 @@ void UTowerProjectileComponent::SpawnProjectile(TWeakObjectPtr<AActor> target) {
 }
 
 void UTowerProjectileComponent::OnProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target) {
-	OwnerTower->OnHitEnemy(target);
+	OwnerTower->OnHitEnemy(projectile->Damage, target);
 }
 
 void UTowerProjectileComponent::OnProjectileSplashTarget(TArray<AActor*> splashedActors) {
-	OwnerTower->ApplySplashToEnemies(splashedActors);
+	OwnerTower->OnSplashEnemies(splashedActors);
 }

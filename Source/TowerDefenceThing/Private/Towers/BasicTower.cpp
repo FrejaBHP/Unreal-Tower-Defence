@@ -26,6 +26,7 @@ ABasicTower::ABasicTower() {
 
 	ProjectileComponent->ProjectileAttributeSet->Chain->Init(0.f); // Currently unimplemented, keep it at 0
 	ProjectileComponent->ProjectileAttributeSet->Speed->Init(1000.f);
+	ProjectileComponent->ProjectileFlipbookName = "arrow_Flip";
 
 	CapsuleComponent->SetCapsuleSize(BaseAttributeSet->Range->GetBaseValue(), BaseAttributeSet->Range->GetBaseValue() + 100.f);
 }
@@ -40,6 +41,9 @@ void ABasicTower::BeginPlay() {
 		VisibleSprite = SpritePtr.Get();
 		SpriteComponent->SetSprite(VisibleSprite);
 	}
+
+	AbilityComponent->AddAbility(EAbilityHandle::BasicFireball);
+	AbilityComponent->DEBUGListAbilities();
 }
 
 // Called every frame
@@ -53,8 +57,9 @@ void ABasicTower::SetupPlayerInputComponent(UInputComponent* PlayerInputComponen
 }
 
 void ABasicTower::AttackTarget() {
-	ProjectileComponent->SpawnProjectile(TowerTarget);
 	Super::AttackTarget();
+	const float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
+	ProjectileComponent->SpawnProjectile(damage, TowerTarget, ProjectileComponent->ProjectileFlipbookName);
 }
 
 /*
@@ -62,7 +67,15 @@ void ABasicTower::OnHitEnemy(TWeakObjectPtr<AActor> enemy) {
 	Super::OnHitEnemy(enemy);
 }
 
-void ABasicTower::ApplySplashToEnemies(TArray<AActor*> enemies) {
-	Super::ApplySplashToEnemies(enemies);
+void ATowerBasePawn::ApplyTowerDamageToEnemy(IEnemyUnit* enemyInterface) {
+	Super::ApplyDamageToEnemy(enemyInterface);
+}
+
+void ABasicTower::OnSplashEnemies(TArray<AActor*> enemies) {
+	Super::OnSplashEnemies(enemies);
+}
+
+void ATowerBasePawn::ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface) {
+	Super::ApplySplashToEnemy(enemyInterface);
 }
 */

@@ -18,7 +18,8 @@ class TOWERDEFENCETHING_API ITowerUnit {
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual bool TrySetTarget(AActor* target) = 0;
-	virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) = 0;
-	virtual void ApplySplashToEnemies(TArray<AActor*> enemies) = 0;
+	virtual TWeakObjectPtr<AActor> GetTarget() = 0;
+	virtual void OnHitEnemy(float damage, TWeakObjectPtr<AActor> enemy) = 0;
+	virtual void OnSplashEnemies(TArray<AActor*> enemies) = 0;
 	virtual float GetSplashRadius() = 0;
 };

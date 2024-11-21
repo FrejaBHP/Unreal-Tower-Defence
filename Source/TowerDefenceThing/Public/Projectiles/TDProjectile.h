@@ -4,8 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
-#include "PaperSprite.h"
-#include "PaperSpriteComponent.h"
+#include <PaperFlipbook.h>
+#include <PaperFlipbookComponent.h>
 #include "Components/SphereComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "TDProjectile.generated.h"
@@ -25,6 +25,8 @@ public:
 	FProjectileSplashSignature ProjectileSplashDelegate;
 	void OnCollideWithTarget();
 
+	FString FlipbookName;
+	float Damage;
 	float Speed;
 	float RemainingChains;
 	float SplashRadius;
@@ -37,7 +39,7 @@ public:
 	USphereComponent* SplashComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UPaperSpriteComponent* SpriteComponent;
+	UPaperFlipbookComponent* FlipbookComponent;
 
 	UPROPERTY(VisibleAnywhere)
 	UProjectileMovementComponent* ProjMovementComponent;

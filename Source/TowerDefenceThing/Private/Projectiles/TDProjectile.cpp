@@ -28,11 +28,11 @@ ATDProjectile::ATDProjectile() {
 		//SplashComponent->OnComponentHit.AddDynamic(this, &ATDProjectile::OnHit);
 	}
 	
-	if (!SpriteComponent) {
-		SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Visible Sprite"));
-		SpriteComponent->SetupAttachment(CollisionComponent);
-		SpriteComponent->SetCollisionProfileName(FName("NoCollision"));
-		SpriteComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+	if (!FlipbookComponent) {
+		FlipbookComponent = CreateDefaultSubobject<UPaperFlipbookComponent>(TEXT("Visible Flipbook"));
+		FlipbookComponent->SetupAttachment(CollisionComponent);
+		FlipbookComponent->SetCollisionProfileName(FName("NoCollision"));
+		FlipbookComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 	}
 
 	if (!ProjMovementComponent) {
@@ -48,7 +48,7 @@ void ATDProjectile::BeginPlay() {
 	Super::BeginPlay();
 
 	// Lav potentielt om med constructionhelper, se om det virker nu hvor den anden fejl er fjernet
-	SpriteComponent->SetSprite(Cast<UTDGameInstance>(GetGameInstance())->GetSpriteByName("arrow_Sprite"));
+	FlipbookComponent->SetFlipbook(Cast<UTDGameInstance>(GetGameInstance())->GetFlipbookByName(*FlipbookName));
 
 	ProjMovementComponent->InitialSpeed = Speed;
 	ProjMovementComponent->MaxSpeed = Speed;

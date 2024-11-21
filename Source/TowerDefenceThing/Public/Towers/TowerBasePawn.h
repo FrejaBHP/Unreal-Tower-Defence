@@ -9,6 +9,7 @@
 #include <TDGameInstance.h>
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/TDAbilityComponent.h"
 #include "Attributes/TowerBaseTDAttributes.h"
 #include "Attributes/TowerAttackTDAttributes.h"
 #include "ClickableUnit.h"
@@ -44,9 +45,13 @@ public:
 	virtual FName GetUnitName() override;
 
 	virtual bool TrySetTarget(AActor* target) override;
-	virtual void OnHitEnemy(TWeakObjectPtr<AActor> enemy) override;
-	virtual void ApplySplashToEnemies(TArray<AActor*> enemies) override;
+	virtual void OnHitEnemy(float damage, TWeakObjectPtr<AActor> enemy) override;
+	virtual void ApplyTowerDamageToEnemy(float damage, IEnemyUnit* enemyInterface);
+	virtual void OnSplashEnemies(TArray<AActor*> enemies) override;
+	virtual void ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface);
 	virtual float GetSplashRadius() override;
+	virtual TWeakObjectPtr<AActor> GetTarget() override;
+	
 
 	void GetNewTarget();
 	void TryAttackTarget();
@@ -82,6 +87,9 @@ public:
 
 	UPROPERTY(VisibleAnywhere)
 	UPaperSpriteComponent* SpriteComponent = nullptr;
+
+	UPROPERTY(VisibleAnywhere)
+	UTDAbilityComponent* AbilityComponent = nullptr;
 
 	UPROPERTY()
 	UPaperSprite* VisibleSprite = nullptr;
