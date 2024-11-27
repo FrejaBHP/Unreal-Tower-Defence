@@ -12,8 +12,8 @@ public:
 	AbilityManager();
 	~AbilityManager();
 
-	TUniquePtr<TDAbility> GiveAbilityFromHandle(EAbilityHandle aHandle, USceneComponent* aComponent);
+	UTDAbility* CreateAssignAbilityFromHandle(EAbilityHandle aHandle, USceneComponent* comp);
 
 protected:
-	TUniquePtr<TDAbility> GetAbilityFromHandle(EAbilityHandle aHandle);
+	UTDAbility* GetAbilityFromHandle(EAbilityHandle aHandle, USceneComponent* comp);
 };

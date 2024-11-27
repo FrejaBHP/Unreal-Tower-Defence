@@ -3,12 +3,20 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AbilityEnums.h"
+#include "Components/SceneComponent.h"
+#include "Components/CapsuleComponent.h"
 
-class TOWERDEFENCETHING_API TDAbility {
+#include "AbilityEnums.h"
+#include "Projectiles/TDProjectile.h"
+#include "TowerUnit.h"
+#include "TDAbility.generated.h"
+
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class TOWERDEFENCETHING_API UTDAbility : public USceneComponent {
+	GENERATED_BODY()
+
 public:
-	TDAbility();
-	virtual ~TDAbility();
+	UTDAbility();
 
 	FName AbilityName;
 	FString AbilityFlipbookName;
@@ -24,8 +32,21 @@ public:
 	float Speed { 0.f };
 	float Damage { 0.f };
 
+	int EnemiesInRange { 0 };
+	ITowerUnit* OwnerTower;
+
+	UPROPERTY(VisibleAnywhere)
+	UCapsuleComponent* OverlapComponent;
+
 	virtual bool TryCastAbility();
 	virtual void CastAbility();
+	
+	void SpawnProjectile(TWeakObjectPtr<AActor> target, FString projectileFlipbookName);
+	void OnAbilityProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target);
+	void OnAbilityProjectileSplashTarget(TArray<AActor*> splashedActors);
+
+	// Gets the closest target if there is an overlap component. Returns a nullptr if there are no overlaps
+	AActor* GetClosestTarget();
 
 	float GetCooldownTimer() const;
 	void SetCooldownTimer(float newCDTimer);
@@ -33,6 +54,20 @@ public:
 	void ResetCooldownTimer();
 	bool IsReady() const;
 
+	UFUNCTION()
+	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,
+		int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION()
+	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
+
 protected:
 	float CooldownTimer { 0.f };
+
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

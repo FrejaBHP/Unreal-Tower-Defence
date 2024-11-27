@@ -43,7 +43,6 @@ void ABasicTower::BeginPlay() {
 	}
 
 	AbilityComponent->AddAbility(EAbilityHandle::BasicFireball);
-	AbilityComponent->DEBUGListAbilities();
 }
 
 // Called every frame

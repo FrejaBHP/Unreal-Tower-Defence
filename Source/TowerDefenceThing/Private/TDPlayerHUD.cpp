@@ -61,7 +61,6 @@ void ATDPlayerHUD::CreateContextMenuWidget() {
 				BuildContextMenuPtr->GridPanelSquareArray[i][j]->OnClicked.BindUObject(this, &ATDPlayerHUD::ReceivedButtonInput);
 			}
 		}
-
 		
 		BuildContextMenuPtr->GridPanelSquareArray[0][2]->SetSWData(SquareWidgetData { ESquareFunctionType::None, 1, "icon_fireball_Brush", 0, 0 });
 		BuildContextMenuPtr->GridPanelSquareArray[3][2]->SetSWData(SquareWidgetData { ESquareFunctionType::Build, 2, "icon_fireball_Brush", 0, 0 });

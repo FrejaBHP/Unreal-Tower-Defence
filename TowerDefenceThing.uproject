@@ -13,8 +13,7 @@
 				"AIModule",
 				"Slate",
 				"SlateCore",
-				"EnhancedInput",
-				"GameplayAbilities"
+				"EnhancedInput"
 			]
 		}
 	],

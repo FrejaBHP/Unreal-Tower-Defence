@@ -4,12 +4,23 @@
 
 #include "CoreMinimal.h"
 #include "Abilities/TDAbility.h"
+#include "ABasicFireball.generated.h"
 
-class TOWERDEFENCETHING_API ABasicFireball : public TDAbility {
+UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
+class TOWERDEFENCETHING_API UABasicFireball : public UTDAbility {
+	GENERATED_BODY()
+
 public:
-	ABasicFireball();
-	~ABasicFireball();
+	UABasicFireball();
 
 	virtual bool TryCastAbility() override;
 	virtual void CastAbility() override;
+
+protected:
+	// Called when the game starts
+	virtual void BeginPlay() override;
+
+public:
+	// Called every frame
+	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 };

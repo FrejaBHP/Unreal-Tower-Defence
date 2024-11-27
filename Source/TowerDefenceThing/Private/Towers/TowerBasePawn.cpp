@@ -130,7 +130,7 @@ void ATowerBasePawn::SetTarget(AActor* target) {
 
 void ATowerBasePawn::TryAttackTarget() {
 	//UE_LOG(LogTemp, Warning, TEXT("Trying to attack target"));
-	if (TowerTarget.IsValid() && GetHorizontalDistanceTo(TowerTarget.Get()) <= BaseAttributeSet->Range->GetCurrentValue() && TowerTargetInterface->GetCurrentHealth() > 0.f) {
+	if (TowerTarget.IsValid() && TowerTargetInterface->GetCurrentHealth() > 0.f) {
 		AttackTarget();
 	}
 	else {
