@@ -79,26 +79,29 @@ void ATDProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor,
 }
 
 void ATDProjectile::OnCollideWithTarget() {
-	ProjectileHitDelegate.Execute(this, Target);
+	if (IsValid(this)) {
+		ProjectileHitDelegate.Execute(this, Target);
 
-	if (SplashRadius != 0.f) {
-		TArray<AActor*> overlappingActors;
-		SplashComponent->GetOverlappingActors(overlappingActors);
+		if (SplashRadius != 0.f) {
+			TArray<AActor*> overlappingActors;
+			SplashComponent->GetOverlappingActors(overlappingActors);
 
-		int32 index;
-		overlappingActors.Find(Target.Get(), index);
-		if (index != INDEX_NONE) {
-			overlappingActors.RemoveAt(index);
+			int32 index;
+			overlappingActors.Find(Target.Get(), index);
+			if (index != INDEX_NONE) {
+				overlappingActors.RemoveAt(index);
+			}
+
+			ProjectileSplashDelegate.Execute(overlappingActors);
 		}
 
-		ProjectileSplashDelegate.Execute(overlappingActors);
-	}
-
-	if (RemainingChains > 0) {
-		RemainingChains--;
-	}
-	else {
-		Destroy();
+		if (RemainingChains > 0) {
+			RemainingChains--;
+		}
+		else {
+			ProjectileDestroyDelegate.Execute(this);
+			Destroy();
+		}
 	}
 }
 

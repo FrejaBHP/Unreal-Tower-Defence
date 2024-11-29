@@ -24,6 +24,7 @@ public:
 	TArray<UTDAbility*> Abilities;
 
 	void AddAbility(EAbilityHandle aHandle);
+	void RemoveAbility(EAbilityHandle aHandle);
 
 protected:
 	// Called when the game starts

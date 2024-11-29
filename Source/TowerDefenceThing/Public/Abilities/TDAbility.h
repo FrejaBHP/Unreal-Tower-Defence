@@ -20,6 +20,7 @@ public:
 
 	FName AbilityName;
 	FString AbilityFlipbookName;
+	EAbilityHandle AbilityHandle;
 	EAbilityCast AbilityCast;
 	EAbilityType AbilityType;
 	EAbilityTarget AbilityTarget;
@@ -41,9 +42,13 @@ public:
 	virtual bool TryCastAbility();
 	virtual void CastAbility();
 	
+	UPROPERTY(VisibleAnywhere)
+	TArray<ATDProjectile*> ActiveProjectiles;
 	void SpawnProjectile(TWeakObjectPtr<AActor> target, FString projectileFlipbookName);
+	void ClearProjectiles();
 	void OnAbilityProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target);
 	void OnAbilityProjectileSplashTarget(TArray<AActor*> splashedActors);
+	void OnAbilityProjectileDestroyed(ATDProjectile* projectile);
 
 	// Gets the closest target if there is an overlap component. Returns a nullptr if there are no overlaps
 	AActor* GetClosestTarget();
@@ -53,6 +58,8 @@ public:
 	void ReduceCooldownTimer(float reduction);
 	void ResetCooldownTimer();
 	bool IsReady() const;
+
+	void DestroyAbility();
 
 	UFUNCTION()
 	void OnOverlapBegin(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp,

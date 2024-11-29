@@ -8,6 +8,7 @@ UABasicFireball::UABasicFireball() {
 
 	AbilityName = "Basic Fireball";
 	AbilityFlipbookName = "proj_fireball_Flip";
+	AbilityHandle = EAbilityHandle::BasicFireball;
 	AbilityCast = EAbilityCast::Active;
 	AbilityType = EAbilityType::Projectile;
 	AbilityTarget = EAbilityTarget::Enemy;

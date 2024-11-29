@@ -17,12 +17,17 @@ class TOWERDEFENCETHING_API UTowerProjectileComponent : public UActorComponent {
 public:	
 	// Sets default values for this component's properties
 	UTowerProjectileComponent();
+	virtual void DestroyComponent(bool bPromoteChildren = false) override;
 
 	FString ProjectileFlipbookName;
 
+	UPROPERTY()
+	TArray<ATDProjectile*> ActiveProjectiles;
 	void SpawnProjectile(float damage, TWeakObjectPtr<AActor> target, FString projectileFlipbookName);
+	void ClearProjectiles();
 	void OnProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target);
 	void OnProjectileSplashTarget(TArray<AActor*> splashedActors);
+	void OnProjectileDestroyed(ATDProjectile* projectile);
 
 	ITowerUnit* OwnerTower;
 

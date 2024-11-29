@@ -103,8 +103,19 @@ void UTDAbility::SpawnProjectile(TWeakObjectPtr<AActor> target, FString projecti
 		newProjectile->Target = target;
 		newProjectile->ProjectileHitDelegate.BindUObject(this, &UTDAbility::OnAbilityProjectileHitTarget);
 		newProjectile->ProjectileSplashDelegate.BindUObject(this, &UTDAbility::OnAbilityProjectileSplashTarget);
+		newProjectile->ProjectileDestroyDelegate.BindUObject(this, &UTDAbility::OnAbilityProjectileDestroyed);
 
 		newProjectile->FinishSpawning(GetOwner()->GetActorTransform());
+		ActiveProjectiles.Add(newProjectile);
+	}
+}
+
+void UTDAbility::ClearProjectiles() {
+	if (!ActiveProjectiles.IsEmpty()) {
+		for (size_t i = 0; i < ActiveProjectiles.Num(); i++) {
+			ActiveProjectiles[i]->Destroy();
+		}
+		ActiveProjectiles.Empty();
 	}
 }
 
@@ -114,6 +125,10 @@ void UTDAbility::OnAbilityProjectileHitTarget(ATDProjectile* projectile, TWeakOb
 
 void UTDAbility::OnAbilityProjectileSplashTarget(TArray<AActor*> splashedActors) {
 	OwnerTower->OnSplashEnemies(splashedActors);
+}
+
+void UTDAbility::OnAbilityProjectileDestroyed(ATDProjectile* projectile) {
+	ActiveProjectiles.Remove(projectile);
 }
 
 void UTDAbility::OnOverlapBegin(UPrimitiveComponent* CapsComp, AActor* OtherActor, UPrimitiveComponent* OtherComp,
@@ -127,4 +142,16 @@ void UTDAbility::OnOverlapEnd(UPrimitiveComponent* CapsComp, AActor* OtherActor,
 	EnemiesInRange--;
 
 	//UE_LOG(LogTemp, Warning, TEXT("Enemy left, now %i in range"), EnemiesInRange);
+}
+
+void UTDAbility::DestroyAbility() {
+	if (OverlapComponent) {
+		OverlapComponent->UnregisterComponent();
+		OverlapComponent->DestroyComponent();
+	}
+
+	ClearProjectiles();
+
+	UnregisterComponent();
+	DestroyComponent();
 }

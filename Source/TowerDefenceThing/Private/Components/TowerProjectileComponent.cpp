@@ -36,8 +36,19 @@ void UTowerProjectileComponent::SpawnProjectile(float damage, TWeakObjectPtr<AAc
 		newProjectile->Target = target;
 		newProjectile->ProjectileHitDelegate.BindUObject(this, &UTowerProjectileComponent::OnProjectileHitTarget);
 		newProjectile->ProjectileSplashDelegate.BindUObject(this, &UTowerProjectileComponent::OnProjectileSplashTarget);
+		newProjectile->ProjectileDestroyDelegate.BindUObject(this, &UTowerProjectileComponent::OnProjectileDestroyed);
 
 		newProjectile->FinishSpawning(GetOwner()->GetActorTransform());
+		ActiveProjectiles.Add(newProjectile);
+	}
+}
+
+void UTowerProjectileComponent::ClearProjectiles() {
+	if (!ActiveProjectiles.IsEmpty()) {
+		for (size_t i = 0; i < ActiveProjectiles.Num(); i++) {
+			ActiveProjectiles[i]->Destroy();
+		}
+		ActiveProjectiles.Empty();
 	}
 }
 
@@ -47,4 +58,13 @@ void UTowerProjectileComponent::OnProjectileHitTarget(ATDProjectile* projectile,
 
 void UTowerProjectileComponent::OnProjectileSplashTarget(TArray<AActor*> splashedActors) {
 	OwnerTower->OnSplashEnemies(splashedActors);
+}
+
+void UTowerProjectileComponent::OnProjectileDestroyed(ATDProjectile* projectile) {
+	ActiveProjectiles.Remove(projectile);
+}
+
+void UTowerProjectileComponent::DestroyComponent(bool bPromoteChildren/*= false*/) {
+	ClearProjectiles();
+	Super::DestroyComponent(bPromoteChildren);
 }

@@ -12,6 +12,7 @@
 
 DECLARE_DELEGATE_TwoParams(FProjectileHitSignature, ATDProjectile*, TWeakObjectPtr<AActor>);
 DECLARE_DELEGATE_OneParam(FProjectileSplashSignature, TArray<AActor*>);
+DECLARE_DELEGATE_OneParam(FProjectileDestroySignature, ATDProjectile*);
 
 UCLASS()
 class TOWERDEFENCETHING_API ATDProjectile : public AActor {
@@ -23,6 +24,7 @@ public:
 
 	FProjectileHitSignature ProjectileHitDelegate;
 	FProjectileSplashSignature ProjectileSplashDelegate;
+	FProjectileDestroySignature ProjectileDestroyDelegate;
 	void OnCollideWithTarget();
 
 	FString FlipbookName;

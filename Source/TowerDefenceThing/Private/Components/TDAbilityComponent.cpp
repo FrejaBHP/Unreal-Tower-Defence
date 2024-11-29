@@ -20,7 +20,7 @@ void UTDAbilityComponent::TickComponent(float DeltaTime, ELevelTick TickType, FA
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 }
 
-// 
+// Gets the Ability Manager stored in the Game Instance, and returns a new component matching the EAbilityHandle argument
 void UTDAbilityComponent::AddAbility(EAbilityHandle aHandle) {
 	UTDAbility* newAbility = Cast<UTDGameInstance>(GetWorld()->GetGameInstance())->AManager->CreateAssignAbilityFromHandle(aHandle, this);
 	
@@ -29,4 +29,16 @@ void UTDAbilityComponent::AddAbility(EAbilityHandle aHandle) {
 	newAbility->RegisterComponent();
 
 	Abilities.Add(newAbility);
+}
+
+// Searches the ability TArray for an ability with a matching EAbilityHandle field, then deletes and cleans up the ability if it finds any
+void UTDAbilityComponent::RemoveAbility(EAbilityHandle aHandle) {
+	int32 index = Abilities.IndexOfByPredicate([&aHandle](const UTDAbility* ability) {
+		return ability->AbilityHandle == aHandle;
+	});
+
+	if (index != INDEX_NONE) {
+		Abilities[index]->DestroyAbility();
+		Abilities.RemoveAt(index);
+	}
 }
