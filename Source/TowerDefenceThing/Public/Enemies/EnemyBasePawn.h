@@ -9,6 +9,7 @@
 #include <TDGameInstance.h>
 #include "Components/CapsuleComponent.h"
 #include "Components/TDEnemyMovementComponent.h"
+#include "Components/TDAbilityComponent.h"
 #include "Components/WidgetComponent.h"
 #include "Attributes/EnemyBaseTDAttributes.h"
 #include "ClickableUnit.h"
@@ -48,6 +49,9 @@ public:
 	UTDEnemyMovementComponent* PawnMovementComponent;
 
 	UPROPERTY(VisibleAnywhere)
+	UTDAbilityComponent* AbilityComponent;
+
+	UPROPERTY(VisibleAnywhere)
 	UWidgetComponent* HealthBarWidgetComponent;
 
 	TSharedPtr<SEnemyHealthBar> HealthBarWidgetPtr;
@@ -59,6 +63,7 @@ public:
 	UPaperFlipbook* VisibleFlipbook = nullptr;
 
 	virtual void PossessedBy(AController* NewController);
+	virtual UTDAbilityComponent& GetAbilityComponent() override;
 
 
 protected:

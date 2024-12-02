@@ -6,10 +6,11 @@
 #include "SlateComps/SquareWidgetData.h"
 #include "Slate/SlateGameResources.h"
 #include "FTDUIResources.h"
+#include "AbilityEnums.h"
 #include "CoreMinimal.h"
 #include "Widgets/SCompoundWidget.h"
 
-DECLARE_DELEGATE_TwoParams(FClickedSignature, ESquareFunctionType, int32);
+DECLARE_DELEGATE_TwoParams(FClickedSignature, ESquareFunctionType, EAbilityHandle);
 
 class TOWERDEFENCETHING_API SContextMenuSquareWidget : public SCompoundWidget {
 

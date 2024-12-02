@@ -27,14 +27,14 @@ void SContextMenuSquareWidget::Construct(const FArguments& InArgs) {
 
 FReply SContextMenuSquareWidget::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
 	if (OnClicked.IsBound() && IsClickable) {
-		OnClicked.Execute(SWData->FunctionType, SWData->FunctionID);
+		OnClicked.Execute(SWData->FunctionType, SWData->AbilityHandle);
 	}
 	return FReply::Handled();
 }
 
 FReply SContextMenuSquareWidget::OnMouseButtonDoubleClick(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
 	if (OnClicked.IsBound() && IsClickable) {
-		OnClicked.Execute(SWData->FunctionType, SWData->FunctionID);
+		OnClicked.Execute(SWData->FunctionType, SWData->AbilityHandle);
 	}
 	return FReply::Handled();
 }
@@ -54,10 +54,8 @@ void SContextMenuSquareWidget::SetImageBrushWithName(FName newBrushName) {
 
 void SContextMenuSquareWidget::SetSWData(const SquareWidgetData& newSWData) {
 	SWData->FunctionType = newSWData.FunctionType;
-	SWData->FunctionID = newSWData.FunctionID;
+	SWData->AbilityHandle = newSWData.AbilityHandle;
 	SWData->BrushName = newSWData.BrushName;
-	SWData->DesiredGridX = newSWData.DesiredGridX;
-	SWData->DesiredGridY = newSWData.DesiredGridY;
 
 	IsClickable = ((SWData->FunctionType == ESquareFunctionType::None) ? false : true);
 

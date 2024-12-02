@@ -3,10 +3,13 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "SlateComps/SquareWidgetData.h"
-#include "Input/IMC_TD_Def.h"
 #include "Templates/SubclassOf.h"
 #include "GameFramework/PlayerController.h"
+
+#include "Abilities/TDAbility.h"
+#include "ClickableUnit.h"
+#include "Input/IMC_TD_Def.h"
+#include "SlateComps/SquareWidgetData.h"
 #include "TowerDefenceThingPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -44,7 +47,7 @@ public:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* RightClickAction;
 
-	void ConsumeHUDButtonInput(ESquareFunctionType, int32);
+	void ConsumeHUDButtonInput(ESquareFunctionType, EAbilityHandle);
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
@@ -53,6 +56,7 @@ protected:
 	APawn* SelectedPawnPtr = nullptr;
 
 	void HandleSelectedUnit();
+	void GetAndConvertAbilitiesToSWD(IClickableUnit* unit, EUnitType type);
 
 	virtual void SetupInputComponent() override;
 	

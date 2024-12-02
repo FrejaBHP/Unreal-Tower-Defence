@@ -8,30 +8,38 @@ ATowerBasePawn::ATowerBasePawn() {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
-	RootComponent = BoxComponent;
-	BoxComponent->InitBoxExtent(FVector(50., 50., 50.));
-	BoxComponent->SetMobility(EComponentMobility::Stationary);
-	BoxComponent->SetCollisionProfileName(FName("TDTower"));
+	if (!BoxComponent) {
+		BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
+		RootComponent = BoxComponent;
+		BoxComponent->InitBoxExtent(FVector(50., 50., 50.));
+		BoxComponent->SetMobility(EComponentMobility::Stationary);
+		BoxComponent->SetCollisionProfileName(FName("TDTower"));
+	}
+	
+	if (!CapsuleComponent) {
+		CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Overlap Range"));
+		CapsuleComponent->SetupAttachment(BoxComponent);
+		CapsuleComponent->SetMobility(EComponentMobility::Stationary);
+		CapsuleComponent->SetCollisionProfileName(FName("TowerTargeting"));
+		CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &ATowerBasePawn::OnOverlapBegin);
+		CapsuleComponent->OnComponentEndOverlap.AddDynamic(this, &ATowerBasePawn::OnOverlapEnd);
+	}
 
-	CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Overlap Range"));
-	CapsuleComponent->SetupAttachment(BoxComponent);
-	CapsuleComponent->SetMobility(EComponentMobility::Stationary);
-	CapsuleComponent->SetCollisionProfileName(FName("TowerTargeting"));
-	CapsuleComponent->OnComponentBeginOverlap.AddDynamic(this, &ATowerBasePawn::OnOverlapBegin);
-	CapsuleComponent->OnComponentEndOverlap.AddDynamic(this, &ATowerBasePawn::OnOverlapEnd);
+	if (!SpriteComponent) {
+		SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Visible Sprite"));
+		SpriteComponent->SetupAttachment(BoxComponent);
+		SpriteComponent->SetCastShadow(true);
+		SpriteComponent->SetMobility(EComponentMobility::Stationary);
 
-	SpriteComponent = CreateDefaultSubobject<UPaperSpriteComponent>(TEXT("Visible Sprite"));
-	SpriteComponent->SetupAttachment(BoxComponent);
-	SpriteComponent->SetCastShadow(true);
-	SpriteComponent->SetMobility(EComponentMobility::Stationary);
+		FRotator rotator = { 0., 90., 0. };
+		SpriteComponent->AddRelativeRotation(rotator.Quaternion());
+	}
 
-	AbilityComponent = CreateDefaultSubobject<UTDAbilityComponent>(TEXT("Abilities"));
-	AbilityComponent->SetupAttachment(BoxComponent);
-	AbilityComponent->SetMobility(EComponentMobility::Stationary);
-
-	FRotator rotator = { 0., 90., 0. };
-	SpriteComponent->AddRelativeRotation(rotator.Quaternion());
+	if (!AbilityComponent) {
+		AbilityComponent = CreateDefaultSubobject<UTDAbilityComponent>(TEXT("Abilities"));
+		AbilityComponent->SetupAttachment(BoxComponent);
+		AbilityComponent->SetMobility(EComponentMobility::Stationary);
+	}
 
 	BaseAttributeSet = MakeUnique<TowerBaseTDAttributes>();
 	AttackAttributeSet = MakeUnique<TowerAttackTDAttributes>();
@@ -168,3 +176,13 @@ void ATowerBasePawn::ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface) {
 TWeakObjectPtr<AActor> ATowerBasePawn::GetTarget() {
 	return TowerTarget;
 }
+
+UTDAbilityComponent& ATowerBasePawn::GetAbilityComponent() {
+	return *AbilityComponent;
+}
+
+/*
+TArray<UTDAbility*>& ATowerBasePawn::GetAbilities() {
+	return AbilityComponent->Abilities;
+}
+*/

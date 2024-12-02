@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "ClickableUnit.h"
+#include "Components/TDAbilityComponent.h"
 #include "TowerDefenceThingCharacter.generated.h"
 
 UCLASS(Blueprintable)
@@ -28,6 +29,11 @@ public:
 	FORCEINLINE class UCameraComponent* GetTopDownCameraComponent() const { return TopDownCameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	UPROPERTY(VisibleAnywhere)
+	UTDAbilityComponent* AbilityComponent;
+
+	virtual UTDAbilityComponent& GetAbilityComponent() override;
 
 private:
 	/** Top down camera */

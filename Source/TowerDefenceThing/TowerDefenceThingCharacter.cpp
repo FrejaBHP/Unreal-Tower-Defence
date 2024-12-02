@@ -43,6 +43,12 @@ ATowerDefenceThingCharacter::ATowerDefenceThingCharacter() {
 	PrimaryActorTick.bCanEverTick = true;
 	PrimaryActorTick.bStartWithTickEnabled = true;
 
+	if (!AbilityComponent) {
+		AbilityComponent = CreateDefaultSubobject<UTDAbilityComponent>(TEXT("Abilities"));
+		AbilityComponent->SetupAttachment(RootComponent);
+		AbilityComponent->SetMobility(EComponentMobility::Stationary);
+	}
+
 	Name = FName("Builder");
 }
 
@@ -60,4 +66,8 @@ EUnitType ATowerDefenceThingCharacter::GetUnitType() {
 
 FName ATowerDefenceThingCharacter::GetUnitName() {
 	return Name;
+}
+
+UTDAbilityComponent& ATowerDefenceThingCharacter::GetAbilityComponent() {
+	return *AbilityComponent;
 }

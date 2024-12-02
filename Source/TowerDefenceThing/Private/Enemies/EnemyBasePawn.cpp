@@ -34,6 +34,12 @@ AEnemyBasePawn::AEnemyBasePawn() {
 		PawnMovementComponent->SetPlaneConstraintOrigin(FVector(0.f, 0.f, 75.f));
 		PawnMovementComponent->bSnapToPlaneAtStart = true;
 	}
+
+	if (!AbilityComponent) {
+		AbilityComponent = CreateDefaultSubobject<UTDAbilityComponent>(TEXT("Abilities"));
+		AbilityComponent->SetupAttachment(RootComponent);
+		AbilityComponent->SetMobility(EComponentMobility::Stationary);
+	}
 	
 	if (!HealthBarWidgetComponent) {
 		HealthBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
@@ -84,6 +90,10 @@ EUnitType AEnemyBasePawn::GetUnitType() {
 
 FName AEnemyBasePawn::GetUnitName() {
 	return Name;
+}
+
+UTDAbilityComponent& AEnemyBasePawn::GetAbilityComponent() {
+	return *AbilityComponent;
 }
 
 float AEnemyBasePawn::GetCurrentHealth() {

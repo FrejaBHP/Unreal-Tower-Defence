@@ -7,11 +7,14 @@ UABasicFireball::UABasicFireball() {
 	PrimaryComponentTick.bCanEverTick = true;
 
 	AbilityName = "Basic Fireball";
+	AbilityHUDBrushName = "icon_fireball_Brush";
 	AbilityFlipbookName = "proj_fireball_Flip";
+
 	AbilityHandle = EAbilityHandle::BasicFireball;
-	AbilityCast = EAbilityCast::Active;
+	AbilityCast = EAbilityCast::Auto;
 	AbilityType = EAbilityType::Projectile;
 	AbilityTarget = EAbilityTarget::Enemy;
+	IsAutoCast = true;
 
 	Cost = 0.f;
 	Range = 350.f;

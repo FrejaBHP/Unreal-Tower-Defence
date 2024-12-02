@@ -37,6 +37,21 @@ public:
 	// Sets default values for this pawn's properties
 	ATowerBasePawn();
 
+	EUnitType UnitType { EUnitType::Tower };
+	FName Name;
+	TUniquePtr<TowerBaseTDAttributes> BaseAttributeSet = nullptr;
+	TUniquePtr<TowerAttackTDAttributes> AttackAttributeSet = nullptr;
+
+	ETowerTargetType TargetType;
+	ETowerAttackType AttackType;
+
+	TWeakObjectPtr<AActor> TowerTarget;
+	IEnemyUnit* TowerTargetInterface;
+
+	bool HasTarget { false };
+	float AttackTimer { 0.f };
+	int EnemiesInRange { 0 };
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -51,8 +66,9 @@ public:
 	virtual void ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface);
 	virtual float GetSplashRadius() override;
 	virtual TWeakObjectPtr<AActor> GetTarget() override;
+	virtual UTDAbilityComponent& GetAbilityComponent() override;
+	//virtual TArray<UTDAbility*>& GetAbilities() override;
 	
-
 	void GetNewTarget();
 	void TryAttackTarget();
 
@@ -63,32 +79,17 @@ public:
 	UFUNCTION()
 	void OnOverlapEnd(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
-	EUnitType UnitType { EUnitType::Tower };
-	FName Name;
-	TUniquePtr<TowerBaseTDAttributes> BaseAttributeSet = nullptr;
-	TUniquePtr<TowerAttackTDAttributes> AttackAttributeSet = nullptr;
-
-	ETowerTargetType TargetType;
-	ETowerAttackType AttackType;
-
-	TWeakObjectPtr<AActor> TowerTarget;
-	IEnemyUnit* TowerTargetInterface;
-	
-	bool HasTarget { false };
-	float AttackTimer { 0.f };
-	int EnemiesInRange { 0 };
+	UPROPERTY(VisibleAnywhere)
+	UBoxComponent* BoxComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UBoxComponent* BoxComponent = nullptr;
+	UCapsuleComponent* CapsuleComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UCapsuleComponent* CapsuleComponent = nullptr;
+	UPaperSpriteComponent* SpriteComponent;
 
 	UPROPERTY(VisibleAnywhere)
-	UPaperSpriteComponent* SpriteComponent = nullptr;
-
-	UPROPERTY(VisibleAnywhere)
-	UTDAbilityComponent* AbilityComponent = nullptr;
+	UTDAbilityComponent* AbilityComponent;
 
 	UPROPERTY()
 	UPaperSprite* VisibleSprite = nullptr;

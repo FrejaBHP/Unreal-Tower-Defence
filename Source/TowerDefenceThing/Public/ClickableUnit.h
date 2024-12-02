@@ -4,6 +4,8 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Interface.h"
+#include "Abilities/TDAbility.h" // muligvis
+#include "Components/TDAbilityComponent.h"
 #include "ClickableUnit.generated.h"
 
 UENUM()
@@ -27,4 +29,6 @@ public:
 	virtual void OnSelect() = 0;
 	virtual EUnitType GetUnitType() = 0;
 	virtual FName GetUnitName() = 0;
+	virtual UTDAbilityComponent& GetAbilityComponent() = 0;
+	//virtual TArray<UTDAbility*>& GetAbilities() = 0;
 };

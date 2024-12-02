@@ -19,11 +19,15 @@ public:
 	UTDAbility();
 
 	FName AbilityName;
+	FName AbilityHUDBrushName;
 	FString AbilityFlipbookName;
+
 	EAbilityHandle AbilityHandle;
 	EAbilityCast AbilityCast;
 	EAbilityType AbilityType;
 	EAbilityTarget AbilityTarget;
+	bool IsAutoCast { false };
+
 	float Cost { 0.f };
 	float Range { 0.f };
 	float Cooldown { 0.f };

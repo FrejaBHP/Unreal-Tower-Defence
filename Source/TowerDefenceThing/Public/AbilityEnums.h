@@ -6,6 +6,7 @@
 
 UENUM()
 enum class EAbilityCast : int8 {
+	Auto,
 	Active,
 	Triggered,
 	Passive
@@ -27,6 +28,7 @@ enum class EAbilityTarget : int8 {
 
 UENUM()
 enum class EAbilityHandle : int8 {
+	NONE,
 	BasicFireball
 };
 

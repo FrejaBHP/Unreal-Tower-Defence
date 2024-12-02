@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/HUD.h"
-#include "SlateComps/SquareWidgetData.h"
 #include "Slate/SlateGameResources.h"
+
 #include "SlateComps/SBuilderMenuWidget.h"
+#include "SlateComps/SquareWidgetData.h"
 #include "../TowerDefenceThingPlayerController.h"
 #include "TDPlayerHUD.generated.h"
 
@@ -18,8 +19,6 @@ class TOWERDEFENCETHING_API ATDPlayerHUD : public AHUD {
 
 public:
 	ATDPlayerHUD();
-	virtual void BeginDestroy() override;
-	void ReceivedButtonInput(ESquareFunctionType, int32);
 
 	//UPROPERTY()
 	FBuildCommandSignature BuildCommandDelegate;
@@ -29,6 +28,11 @@ public:
 
 	TSharedPtr<SWidget> LivesWidgetPtr;
 	TSharedPtr<SBuilderMenuWidget> BuildContextMenuPtr;
+
+	virtual void BeginDestroy() override;
+	void ReceivedButtonInput(ESquareFunctionType, EAbilityHandle);
+	void ResetSquareWidgetData(int8 x, int8 y) const;
+	void OverrideSquareWidgetData(int8 x, int8 y, SquareWidgetData swd) const;
 
 protected:
 	// Called when the game starts or when spawned

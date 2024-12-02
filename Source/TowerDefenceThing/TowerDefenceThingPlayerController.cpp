@@ -1,17 +1,19 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
 #include "TowerDefenceThingPlayerController.h"
-#include "GameFramework/Pawn.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
-#include "NiagaraSystem.h"
-#include "NiagaraFunctionLibrary.h"
-#include "TowerDefenceThingCharacter.h"
+#include "Engine/LocalPlayer.h"
 #include "Engine/World.h"
 #include "EnhancedInputComponent.h"
-#include "InputActionValue.h"
 #include "EnhancedInputSubsystems.h"
+#include "GameFramework/Pawn.h"
+#include "InputActionValue.h"
+#include "NiagaraSystem.h"
+#include "NiagaraFunctionLibrary.h"
+
+#include "TowerDefenceThingCharacter.h"
 #include "TDPlayerHUD.h"
-#include "Engine/LocalPlayer.h"
+
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
 
@@ -65,12 +67,14 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 			HandleSelectedUnit();
 		}
 	}
+	// If the landscape is clicked and currently selected unit isn't the player unit, select it
 	else if (GetPawn() != SelectedPawnPtr) {
 		SelectedPawnPtr = GetPawn();
 		HandleSelectedUnit();
 	}
 }
 
+// When unit is selected, update HUD to reflect it and show stats + abilities
 void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
 	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr);
 	EUnitType unitType = selectedUnit->GetUnitType();
@@ -85,7 +89,28 @@ void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
 		UE_LOG(LogTemp, Warning, TEXT("Player"));
 	}
 
-	//GetHUD<ATDPlayerHUD>();
+	GetAndConvertAbilitiesToSWD(selectedUnit, unitType);
+}
+
+void ATowerDefenceThingPlayerController::GetAndConvertAbilitiesToSWD(IClickableUnit* unit, EUnitType type) {
+	auto& abilities = unit->GetAbilityComponent().Abilities;
+	auto pHUD = GetHUD<ATDPlayerHUD>();
+
+	for (size_t i = 0; i < 4; i++) {
+		// MIDLERTIDIG LØSNING PÅ PLADS I HUD. ÆNDR SENERE TIL EN LIDT MERE SOFISTIKERET METODE
+		if (i < abilities.Num()) {
+			// MIDLERTIDIGT FIKS TIL FJENDERS ABILITIES
+			if (type != EUnitType::Enemy && abilities[i]->AbilityCast == EAbilityCast::Active) {
+				pHUD->OverrideSquareWidgetData(i, 2, SquareWidgetData { ESquareFunctionType::Cast, abilities[i]->AbilityHandle, abilities[i]->AbilityHUDBrushName });
+			}
+			else {
+				pHUD->OverrideSquareWidgetData(i, 2, SquareWidgetData { ESquareFunctionType::None, abilities[i]->AbilityHandle, abilities[i]->AbilityHUDBrushName });
+			}
+		}
+		else {
+			pHUD->ResetSquareWidgetData(i, 2);
+		}
+	}
 }
 
 void ATowerDefenceThingPlayerController::OnMoveInputStarted() {
@@ -125,12 +150,10 @@ void ATowerDefenceThingPlayerController::OnSetDestinationReleased() {
 	FollowTime = 0.f;
 }
 
-void ATowerDefenceThingPlayerController::ConsumeHUDButtonInput(ESquareFunctionType type, int32 id) {
-	UE_LOG(LogTemp, Warning, TEXT("Received input, type: %s, id: %i"), *UEnum::GetValueAsString(type), id);
+void ATowerDefenceThingPlayerController::ConsumeHUDButtonInput(ESquareFunctionType type, EAbilityHandle aHandle) {
+	UE_LOG(LogTemp, Warning, TEXT("Received input, type: %s, id: %i"), *UEnum::GetValueAsString(type), (int)aHandle);
 }
 
 void ATowerDefenceThingPlayerController::BeginDestroy() {
-	//CustomMappingContext->MarkAsGarbage();
-	
 	Super::BeginDestroy();
 }
