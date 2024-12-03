@@ -25,6 +25,8 @@ public:
 
 	void AddAbility(EAbilityHandle aHandle);
 	void RemoveAbility(EAbilityHandle aHandle);
+	bool TryCastAbility(EAbilityHandle aHandle);
+	int32 GetAbilityIndex(EAbilityHandle aHandle) const;
 
 protected:
 	// Called when the game starts

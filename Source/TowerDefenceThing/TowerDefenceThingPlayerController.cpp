@@ -79,6 +79,7 @@ void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
 	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr);
 	EUnitType unitType = selectedUnit->GetUnitType();
 
+	/*
 	if (unitType == EUnitType::Tower) {
 		UE_LOG(LogTemp, Warning, TEXT("Tower"));
 	}
@@ -88,6 +89,7 @@ void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
 	else if (unitType == EUnitType::Player) {
 		UE_LOG(LogTemp, Warning, TEXT("Player"));
 	}
+	*/
 
 	GetAndConvertAbilitiesToSWD(selectedUnit, unitType);
 }
@@ -101,10 +103,10 @@ void ATowerDefenceThingPlayerController::GetAndConvertAbilitiesToSWD(IClickableU
 		if (i < abilities.Num()) {
 			// MIDLERTIDIGT FIKS TIL FJENDERS ABILITIES
 			if (type != EUnitType::Enemy && abilities[i]->AbilityCast == EAbilityCast::Active) {
-				pHUD->OverrideSquareWidgetData(i, 2, SquareWidgetData { ESquareFunctionType::Cast, abilities[i]->AbilityHandle, abilities[i]->AbilityHUDBrushName });
+				pHUD->OverrideSquareWidgetAbility(i, 2, abilities[i]);
 			}
 			else {
-				pHUD->OverrideSquareWidgetData(i, 2, SquareWidgetData { ESquareFunctionType::None, abilities[i]->AbilityHandle, abilities[i]->AbilityHUDBrushName });
+				pHUD->OverrideSquareWidgetAbility(i, 2, abilities[i]);
 			}
 		}
 		else {
@@ -150,8 +152,12 @@ void ATowerDefenceThingPlayerController::OnSetDestinationReleased() {
 	FollowTime = 0.f;
 }
 
-void ATowerDefenceThingPlayerController::ConsumeHUDButtonInput(ESquareFunctionType type, EAbilityHandle aHandle) {
-	UE_LOG(LogTemp, Warning, TEXT("Received input, type: %s, id: %i"), *UEnum::GetValueAsString(type), (int)aHandle);
+// Called when an Ability is pressed in the HUD. Has access to the ability's handle for now (should be the ability itself later down the line)
+void ATowerDefenceThingPlayerController::ConsumeHUDButtonInput(EAbilityHandle aHandle) {
+	UTDAbilityComponent& abilityComp = Cast<IClickableUnit>(SelectedPawnPtr)->GetAbilityComponent(); // Pawn is only assigned if interface is implemented, so this is safe
+	abilityComp.TryCastAbility(aHandle);
+
+	//UE_LOG(LogTemp, Warning, TEXT("Received input, type: %s, id: %i"), *UEnum::GetValueAsString(type), (int)aHandle);
 }
 
 void ATowerDefenceThingPlayerController::BeginDestroy() {

@@ -33,12 +33,29 @@ void UTDAbilityComponent::AddAbility(EAbilityHandle aHandle) {
 
 // Searches the ability TArray for an ability with a matching EAbilityHandle field, then deletes and cleans up the ability if it finds any
 void UTDAbilityComponent::RemoveAbility(EAbilityHandle aHandle) {
-	int32 index = Abilities.IndexOfByPredicate([&aHandle](const UTDAbility* ability) {
-		return ability->AbilityHandle == aHandle;
-	});
-
+	const int32 index = GetAbilityIndex(aHandle);
 	if (index != INDEX_NONE) {
 		Abilities[index]->DestroyAbility();
 		Abilities.RemoveAt(index);
 	}
+}
+
+// Searches for ability, and if it allows for manual casting, tries to cast it
+bool UTDAbilityComponent::TryCastAbility(EAbilityHandle aHandle) {
+	const int32 index = GetAbilityIndex(aHandle);
+	if (index != INDEX_NONE && Abilities[index]->AbilityCast == EAbilityCast::Active) {
+		return Abilities[index]->TryCastAbility();
+	}
+	else {
+		return false;
+	}
+}
+
+// Separate implementation of IndexByPredicate for ability handles for ease of use
+int32 UTDAbilityComponent::GetAbilityIndex(EAbilityHandle aHandle) const {
+	const int32 index = Abilities.IndexOfByPredicate([&aHandle](const UTDAbility* ability) {
+		return ability->AbilityHandle == aHandle;
+	});
+
+	return index;
 }

@@ -11,10 +11,10 @@ UABasicFireball::UABasicFireball() {
 	AbilityFlipbookName = "proj_fireball_Flip";
 
 	AbilityHandle = EAbilityHandle::BasicFireball;
-	AbilityCast = EAbilityCast::Auto;
+	AbilityCast = EAbilityCast::Active;
 	AbilityType = EAbilityType::Projectile;
 	AbilityTarget = EAbilityTarget::Enemy;
-	IsAutoCast = true;
+	IsAutoCast = false;
 
 	Cost = 0.f;
 	Range = 350.f;
@@ -52,13 +52,13 @@ void UABasicFireball::TickComponent(float DeltaTime, ELevelTick TickType, FActor
 	if (!IsReady()) {
 		ReduceCooldownTimer(DeltaTime);
 	}
-	else if (EnemiesInRange > 0) {
+	else if (IsAutoCast) {
 		TryCastAbility();
 	}
 }
 
 bool UABasicFireball::TryCastAbility() {
-	if (true) { // Has no cost at the moment, so can always be cast provided it isn't cooling down
+	if (EnemiesInRange > 0) { // Has no cost at the moment, so can always be cast provided it isn't cooling down and targets exist
 		CastAbility();
 		return true;
 	}

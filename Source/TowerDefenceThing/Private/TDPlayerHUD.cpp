@@ -4,7 +4,6 @@
 #include <TDGameInstance.h>
 #include "SlateComps/SLivesWidget.h"
 #include "SlateComps/SContextMenuSquareWidget.h"
-#include "SlateComps/SquareWidgetData.h"
 #include "AbilityEnums.h"
 
 ATDPlayerHUD::ATDPlayerHUD() {
@@ -28,8 +27,8 @@ TObjectPtr<ATowerDefenceThingPlayerController> ATDPlayerHUD::GetPlayerOwner() {
 	return Cast<ATowerDefenceThingPlayerController>(PlayerOwner);
 }
 
-void ATDPlayerHUD::ReceivedButtonInput(ESquareFunctionType type, EAbilityHandle aHandle) {
-	GetPlayerOwner()->ConsumeHUDButtonInput(type, aHandle);
+void ATDPlayerHUD::ReceivedButtonInput(EAbilityHandle aHandle) {
+	GetPlayerOwner()->ConsumeHUDButtonInput(aHandle);
 }
 
 void ATDPlayerHUD::CreateLivesWidget() {
@@ -62,21 +61,18 @@ void ATDPlayerHUD::CreateContextMenuWidget() {
 				BuildContextMenuPtr->GridPanelSquareArray[i][j]->OnClicked.BindUObject(this, &ATDPlayerHUD::ReceivedButtonInput);
 			}
 		}
-		
-		//BuildContextMenuPtr->GridPanelSquareArray[0][2]->SetSWData(SquareWidgetData { ESquareFunctionType::None, 1, "icon_fireball_Brush" });
-		//BuildContextMenuPtr->GridPanelSquareArray[3][2]->SetSWData(SquareWidgetData { ESquareFunctionType::Build, 2, "icon_fireball_Brush" });
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Menu pointer invalid, button widgets not created"));
 	}
 }
 
-void ATDPlayerHUD::ResetSquareWidgetData(int8 x, int8 y) const {
-	BuildContextMenuPtr->GridPanelSquareArray[x][y]->SetSWData(SquareWidgetData { ESquareFunctionType::None, EAbilityHandle::NONE, "empty_Brush" });
+void ATDPlayerHUD::OverrideSquareWidgetAbility(int8 x, int8 y, UTDAbility* ability) const {
+	BuildContextMenuPtr->GridPanelSquareArray[x][y]->SetBoundAbility(ability);
 }
 
-void ATDPlayerHUD::OverrideSquareWidgetData(int8 x, int8 y, SquareWidgetData swd) const {
-	BuildContextMenuPtr->GridPanelSquareArray[x][y]->SetSWData(swd);
+void ATDPlayerHUD::ResetSquareWidgetData(int8 x, int8 y) const {
+	BuildContextMenuPtr->GridPanelSquareArray[x][y]->SetBoundAbility(nullptr);
 }
 
 void ATDPlayerHUD::BeginDestroy() {

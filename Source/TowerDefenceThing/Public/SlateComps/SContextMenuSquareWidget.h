@@ -3,14 +3,17 @@
 #pragma once
 
 
-#include "SlateComps/SquareWidgetData.h"
-#include "Slate/SlateGameResources.h"
-#include "FTDUIResources.h"
-#include "AbilityEnums.h"
 #include "CoreMinimal.h"
+#include "Widgets/Notifications/SProgressBar.h"
 #include "Widgets/SCompoundWidget.h"
 
-DECLARE_DELEGATE_TwoParams(FClickedSignature, ESquareFunctionType, EAbilityHandle);
+#include "Abilities/TDAbility.h"
+#include "AbilityEnums.h"
+#include "FTDUIResources.h"
+#include "Slate/SlateGameResources.h"
+
+
+DECLARE_DELEGATE_OneParam(FClickedSignature, EAbilityHandle);
 
 class TOWERDEFENCETHING_API SContextMenuSquareWidget : public SCompoundWidget {
 
@@ -27,14 +30,21 @@ public:
 	FReply OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	FReply OnMouseButtonDoubleClick(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
 	void SetImageBrushWithName(FName newBrushName);
-	void SetSWData(const SquareWidgetData& newSWData);
+	void SetBoundAbility(UTDAbility* ability);
+	void UpdateCooldown();
+	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
 
-	TUniquePtr<SquareWidgetData> SWData = nullptr;
 	FClickedSignature OnClicked;
 	bool IsClickable = false;
 
 protected:
-	const FSlateBrush* GetImageBrushFromName(FName newBrushName) const;
+	TSharedPtr<SProgressBar> ProgressBarPtr;
 	TWeakPtr<FSlateGameResources> tdUIResources;
 	FSlateBrush imageBrush;
+
+	UTDAbility* BoundAbility = nullptr;
+	FName CurrentAbilityBrushName;
+	EAbilityHandle CurrentAbilityHandle;
+	float CooldownRatio { 1.f };
+	const FSlateBrush* GetImageBrushFromName(FName newBrushName) const;
 };

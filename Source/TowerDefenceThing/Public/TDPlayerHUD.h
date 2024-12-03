@@ -6,8 +6,8 @@
 #include "GameFramework/HUD.h"
 #include "Slate/SlateGameResources.h"
 
+#include "Abilities/TDAbility.h"
 #include "SlateComps/SBuilderMenuWidget.h"
-#include "SlateComps/SquareWidgetData.h"
 #include "../TowerDefenceThingPlayerController.h"
 #include "TDPlayerHUD.generated.h"
 
@@ -30,9 +30,9 @@ public:
 	TSharedPtr<SBuilderMenuWidget> BuildContextMenuPtr;
 
 	virtual void BeginDestroy() override;
-	void ReceivedButtonInput(ESquareFunctionType, EAbilityHandle);
+	void ReceivedButtonInput(EAbilityHandle);
+	void OverrideSquareWidgetAbility(int8 x, int8 y, UTDAbility* ability) const;
 	void ResetSquareWidgetData(int8 x, int8 y) const;
-	void OverrideSquareWidgetData(int8 x, int8 y, SquareWidgetData swd) const;
 
 protected:
 	// Called when the game starts or when spawned

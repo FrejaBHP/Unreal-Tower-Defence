@@ -6,35 +6,43 @@
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SContextMenuSquareWidget::Construct(const FArguments& InArgs) {
-	SWData = MakeUnique<SquareWidgetData>();
-
 	tdUIResources = InArgs._tdUIResources;
 	imageBrush.DrawAs = ESlateBrushDrawType::Image;
 
-	SetImageBrushWithName(SWData->BrushName);
+	SetImageBrushWithName("empty_Brush");
 	
 	ChildSlot
 	[
 		SNew(SBox)
-			.HeightOverride(96)
-			.WidthOverride(96)
-			[
-				SNew(SImage)
-				.Image(&imageBrush)
-			]
+		.HeightOverride(96)
+		.WidthOverride(96)
+		[
+			SAssignNew(ProgressBarPtr, SProgressBar)
+			.Percent(0.f)
+			.BackgroundImage(&imageBrush)
+			.BarFillType(EProgressBarFillType::BottomToTop)
+			.FillColorAndOpacity(FSlateColor(FLinearColor(0.5f, 0.5f, 0.5f, 0.5f)))
+		]
 	];
+}
+
+void SContextMenuSquareWidget::Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) {
+	SCompoundWidget::Tick(AllottedGeometry, InCurrentTime, InDeltaTime);
+	if (BoundAbility != nullptr) {
+		UpdateCooldown();
+	}
 }
 
 FReply SContextMenuSquareWidget::OnMouseButtonDown(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
 	if (OnClicked.IsBound() && IsClickable) {
-		OnClicked.Execute(SWData->FunctionType, SWData->AbilityHandle);
+		OnClicked.Execute(CurrentAbilityHandle);
 	}
 	return FReply::Handled();
 }
 
 FReply SContextMenuSquareWidget::OnMouseButtonDoubleClick(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
 	if (OnClicked.IsBound() && IsClickable) {
-		OnClicked.Execute(SWData->FunctionType, SWData->AbilityHandle);
+		OnClicked.Execute(CurrentAbilityHandle);
 	}
 	return FReply::Handled();
 }
@@ -52,14 +60,35 @@ void SContextMenuSquareWidget::SetImageBrushWithName(FName newBrushName) {
 	imageBrush = *GetImageBrushFromName(newBrushName);
 }
 
-void SContextMenuSquareWidget::SetSWData(const SquareWidgetData& newSWData) {
-	SWData->FunctionType = newSWData.FunctionType;
-	SWData->AbilityHandle = newSWData.AbilityHandle;
-	SWData->BrushName = newSWData.BrushName;
+void SContextMenuSquareWidget::UpdateCooldown() {
+	if (BoundAbility->IsReady()) {
+		CooldownRatio = 0.f;
+	}
+	else {
+		CooldownRatio = BoundAbility->GetCooldownTimer() / BoundAbility->Cooldown;
+	}
 
-	IsClickable = ((SWData->FunctionType == ESquareFunctionType::None) ? false : true);
+	ProgressBarPtr->SetPercent(CooldownRatio);
+}
 
-	SetImageBrushWithName(SWData->BrushName);
+// Updates bound ability pointer and sets up necessary data like if it should be able to be clicked, the icon, etc
+void SContextMenuSquareWidget::SetBoundAbility(UTDAbility* ability) {
+	BoundAbility = ability;
+
+	if (BoundAbility) {
+		CurrentAbilityHandle = BoundAbility->AbilityHandle;
+		CurrentAbilityBrushName = BoundAbility->AbilityHUDBrushName;
+		IsClickable = ((BoundAbility->AbilityCast == EAbilityCast::Active) ? true : false);
+	}
+	// If ability pointer is null, set up the widget as "empty"
+	else {
+		CurrentAbilityHandle = EAbilityHandle::NONE;
+		CurrentAbilityBrushName = "empty_Brush";
+		IsClickable = false;
+		ProgressBarPtr->SetPercent(0.f);
+	}
+
+	SetImageBrushWithName(CurrentAbilityBrushName);
 }
 
 SContextMenuSquareWidget::~SContextMenuSquareWidget() {

@@ -91,6 +91,7 @@ AActor* UTDAbility::GetClosestTarget() {
 	return closestActor;
 }
 
+// Spawns a projectile from parametres. Do not use for anything but towers for the time being; anything else will crash
 void UTDAbility::SpawnProjectile(TWeakObjectPtr<AActor> target, FString projectileFlipbookName) {
 	UWorld* World = GetWorld();
 	if (World) {
