@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 
 UENUM()
-enum class EAbilityCast : int8 {
+enum class EAbilityCast : uint8 {
 	Auto,
 	Active,
 	Triggered,
@@ -13,13 +13,13 @@ enum class EAbilityCast : int8 {
 };
 
 UENUM()
-enum class EAbilityType : int8 {
+enum class EAbilityType : uint8 {
 	Projectile,
 	Instant
 };
 
 UENUM()
-enum class EAbilityTarget : int8 {
+enum class EAbilityTarget : uint8 {
 	Friendly,
 	Enemy,
 	Self,
@@ -27,7 +27,7 @@ enum class EAbilityTarget : int8 {
 };
 
 UENUM()
-enum class EAbilityHandle : int8 {
+enum class EAbilityHandle : uint8 {
 	NONE,
 	BasicFireball
 };

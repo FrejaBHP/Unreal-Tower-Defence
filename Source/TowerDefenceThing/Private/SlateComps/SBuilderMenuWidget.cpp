@@ -28,77 +28,77 @@ void SBuilderMenuWidget::Construct(const FArguments& InArgs) {
 		[
 			SAssignNew(GridPanelPtr, SUniformGridPanel)
 			.SlotPadding(FMargin(2.0f))
-				+ SUniformGridPanel::Slot(0, 0)
-				[
-					SAssignNew(GridPanelSquareArray[0][0], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(0, 0)
+			[
+				SAssignNew(GridPanelSquareArray[0][0], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 				
-				+ SUniformGridPanel::Slot(1, 0)
-				[
-					SAssignNew(GridPanelSquareArray[1][0], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(1, 0)
+			[
+				SAssignNew(GridPanelSquareArray[1][0], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(2, 0)
-				[
-					SAssignNew(GridPanelSquareArray[2][0], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(2, 0)
+			[
+				SAssignNew(GridPanelSquareArray[2][0], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(3, 0)
-				[
-					SAssignNew(GridPanelSquareArray[3][0], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(3, 0)
+			[
+				SAssignNew(GridPanelSquareArray[3][0], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(0, 1)
-				[
-					SAssignNew(GridPanelSquareArray[0][1], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(0, 1)
+			[
+				SAssignNew(GridPanelSquareArray[0][1], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(1, 1)
-				[
-					SAssignNew(GridPanelSquareArray[1][1], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(1, 1)
+			[
+				SAssignNew(GridPanelSquareArray[1][1], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(2, 1)
-				[
-					SAssignNew(GridPanelSquareArray[2][1], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(2, 1)
+			[
+				SAssignNew(GridPanelSquareArray[2][1], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(3, 1)
-				[
-					SAssignNew(GridPanelSquareArray[3][1], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(3, 1)
+			[
+				SAssignNew(GridPanelSquareArray[3][1], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(0, 2)
-				[
-					SAssignNew(GridPanelSquareArray[0][2], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(0, 2)
+			[
+				SAssignNew(GridPanelSquareArray[0][2], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(1, 2)
-				[
-					SAssignNew(GridPanelSquareArray[1][2], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(1, 2)
+			[
+				SAssignNew(GridPanelSquareArray[1][2], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(2, 2)
-				[
-					SAssignNew(GridPanelSquareArray[2][2], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(2, 2)
+			[
+				SAssignNew(GridPanelSquareArray[2][2], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 
-				+ SUniformGridPanel::Slot(3, 2)
-				[
-					SAssignNew(GridPanelSquareArray[3][2], SContextMenuSquareWidget)
-					.tdUIResources(tdUIResources)
-				]
+			+ SUniformGridPanel::Slot(3, 2)
+			[
+				SAssignNew(GridPanelSquareArray[3][2], SContextMenuSquareWidget)
+				.tdUIResources(tdUIResources)
+			]
 		]
 	];
 }

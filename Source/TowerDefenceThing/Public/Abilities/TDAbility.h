@@ -19,6 +19,7 @@ public:
 	UTDAbility();
 
 	FName AbilityName;
+
 	FName AbilityHUDBrushName;
 	FString AbilityFlipbookName;
 
@@ -53,6 +54,8 @@ public:
 	void OnAbilityProjectileHitTarget(ATDProjectile* projectile, TWeakObjectPtr<AActor> target);
 	void OnAbilityProjectileSplashTarget(TArray<AActor*> splashedActors);
 	void OnAbilityProjectileDestroyed(ATDProjectile* projectile);
+
+	virtual FText GetAbilityDescription();
 
 	// Gets the closest target if there is an overlap component. Returns a nullptr if there are no overlaps
 	AActor* GetClosestTarget();

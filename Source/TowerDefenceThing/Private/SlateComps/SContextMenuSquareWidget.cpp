@@ -28,8 +28,28 @@ void SContextMenuSquareWidget::Construct(const FArguments& InArgs) {
 
 void SContextMenuSquareWidget::Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) {
 	SCompoundWidget::Tick(AllottedGeometry, InCurrentTime, InDeltaTime);
-	if (BoundAbility != nullptr) {
+	if (BoundAbility) {
 		UpdateCooldown();
+	}
+}
+
+void SContextMenuSquareWidget::OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
+	if (OnEntered.IsBound() && BoundAbility) {
+		OnEntered.Execute(BoundAbility, GetTickSpaceGeometry());
+	}
+}
+
+FReply SContextMenuSquareWidget::OnMouseMove(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
+	if (BoundAbility) {
+		FVector2D mouseMovePos = MyGeometry.AbsoluteToLocal(MouseEvent.GetScreenSpacePosition());
+	}
+
+	return FReply::Handled();
+}
+
+void SContextMenuSquareWidget::OnMouseLeave(const FPointerEvent& MouseEvent) {
+	if (OnEntered.IsBound() && BoundAbility) {
+		OnLeft.Execute();
 	}
 }
 

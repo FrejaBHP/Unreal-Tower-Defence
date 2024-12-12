@@ -7,6 +7,7 @@ UABasicFireball::UABasicFireball() {
 	PrimaryComponentTick.bCanEverTick = true;
 
 	AbilityName = "Basic Fireball";
+
 	AbilityHUDBrushName = "icon_fireball_Brush";
 	AbilityFlipbookName = "proj_fireball_Flip";
 
@@ -75,4 +76,8 @@ void UABasicFireball::CastAbility() {
 		SpawnProjectile(twTarget, AbilityFlipbookName);
 		ResetCooldownTimer();
 	}
+}
+
+FText UABasicFireball::GetAbilityDescription() {
+	return FText::Format(INVTEXT("Fires a fireball at the nearest enemy, dealing {0} damage."), Damage);
 }

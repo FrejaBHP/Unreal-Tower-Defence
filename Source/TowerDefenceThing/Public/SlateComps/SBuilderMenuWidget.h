@@ -8,7 +8,6 @@
 #include "Widgets/SCompoundWidget.h"
 
 class TOWERDEFENCETHING_API SBuilderMenuWidget : public SCompoundWidget {
-
 public:
 	SLATE_BEGIN_ARGS(SBuilderMenuWidget) :
 		_tdUIResources()

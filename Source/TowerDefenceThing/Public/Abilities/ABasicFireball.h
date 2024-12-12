@@ -15,6 +15,7 @@ public:
 
 	virtual bool TryCastAbility() override;
 	virtual void CastAbility() override;
+	virtual FText GetAbilityDescription() override;
 
 protected:
 	// Called when the game starts

@@ -6,7 +6,6 @@
 #include "Widgets/Notifications/SProgressBar.h"
 #include "Widgets/SCompoundWidget.h"
 
-
 class TOWERDEFENCETHING_API SEnemyHealthBar : public SCompoundWidget {
 public:
 	SLATE_BEGIN_ARGS(SEnemyHealthBar)

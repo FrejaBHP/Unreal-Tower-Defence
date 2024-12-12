@@ -62,6 +62,10 @@ bool UTDAbility::IsReady() const {
 	}
 }
 
+FText UTDAbility::GetAbilityDescription() {
+	return FText::GetEmpty();
+}
+
 AActor* UTDAbility::GetClosestTarget() {
 	AActor* closestActor = nullptr;
 
