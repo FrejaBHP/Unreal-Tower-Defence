@@ -43,7 +43,7 @@ void UTDAbilityComponent::RemoveAbility(EAbilityHandle aHandle) {
 // Searches for ability, and if it allows for manual casting, tries to cast it
 bool UTDAbilityComponent::TryCastAbility(EAbilityHandle aHandle) {
 	const int32 index = GetAbilityIndex(aHandle);
-	if (index != INDEX_NONE && Abilities[index]->AbilityCast == EAbilityCast::Active) {
+	if (index != INDEX_NONE && Abilities[index]->AbilityCast == EAbilityCast::Active && Abilities[index]->IsReady()) {
 		return Abilities[index]->TryCastAbility();
 	}
 	else {

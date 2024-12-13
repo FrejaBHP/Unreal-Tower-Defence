@@ -3,6 +3,7 @@
 
 #include "EnemySpawner.h"
 #include "Enemies/BasicEnemy.h"
+#include "TDGameInstance.h"
 
 // Sets default values
 AEnemySpawner::AEnemySpawner() {
@@ -11,18 +12,35 @@ AEnemySpawner::AEnemySpawner() {
 	SpawnVolume->AttachToComponent(RootComponent, FAttachmentTransformRules::KeepRelativeTransform);
 }
 
-void AEnemySpawner::SpawnEnemy() {
-	ABasicEnemy* newBasicEnemy = GetWorld()->SpawnActor<ABasicEnemy>(GetActorLocation(), GetActorRotation());
-}
-
 // Called when the game starts or when spawned
 void AEnemySpawner::BeginPlay() {
 	Super::BeginPlay();
 
-	FTimerHandle TimerHandle;
-	FTimerHandle TimerHandle1;
-
-	GetWorldTimerManager().SetTimer(TimerHandle, this, &AEnemySpawner::SpawnEnemy, 1.f, false, 1.f);
-	GetWorldTimerManager().SetTimer(TimerHandle1, this, &AEnemySpawner::SpawnEnemy, 1.f, false, 1.5f);
+	Cast<UTDGameInstance>(GetGameInstance())->EnemySpawner = this;
 }
 
+void AEnemySpawner::SpawnWave(WaveManager::TDWave& wave) {
+	EnemiesToSpawn = wave.Amount;
+
+	TimerDelegate.BindUFunction(this, FName("SpawnEnemy"), wave.Health, wave.Speed, wave.FlipbookName);
+	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 1.f, true, -1.f);
+}
+
+// Also needs support for spawning different enemy types
+void AEnemySpawner::SpawnEnemy(float health, float speed, FString flipbook) {
+	UTDGameInstance* GI = Cast<UTDGameInstance>(GetGameInstance());
+
+	if (EnemiesToSpawn != 0) {
+		ABasicEnemy* newBasicEnemy = GetWorld()->SpawnActorDeferred<ABasicEnemy>(ABasicEnemy::StaticClass(), GetActorTransform(), this);
+		newBasicEnemy->SetWaveStats(health, speed);
+		newBasicEnemy->SetFlipbook(flipbook);
+		newBasicEnemy->EnemyDeathDecrementDelegate.BindUObject(GI, &UTDGameInstance::DecrementEnemiesOnMap);
+		newBasicEnemy->FinishSpawning(GetActorTransform());
+
+		EnemiesToSpawn--;
+	}
+
+	if (EnemiesToSpawn == 0) {
+		GetWorldTimerManager().PauseTimer(TimerHandle);
+	}
+}

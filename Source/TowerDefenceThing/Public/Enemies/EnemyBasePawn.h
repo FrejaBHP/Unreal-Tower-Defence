@@ -3,19 +3,22 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/CapsuleComponent.h"
 #include "GameFramework/Pawn.h"
 #include <PaperFlipbook.h>
 #include <PaperFlipbookComponent.h>
 #include <TDGameInstance.h>
-#include "Components/CapsuleComponent.h"
+
+#include "Attributes/EnemyBaseTDAttributes.h"
+#include "ClickableUnit.h"
 #include "Components/TDEnemyMovementComponent.h"
 #include "Components/TDAbilityComponent.h"
 #include "Components/WidgetComponent.h"
-#include "Attributes/EnemyBaseTDAttributes.h"
-#include "ClickableUnit.h"
 #include "EnemyUnit.h"
 #include "SlateComps/SEnemyHealthBar.h"
 #include "EnemyBasePawn.generated.h"
+
+DECLARE_DELEGATE(FEnemyDeathDecrementSignature);
 
 UCLASS(Abstract)
 class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IClickableUnit, public IEnemyUnit {
@@ -24,6 +27,8 @@ class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IClickableUnit
 public:
 	// Sets default values for this pawn's properties
 	AEnemyBasePawn();
+
+	FEnemyDeathDecrementSignature EnemyDeathDecrementDelegate;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -37,6 +42,8 @@ public:
 
 	EUnitType UnitType { EUnitType::Enemy };
 	FName Name;
+	FString FlipbookName;
+	float HealthMultiplier { 1.f };
 	TUniquePtr<EnemyBaseTDAttributes> BaseAttributeSet = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
@@ -64,6 +71,9 @@ public:
 
 	virtual void PossessedBy(AController* NewController);
 	virtual UTDAbilityComponent& GetAbilityComponent() override;
+
+	void SetWaveStats(float baseHealth, float baseSpeed);
+	void SetFlipbook(FString flipbookName);
 
 
 protected:

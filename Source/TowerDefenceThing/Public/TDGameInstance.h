@@ -4,12 +4,15 @@
 
 #include "CoreMinimal.h"
 #include "Engine/GameInstance.h"
+#include "Engine/ObjectLibrary.h"
 #include "PaperSprite.h"
 #include "PaperFlipbook.h"
-#include "SplinePath.h"
-#include "Engine/ObjectLibrary.h"
-#include "FTDUIResources.h"
+
 #include "Abilities/AbilityManager.h"
+#include "EnemySpawner.h"
+#include "FTDUIResources.h"
+#include "SplinePath.h"
+#include "WaveManager.h"
 #include "TDGameInstance.generated.h"
 
 UCLASS()
@@ -20,19 +23,33 @@ public:
 	virtual void Init() override;
 	virtual void Shutdown() override;
 
+	UPROPERTY()
+	TObjectPtr<ASplinePath> EnemySplinePath { nullptr };
+
+	UPROPERTY()
+	TObjectPtr<AEnemySpawner> EnemySpawner { nullptr };
+
+	UPROPERTY()
+	int32 Lives;
+
+	UPROPERTY()
+	int32 WaveNumber { -1 };
+
+	UPROPERTY()
+	int32 RemainingEnemiesOnMap { 0 };
+
+	TUniquePtr<AbilityManager> AManager { nullptr };
+	TUniquePtr<WaveManager> WavesManager { nullptr };
+
+	FRandomStream RandStream;
+
+	void DecrementEnemiesOnMap();
+
 	UPaperSprite* GetSpriteByName(FString spriteName);
 	UPaperFlipbook* GetFlipbookByName(FString flipbookName);
 
 	TSharedPtr<FSlateGameResources> GetSlateGameResources();
-	TUniquePtr<AbilityManager> AManager = nullptr;
-
-	FRandomStream RandStream;
-
-	UPROPERTY()
-	ASplinePath* EnemySplinePath { nullptr };
-
-	UPROPERTY()
-	int32 Lives;
+	
 
 protected:
 	UObjectLibrary* SpriteLib { nullptr };
@@ -42,6 +59,11 @@ protected:
 	TMap<FName, UPaperFlipbook*> FlipbookMap;
 
 	FTDUIResources TDUIResources;
+
+	void InitWaveManager() const;
+	void SetNewWave();
+	void StartSpawnWave();
+	void StartWaveTimer();
 
 private:
 	UTDGameInstance();

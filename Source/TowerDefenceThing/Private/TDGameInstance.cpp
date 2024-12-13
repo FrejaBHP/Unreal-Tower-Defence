@@ -9,6 +9,7 @@ UTDGameInstance::UTDGameInstance() {
 	RandStream.GenerateNewSeed();
 
 	Lives = 50;
+
 	SpriteLib = UObjectLibrary::CreateLibrary(UPaperSprite::StaticClass(), false, false);
 	FlipbookLib = UObjectLibrary::CreateLibrary(UPaperFlipbook::StaticClass(), false, false);
 
@@ -16,10 +17,52 @@ UTDGameInstance::UTDGameInstance() {
 	CatalogueFlipbooks();
 
 	AManager = MakeUnique<AbilityManager>();
+	WavesManager = MakeUnique<WaveManager>();
 }
 
 void UTDGameInstance::Init() {
 	Super::Init();
+
+	InitWaveManager();
+
+	FTimerHandle StartTimerHandle;
+	GetTimerManager().SetTimer(StartTimerHandle, this, &UTDGameInstance::SetNewWave, 2.f, false, -1.f);
+}
+
+void UTDGameInstance::InitWaveManager() const {
+	WavesManager->GenerateWaves(20);
+}
+
+void UTDGameInstance::SetNewWave() {
+	WaveNumber++;
+	StartSpawnWave();
+
+	UE_LOG(LogTemp, Warning, TEXT("Wave %i"), WaveNumber + 1);
+}
+
+void UTDGameInstance::StartSpawnWave() {
+	if (IsValid(EnemySpawner)) {
+		EnemySpawner->SpawnWave(WavesManager->WaveArray[WaveNumber]);
+		RemainingEnemiesOnMap = WavesManager->WaveArray[WaveNumber].Amount;
+
+		UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
+	}
+}
+
+void UTDGameInstance::DecrementEnemiesOnMap() {
+	RemainingEnemiesOnMap--;
+	UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
+
+	if (RemainingEnemiesOnMap == 0 && WaveNumber < WavesManager->WaveArray.Num() - 1) {
+		StartWaveTimer();
+	}
+}
+
+void UTDGameInstance::StartWaveTimer() {
+	UE_LOG(LogTemp, Warning, TEXT("Wave %d complete! New wave starts in 15 seconds"), WaveNumber + 1);
+
+	FTimerHandle WaveTimerHandle;
+	GetTimerManager().SetTimer(WaveTimerHandle, this, &UTDGameInstance::SetNewWave, 15.f, false, -1.f);
 }
 
 void UTDGameInstance::CatalogueSprites() {

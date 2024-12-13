@@ -80,6 +80,26 @@ void AEnemyBasePawn::PossessedBy(AController* NewController) {
 	SetOwner(NewController);
 }
 
+void AEnemyBasePawn::SetWaveStats(float baseHealth, float baseSpeed) {
+	float effectiveHealth = baseHealth * HealthMultiplier;
+	BaseAttributeSet->Health->InitMinMax(effectiveHealth, 0.f, effectiveHealth);
+	BaseAttributeSet->Speed->InitMinMax(baseSpeed, 50.f, 400.f); // default is 200
+}
+
+void AEnemyBasePawn::SetFlipbook(FString flipbookName) {
+	FlipbookPtr = Cast<UTDGameInstance>(GetGameInstance())->GetFlipbookByName(flipbookName);
+
+	if (FlipbookPtr) {
+		VisibleFlipbook = FlipbookPtr.Get();
+		FlipbookComponent->SetFlipbook(VisibleFlipbook);
+	}
+	else {
+		FlipbookPtr = Cast<UTDGameInstance>(GetGameInstance())->GetFlipbookByName("dg_humans32_0_Flip");
+		VisibleFlipbook = FlipbookPtr.Get();
+		FlipbookComponent->SetFlipbook(VisibleFlipbook);
+	}
+}
+
 void AEnemyBasePawn::OnSelect() {
 	
 }
@@ -112,6 +132,7 @@ void AEnemyBasePawn::TakeDamage(float damage) {
 }
 
 void AEnemyBasePawn::Die() {
+	EnemyDeathDecrementDelegate.ExecuteIfBound();
 	HealthBarWidgetPtr.Reset();
 	Destroy();
 }
