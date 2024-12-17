@@ -19,7 +19,7 @@ public:
 	void SpawnWave(WaveManager::TDWave& wave);
 
 	UFUNCTION()
-	void SpawnEnemy(float health, float speed, FString flipbook);
+	void SpawnEnemy(float health, float speed, float bounty, FString flipbook);
 
 	UPROPERTY()
 	int32 EnemiesToSpawn { 0 };

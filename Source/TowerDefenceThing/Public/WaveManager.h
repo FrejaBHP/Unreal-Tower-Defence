@@ -18,11 +18,12 @@ public:
 			int32 Amount;
 			float Health;
 			float Speed;
+			float Bounty;
 			FString FlipbookName;
 			// Modifiers, eventually
 			// Same with abilities
 
-			TDWave(int32 amount, float health, float speed, FString flipbook) : Amount(amount), Health(health), Speed(speed), FlipbookName(flipbook) {}
+			TDWave(int32 amount, float health, float speed, float bounty, FString flipbook) : Amount(amount), Health(health), Speed(speed), Bounty(bounty), FlipbookName(flipbook) {}
 	};
 
 	TArray<WaveManager::TDWave> WaveArray;
@@ -30,6 +31,9 @@ public:
 private:
 	float BaseHealth { 15.f };
 	float WaveHealthModifier { 1.2f };
+
+	float BaseBounty { 1.f };
+	int WavesPerBountyIncrease { 4 };
 
 	float SlowSpeed { 150.f };
 	float DefaultSpeed { 200.f };

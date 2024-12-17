@@ -17,18 +17,11 @@ public:
 	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	UPROPERTY()
-	float MaxSpeed = { 0.f };
+	float MaxSpeed { 0.f };
 
 	UPROPERTY()
-	float BaseSpeed = { 0.f };
+	float BaseSpeed { 0.f };
 
 	UPROPERTY()
-	float DistanceTravelled = { 0.f };
-
-	void Test(FVector from, FVector to);
-
-protected:
-
-private:
-
+	float DistanceTravelled { 0.f };
 };

@@ -47,7 +47,3 @@ void UTDEnemyMovementComponent::TickComponent(float DeltaTime, enum ELevelTick T
 
 	UpdateComponentVelocity();
 }
-
-void UTDEnemyMovementComponent::Test(FVector from, FVector to) {
-	
-}

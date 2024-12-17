@@ -6,7 +6,6 @@
 #include "Widgets/SCanvas.h"
 
 #include "AbilityEnums.h"
-#include "SlateComps/SLivesWidget.h"
 #include "SlateComps/SContextMenuSquareWidget.h"
 #include <TDGameInstance.h>
 
@@ -25,8 +24,11 @@ void ATDPlayerHUD::BeginPlay() {
 	TDUIResources = Cast<UTDGameInstance>(GetGameInstance())->GetSlateGameResources();
 
 	CreateLivesWidget();
+	CreateGoldWidget();
 	CreateContextMenuWidget();
 	CreateAbilityTooltipWidget();
+
+	GetPlayerOwner()->FGoldChangedDelegate.BindUObject(this, &ATDPlayerHUD::UpdateGoldWidget);
 }
 
 void ATDPlayerHUD::DrawHUD() {
@@ -37,19 +39,27 @@ TObjectPtr<ATowerDefenceThingPlayerController> ATDPlayerHUD::GetPlayerOwner() {
 	return Cast<ATowerDefenceThingPlayerController>(PlayerOwner);
 }
 
+void ATDPlayerHUD::UpdateLivesWidget() const {
+	LivesWidgetPtr->UpdateLivesCounter();
+}
+
+void ATDPlayerHUD::UpdateGoldWidget(const int32 gold) const {
+	GoldWidgetPtr->SetGoldCount(gold);
+}
+
 void ATDPlayerHUD::ReceivedButtonInput(EAbilityHandle aHandle) {
 	GetPlayerOwner()->ConsumeHUDButtonInput(aHandle);
 }
 
 void ATDPlayerHUD::ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetPosition) {
 	
-	//==================================================================================================//
-	// Jeg giver simpelthen op																			//
-	// Det er nu tredje dag, og jeg kan stadig ikke forstå, hvorfor tingene opfører sig, som de gør.	//
-	// Uanset hvad jeg prøver eller slår op, finder jeg ingen løsning.									//
-	// Tooltip featuren må forblive ikke færdig, fordi jeg gider ikke mere.								//
-	// Nyd kirkegården af forsøg og logging. Suk.														//
-	//==================================================================================================//
+	//==================================================================================================
+	// Jeg giver simpelthen op																			
+	// Det er nu tredje dag, og jeg kan stadig ikke forstå, hvorfor tingene opfører sig, som de gør.	
+	// Uanset hvad jeg prøver eller slår op, finder jeg ingen løsning.									
+	// Tooltip featuren må forblive ikke færdig, fordi jeg gider ikke mere.								
+	// Nyd kirkegården af forsøg og logging. Suk.														
+	//==================================================================================================
 
 	/*
 	FVector2D viewportPosition = AbsoluteToViewport(position);
@@ -137,13 +147,19 @@ void ATDPlayerHUD::CreateLivesWidget() {
 	if (LivesPtr != nullptr) {
 		GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(), 
 			SAssignNew(LivesWidgetPtr, SLivesWidget)
-			.font(BigFont)
-			.livesPtr(LivesPtr)
+			.Font(BigFont)
+			.LivesPtr(LivesPtr)
 		, 10);
 	}
 	else {
 		UE_LOG(LogTemp, Error, TEXT("Lives pointer failed, lives widget not created"));
 	}
+}
+
+void ATDPlayerHUD::CreateGoldWidget() {
+	GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(),
+		SAssignNew(GoldWidgetPtr, SGoldWidget)
+		, 10);
 }
 
 void ATDPlayerHUD::CreateContextMenuWidget() {
@@ -198,6 +214,7 @@ FVector2D ATDPlayerHUD::AbsoluteToViewport(FVector2D& absolutePosition) {
 void ATDPlayerHUD::BeginDestroy() {
 	TDUIResources.Reset();
 	LivesWidgetPtr.Reset();
+	GoldWidgetPtr.Reset();
 	BuildContextMenuPtr.Reset();
 	AbilityTooltipWidget.Reset();
 

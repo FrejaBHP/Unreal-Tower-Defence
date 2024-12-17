@@ -6,8 +6,8 @@
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SLivesWidget::Construct(const FArguments& InArgs) {
-	livesPtr = InArgs._livesPtr;
-	font = InArgs._font;
+	Lives = InArgs._LivesPtr;
+	Font = InArgs._Font;
 
 	ChildSlot
 	.HAlign(HAlign_Right)
@@ -17,11 +17,19 @@ void SLivesWidget::Construct(const FArguments& InArgs) {
 		+ SHorizontalBox::Slot()
 		[
 			SNew(STextBlock)
-			.Font(font)
+			.Font(Font)
 			.ColorAndOpacity(FSlateColor(FLinearColor::Black))
-			.Text_Lambda([this]()->FText { return FText::AsNumber(*livesPtr); })
+			.Text(this, &SLivesWidget::GetLivesCount)
 		]
 	];
+}
+
+void SLivesWidget::UpdateLivesCounter() {
+	GetLivesCount();
+}
+
+FText SLivesWidget::GetLivesCount() const {
+	return FText::AsNumber(*Lives);
 }
 
 SLivesWidget::~SLivesWidget() {

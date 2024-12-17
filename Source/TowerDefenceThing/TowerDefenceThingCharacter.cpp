@@ -46,7 +46,7 @@ ATowerDefenceThingCharacter::ATowerDefenceThingCharacter() {
 	if (!AbilityComponent) {
 		AbilityComponent = CreateDefaultSubobject<UTDAbilityComponent>(TEXT("Abilities"));
 		AbilityComponent->SetupAttachment(RootComponent);
-		AbilityComponent->SetMobility(EComponentMobility::Stationary);
+		AbilityComponent->SetMobility(EComponentMobility::Movable);
 	}
 
 	Name = FName("Builder");

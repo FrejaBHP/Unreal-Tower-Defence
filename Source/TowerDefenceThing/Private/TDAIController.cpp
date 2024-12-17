@@ -46,7 +46,7 @@ void ATDAIController::TDPassedPoint(uint8 pointIndex) {
 		TDUpdateGoalsForPoint(0);
 		TDMoveToSplinePoint(1);
 
-		Cast<UTDGameInstance>(GetGameInstance())->Lives--;
+		Cast<UTDGameInstance>(GetGameInstance())->DeductFromLivesCounter(1);
 	}
 }
 

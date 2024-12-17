@@ -9,6 +9,8 @@
 #include "Abilities/TDAbility.h"
 #include "SlateComps/SAbilityTooltip.h"
 #include "SlateComps/SBuilderMenuWidget.h"
+#include "SlateComps/SGoldWidget.h"
+#include "SlateComps/SLivesWidget.h"
 #include "../TowerDefenceThingPlayerController.h"
 #include "TDPlayerHUD.generated.h"
 
@@ -28,10 +30,15 @@ public:
 	//const FSlateFontInfo fontinfo = FSlateFontInfo(FPaths::EngineContentDir() / TEXT("Slate/Fonts/Roboto-Medium.ttf"), 36);
 	FSlateFontInfo BigFont;
 
-	TSharedPtr<SWidget> LivesWidgetPtr;
+	TSharedPtr<SLivesWidget> LivesWidgetPtr;
+	TSharedPtr<SGoldWidget> GoldWidgetPtr;
 	TSharedPtr<SBuilderMenuWidget> BuildContextMenuPtr;
 
 	virtual void BeginDestroy() override;
+
+	void UpdateLivesWidget() const;
+	void UpdateGoldWidget(const int32 gold) const;
+
 	void ReceivedButtonInput(EAbilityHandle aHandle);
 	void ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetPosition);
 	void ReceivedButtonLeft();
@@ -45,6 +52,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void CreateLivesWidget();
+	void CreateGoldWidget();
 	void CreateContextMenuWidget();
 	void CreateAbilityTooltipWidget();
 

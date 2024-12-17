@@ -9,8 +9,14 @@ WaveManager::WaveManager() {
 
 void WaveManager::GenerateWaves(int amount) {
 	float totalHealthModifier = 1;
+	float totalBounty = BaseBounty;
+
 	for (size_t i = 0; i < amount; i++) {
-		WaveArray.Add(TDWave(10, BaseHealth * totalHealthModifier, DefaultSpeed, ValidEnemyFlipbookNames[0]));
+		if (i != 0 && i % WavesPerBountyIncrease == 0) {
+			totalBounty += 1;
+		}
+
+		WaveArray.Add(TDWave(10, BaseHealth * totalHealthModifier, DefaultSpeed, totalBounty, ValidEnemyFlipbookNames[0]));
 
 		totalHealthModifier *= WaveHealthModifier;
 	}

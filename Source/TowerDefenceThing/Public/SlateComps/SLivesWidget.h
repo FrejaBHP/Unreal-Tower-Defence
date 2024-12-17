@@ -9,19 +9,22 @@ class TOWERDEFENCETHING_API SLivesWidget : public SCompoundWidget {
 
 public:
 	SLATE_BEGIN_ARGS(SLivesWidget) :
-		_livesPtr(nullptr),
-		_font()
+		_LivesPtr(),
+		_Font()
 	{}
-	SLATE_ARGUMENT(int32*, livesPtr)
-	SLATE_ARGUMENT(FSlateFontInfo, font)
+	SLATE_ARGUMENT(int32*, LivesPtr)
+	SLATE_ARGUMENT(FSlateFontInfo, Font)
 	SLATE_END_ARGS()
 
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
 	~SLivesWidget();
-	
 
-protected:
-	int32* livesPtr = nullptr;
-	FSlateFontInfo font;
+	void UpdateLivesCounter();
+
+private:
+	int32* Lives;
+	FSlateFontInfo Font;
+
+	FText GetLivesCount() const;
 };

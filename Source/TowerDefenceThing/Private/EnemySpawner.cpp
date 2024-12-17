@@ -22,19 +22,20 @@ void AEnemySpawner::BeginPlay() {
 void AEnemySpawner::SpawnWave(WaveManager::TDWave& wave) {
 	EnemiesToSpawn = wave.Amount;
 
-	TimerDelegate.BindUFunction(this, FName("SpawnEnemy"), wave.Health, wave.Speed, wave.FlipbookName);
+	TimerDelegate.BindUFunction(this, FName("SpawnEnemy"), wave.Health, wave.Speed, wave.Bounty, wave.FlipbookName);
 	GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 1.f, true, -1.f);
 }
 
 // Also needs support for spawning different enemy types
-void AEnemySpawner::SpawnEnemy(float health, float speed, FString flipbook) {
+void AEnemySpawner::SpawnEnemy(float health, float speed, float bounty, FString flipbook) {
 	UTDGameInstance* GI = Cast<UTDGameInstance>(GetGameInstance());
 
 	if (EnemiesToSpawn != 0) {
 		ABasicEnemy* newBasicEnemy = GetWorld()->SpawnActorDeferred<ABasicEnemy>(ABasicEnemy::StaticClass(), GetActorTransform(), this);
-		newBasicEnemy->SetWaveStats(health, speed);
+		newBasicEnemy->SetWaveStats(health, speed, (int32)bounty);
 		newBasicEnemy->SetFlipbook(flipbook);
 		newBasicEnemy->EnemyDeathDecrementDelegate.BindUObject(GI, &UTDGameInstance::DecrementEnemiesOnMap);
+		newBasicEnemy->EnemyBountyDelegate.BindUObject(GI, &UTDGameInstance::AwardBountyToPlayer);
 		newBasicEnemy->FinishSpawning(GetActorTransform());
 
 		EnemiesToSpawn--;

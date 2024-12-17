@@ -38,12 +38,14 @@ public:
 	UPROPERTY()
 	int32 RemainingEnemiesOnMap { 0 };
 
+	FRandomStream RandStream;
+
 	TUniquePtr<AbilityManager> AManager { nullptr };
 	TUniquePtr<WaveManager> WavesManager { nullptr };
 
-	FRandomStream RandStream;
-
+	void DeductFromLivesCounter(int);
 	void DecrementEnemiesOnMap();
+	void AwardBountyToPlayer(int player, int32 bounty);
 
 	UPaperSprite* GetSpriteByName(FString spriteName);
 	UPaperFlipbook* GetFlipbookByName(FString flipbookName);

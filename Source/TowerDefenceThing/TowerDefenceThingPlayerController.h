@@ -18,6 +18,8 @@ class UInputAction;
 
 DECLARE_LOG_CATEGORY_EXTERN(LogTemplateCharacter, Log, All);
 
+DECLARE_DELEGATE_OneParam(FGoldChangedSignature, int32 const);
+
 UCLASS()
 class ATowerDefenceThingPlayerController : public APlayerController {
 	GENERATED_BODY()
@@ -25,6 +27,8 @@ class ATowerDefenceThingPlayerController : public APlayerController {
 public:
 	ATowerDefenceThingPlayerController();
 	virtual void BeginDestroy() override;
+
+	FGoldChangedSignature FGoldChangedDelegate;
 
 	/** Time Threshold to know if it was a short press */
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
@@ -48,11 +52,17 @@ public:
 
 	void ConsumeHUDButtonInput(EAbilityHandle);
 
+	void AddPlayerGold(int32 amount);
+	void RemovePlayerGold(int32 amount);
+	int32 GetPlayerGold() const;
+
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
 	APawn* SelectedPawnPtr = nullptr;
+
+	int32 PlayerGold { 0 };
 
 	void HandleSelectedUnit();
 	void GetAndConvertAbilitiesToSWD(IClickableUnit* unit, EUnitType type);

@@ -2,6 +2,8 @@
 
 
 #include "TDGameInstance.h"
+#include "TDPlayerHUD.h"
+#include "../TowerDefenceThingPlayerController.h"
 #include <Engine/StreamableManager.h>
 
 UTDGameInstance::UTDGameInstance() {
@@ -49,6 +51,20 @@ void UTDGameInstance::StartSpawnWave() {
 	}
 }
 
+void UTDGameInstance::DeductFromLivesCounter(int amount) {
+	Lives -= amount;
+
+	// Should probably replace this part with a delegate/signal to avoid this call chain
+
+	auto& players = GetLocalPlayers();
+	for (size_t i = 0; i < players.Num(); i++) {
+		auto pCon = players[i]->GetPlayerController(GetWorld());
+		ATDPlayerHUD* playerHUD = pCon->GetHUD<ATDPlayerHUD>();
+
+		playerHUD->UpdateLivesWidget();
+	}
+}
+
 void UTDGameInstance::DecrementEnemiesOnMap() {
 	RemainingEnemiesOnMap--;
 	UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
@@ -56,6 +72,12 @@ void UTDGameInstance::DecrementEnemiesOnMap() {
 	if (RemainingEnemiesOnMap == 0 && WaveNumber < WavesManager->WaveArray.Num() - 1) {
 		StartWaveTimer();
 	}
+}
+
+void UTDGameInstance::AwardBountyToPlayer(int player, int32 bounty) {
+	ULocalPlayer* localPlayer = GetLocalPlayerByIndex(player);
+	ATowerDefenceThingPlayerController* localController = Cast<ATowerDefenceThingPlayerController>(localPlayer->GetPlayerController(GetWorld()));
+	localController->AddPlayerGold(bounty);
 }
 
 void UTDGameInstance::StartWaveTimer() {

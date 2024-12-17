@@ -80,7 +80,8 @@ void AEnemyBasePawn::PossessedBy(AController* NewController) {
 	SetOwner(NewController);
 }
 
-void AEnemyBasePawn::SetWaveStats(float baseHealth, float baseSpeed) {
+void AEnemyBasePawn::SetWaveStats(float baseHealth, float baseSpeed, int32 baseBounty) {
+	Bounty = baseBounty;
 	float effectiveHealth = baseHealth * HealthMultiplier;
 	BaseAttributeSet->Health->InitMinMax(effectiveHealth, 0.f, effectiveHealth);
 	BaseAttributeSet->Speed->InitMinMax(baseSpeed, 50.f, 400.f); // default is 200
@@ -120,7 +121,7 @@ float AEnemyBasePawn::GetCurrentHealth() {
 	return BaseAttributeSet->Health->GetCurrentValue();
 }
 
-void AEnemyBasePawn::TakeDamage(float damage) {
+void AEnemyBasePawn::TakeDamage(int sourcePlayer, float damage) {
 	// BASIC
 	float newValue = BaseAttributeSet->Health->GetCurrentValue() - damage;
 	BaseAttributeSet->Health->SetCurrentValue(newValue);
@@ -132,6 +133,9 @@ void AEnemyBasePawn::TakeDamage(float damage) {
 }
 
 void AEnemyBasePawn::Die() {
+	if (EnemyBountyDelegate.IsBound()) {
+		EnemyBountyDelegate.Execute(0, Bounty);
+	}
 	EnemyDeathDecrementDelegate.ExecuteIfBound();
 	HealthBarWidgetPtr.Reset();
 	Destroy();

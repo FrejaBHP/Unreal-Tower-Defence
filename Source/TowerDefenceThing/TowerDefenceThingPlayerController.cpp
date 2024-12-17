@@ -54,6 +54,27 @@ void ATowerDefenceThingPlayerController::SetupInputComponent() {
 	}
 }
 
+void ATowerDefenceThingPlayerController::AddPlayerGold(int32 amount) {
+	PlayerGold += amount;
+
+	FGoldChangedDelegate.ExecuteIfBound(GetPlayerGold());
+}
+
+void ATowerDefenceThingPlayerController::RemovePlayerGold(int32 amount) {
+	if ((PlayerGold - amount) < 0) {
+		PlayerGold = 0;
+	}
+	else {
+		PlayerGold -= amount;
+	}
+
+	FGoldChangedDelegate.ExecuteIfBound(GetPlayerGold());
+}
+
+int32 ATowerDefenceThingPlayerController::GetPlayerGold() const {
+	return PlayerGold;
+}
+
 void ATowerDefenceThingPlayerController::OnSelectInput() {
 	FHitResult Hit;
 	bool bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, true, Hit);

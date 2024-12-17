@@ -19,6 +19,7 @@
 #include "EnemyBasePawn.generated.h"
 
 DECLARE_DELEGATE(FEnemyDeathDecrementSignature);
+DECLARE_DELEGATE_TwoParams(FEnemyBountySignature, int, int32);
 
 UCLASS(Abstract)
 class TOWERDEFENCETHING_API AEnemyBasePawn : public APawn, public IClickableUnit, public IEnemyUnit {
@@ -29,6 +30,7 @@ public:
 	AEnemyBasePawn();
 
 	FEnemyDeathDecrementSignature EnemyDeathDecrementDelegate;
+	FEnemyBountySignature EnemyBountyDelegate;
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -38,12 +40,13 @@ public:
 	virtual FName GetUnitName() override;
 
 	virtual float GetCurrentHealth() override;
-	virtual void TakeDamage(float damage) override;
+	virtual void TakeDamage(int sourcePlayer, float damage) override;
 
 	EUnitType UnitType { EUnitType::Enemy };
 	FName Name;
 	FString FlipbookName;
 	float HealthMultiplier { 1.f };
+	int32 Bounty { 0 };
 	TUniquePtr<EnemyBaseTDAttributes> BaseAttributeSet = nullptr;
 
 	UPROPERTY(VisibleAnywhere)
@@ -72,7 +75,7 @@ public:
 	virtual void PossessedBy(AController* NewController);
 	virtual UTDAbilityComponent& GetAbilityComponent() override;
 
-	void SetWaveStats(float baseHealth, float baseSpeed);
+	void SetWaveStats(float baseHealth, float baseSpeed, int32 baseBounty);
 	void SetFlipbook(FString flipbookName);
 
 

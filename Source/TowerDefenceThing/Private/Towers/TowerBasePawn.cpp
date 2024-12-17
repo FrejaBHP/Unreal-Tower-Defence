@@ -48,6 +48,15 @@ ATowerBasePawn::ATowerBasePawn() {
 // Called when the game starts or when spawned
 void ATowerBasePawn::BeginPlay() {
 	Super::BeginPlay();
+
+	UPlayer* player = GetNetOwningPlayer();
+	if (player) {
+		FName name = player->GetFName();
+		UE_LOG(LogTemp, Warning, TEXT("Tower owner: %s"), *name.ToString());
+	}
+	else {
+		UE_LOG(LogTemp, Warning, TEXT("No player owner"));
+	}
 }
 
 // Called every frame
@@ -157,7 +166,7 @@ void ATowerBasePawn::OnHitEnemy(float damage, TWeakObjectPtr<AActor> enemy) {
 }
 
 void ATowerBasePawn::ApplyTowerDamageToEnemy(float damage, IEnemyUnit* enemyInterface) {
-	enemyInterface->TakeDamage(damage);
+	enemyInterface->TakeDamage(0, damage);
 }
 
 void ATowerBasePawn::OnSplashEnemies(TArray<AActor*> enemies) {
@@ -170,7 +179,7 @@ void ATowerBasePawn::OnSplashEnemies(TArray<AActor*> enemies) {
 void ATowerBasePawn::ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface) {
 	float damage = Cast<UTDGameInstance>(GetGameInstance())->RandStream.FRandRange(AttackAttributeSet->MinDamage->GetCurrentValue(), AttackAttributeSet->MaxDamage->GetCurrentValue());
 	damage *= AttackAttributeSet->SplashPercentage->GetCurrentValue();
-	enemyInterface->TakeDamage(damage);
+	enemyInterface->TakeDamage(0, damage);
 }
 
 TWeakObjectPtr<AActor> ATowerBasePawn::GetTarget() {
