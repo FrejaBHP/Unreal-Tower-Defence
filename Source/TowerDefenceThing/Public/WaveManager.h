@@ -29,15 +29,15 @@ public:
 	TArray<WaveManager::TDWave> WaveArray;
 
 private:
-	float BaseHealth { 15.f };
-	float WaveHealthModifier { 1.2f };
+	const float BaseHealth { 15.f };
+	const float WaveHealthModifier { 1.2f };
 
-	float BaseBounty { 1.f };
-	int WavesPerBountyIncrease { 4 };
+	const float BaseBounty { 1.f };
+	const int WavesPerBountyIncrease { 4 };
 
-	float SlowSpeed { 150.f };
-	float DefaultSpeed { 200.f };
-	float FastSpeed { 250.f };
+	const float SlowSpeed { 150.f };
+	const float DefaultSpeed { 200.f };
+	const float FastSpeed { 250.f };
 
 	TArray<FString> ValidEnemyFlipbookNames;
 };

@@ -9,8 +9,7 @@
 #include "Abilities/TDAbility.h"
 #include "SlateComps/SAbilityTooltip.h"
 #include "SlateComps/SBuilderMenuWidget.h"
-#include "SlateComps/SGoldWidget.h"
-#include "SlateComps/SLivesWidget.h"
+#include "SlateComps/STopBarWidget.h"
 #include "../TowerDefenceThingPlayerController.h"
 #include "TDPlayerHUD.generated.h"
 
@@ -30,14 +29,15 @@ public:
 	//const FSlateFontInfo fontinfo = FSlateFontInfo(FPaths::EngineContentDir() / TEXT("Slate/Fonts/Roboto-Medium.ttf"), 36);
 	FSlateFontInfo BigFont;
 
-	TSharedPtr<SLivesWidget> LivesWidgetPtr;
-	TSharedPtr<SGoldWidget> GoldWidgetPtr;
+	TSharedPtr<STopBarWidget> TopBarWidgetPtr;
 	TSharedPtr<SBuilderMenuWidget> BuildContextMenuPtr;
 
 	virtual void BeginDestroy() override;
 
-	void UpdateLivesWidget() const;
-	void UpdateGoldWidget(const int32 gold) const;
+	void UpdateLives() const;
+	void UpdateEnemiesRemaining() const;
+	void UpdateWaveNumber() const;
+	void UpdateGold(const int32 gold) const;
 
 	void ReceivedButtonInput(EAbilityHandle aHandle);
 	void ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetPosition);
@@ -51,8 +51,7 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-	void CreateLivesWidget();
-	void CreateGoldWidget();
+	void CreateTopBarWidget();
 	void CreateContextMenuWidget();
 	void CreateAbilityTooltipWidget();
 
@@ -63,5 +62,7 @@ protected:
 	bool IsAbilityTooltipActive { false };
 
 private:
-	int32* LivesPtr = nullptr;
+	int32* LivesPtr { nullptr };
+	int32* WaveNumberPtr { nullptr };
+	int32* RemainingPtr { nullptr };
 };

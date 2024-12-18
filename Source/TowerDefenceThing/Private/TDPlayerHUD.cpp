@@ -20,15 +20,18 @@ void ATDPlayerHUD::BeginPlay() {
 	BigFont = FStyleDefaults::GetFontInfo(); // HOLY SHIT
 	BigFont.Size = 48;
 
-	LivesPtr = &Cast<UTDGameInstance>(GetGameInstance())->Lives;
-	TDUIResources = Cast<UTDGameInstance>(GetGameInstance())->GetSlateGameResources();
+	UTDGameInstance* instance = Cast<UTDGameInstance>(GetGameInstance());
 
-	CreateLivesWidget();
-	CreateGoldWidget();
+	LivesPtr = &instance->Lives;
+	WaveNumberPtr = &instance->WaveNumber;
+	RemainingPtr = &instance->RemainingEnemiesOnMap;
+	TDUIResources = instance->GetSlateGameResources();
+
+	CreateTopBarWidget();
 	CreateContextMenuWidget();
 	CreateAbilityTooltipWidget();
 
-	GetPlayerOwner()->FGoldChangedDelegate.BindUObject(this, &ATDPlayerHUD::UpdateGoldWidget);
+	GetPlayerOwner()->FGoldChangedDelegate.BindUObject(this, &ATDPlayerHUD::UpdateGold);
 }
 
 void ATDPlayerHUD::DrawHUD() {
@@ -39,12 +42,20 @@ TObjectPtr<ATowerDefenceThingPlayerController> ATDPlayerHUD::GetPlayerOwner() {
 	return Cast<ATowerDefenceThingPlayerController>(PlayerOwner);
 }
 
-void ATDPlayerHUD::UpdateLivesWidget() const {
-	LivesWidgetPtr->UpdateLivesCounter();
+void ATDPlayerHUD::UpdateLives() const {
+	TopBarWidgetPtr->GetLivesText();
 }
 
-void ATDPlayerHUD::UpdateGoldWidget(const int32 gold) const {
-	GoldWidgetPtr->SetGoldCount(gold);
+void ATDPlayerHUD::UpdateEnemiesRemaining() const {
+	TopBarWidgetPtr->GetRemainingText();
+}
+
+void ATDPlayerHUD::UpdateWaveNumber() const {
+	TopBarWidgetPtr->GetWaveNumberText();
+}
+
+void ATDPlayerHUD::UpdateGold(const int32 gold) const {
+	TopBarWidgetPtr->SetGoldAmount(gold);
 }
 
 void ATDPlayerHUD::ReceivedButtonInput(EAbilityHandle aHandle) {
@@ -143,22 +154,13 @@ void ATDPlayerHUD::ReceivedButtonLeft() {
 	IsAbilityTooltipActive = false;
 }
 
-void ATDPlayerHUD::CreateLivesWidget() {
-	if (LivesPtr != nullptr) {
-		GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(), 
-			SAssignNew(LivesWidgetPtr, SLivesWidget)
-			.Font(BigFont)
-			.LivesPtr(LivesPtr)
-		, 10);
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("Lives pointer failed, lives widget not created"));
-	}
-}
-
-void ATDPlayerHUD::CreateGoldWidget() {
+void ATDPlayerHUD::CreateTopBarWidget() {
 	GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(),
-		SAssignNew(GoldWidgetPtr, SGoldWidget)
+		SAssignNew(TopBarWidgetPtr, STopBarWidget)
+		.tdUIResources(TDUIResources.ToWeakPtr())
+		.livesPtr(LivesPtr)
+		.remainingPtr(RemainingPtr)
+		.waveNumberPtr(WaveNumberPtr)
 		, 10);
 }
 
@@ -213,8 +215,6 @@ FVector2D ATDPlayerHUD::AbsoluteToViewport(FVector2D& absolutePosition) {
 
 void ATDPlayerHUD::BeginDestroy() {
 	TDUIResources.Reset();
-	LivesWidgetPtr.Reset();
-	GoldWidgetPtr.Reset();
 	BuildContextMenuPtr.Reset();
 	AbilityTooltipWidget.Reset();
 

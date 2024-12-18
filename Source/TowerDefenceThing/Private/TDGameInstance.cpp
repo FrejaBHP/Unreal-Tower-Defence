@@ -39,7 +39,7 @@ void UTDGameInstance::SetNewWave() {
 	WaveNumber++;
 	StartSpawnWave();
 
-	UE_LOG(LogTemp, Warning, TEXT("Wave %i"), WaveNumber + 1);
+	//UE_LOG(LogTemp, Warning, TEXT("Wave %i"), WaveNumber + 1);
 }
 
 void UTDGameInstance::StartSpawnWave() {
@@ -47,27 +47,48 @@ void UTDGameInstance::StartSpawnWave() {
 		EnemySpawner->SpawnWave(WavesManager->WaveArray[WaveNumber]);
 		RemainingEnemiesOnMap = WavesManager->WaveArray[WaveNumber].Amount;
 
-		UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
+		//UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
+
+		// Should probably replace this part with a delegate/signal to avoid this call chain
+
+		auto& players = GetLocalPlayers();
+		for (size_t i = 0; i < players.Num(); i++) {
+			APlayerController* pCon = players[i]->GetPlayerController(GetWorld());
+			ATDPlayerHUD* playerHUD = pCon->GetHUD<ATDPlayerHUD>();
+
+			playerHUD->UpdateWaveNumber();
+			playerHUD->UpdateEnemiesRemaining();
+		}
 	}
 }
 
 void UTDGameInstance::DeductFromLivesCounter(int amount) {
 	Lives -= amount;
 
-	// Should probably replace this part with a delegate/signal to avoid this call chain
+	// Ditto
 
 	auto& players = GetLocalPlayers();
 	for (size_t i = 0; i < players.Num(); i++) {
-		auto pCon = players[i]->GetPlayerController(GetWorld());
+		APlayerController* pCon = players[i]->GetPlayerController(GetWorld());
 		ATDPlayerHUD* playerHUD = pCon->GetHUD<ATDPlayerHUD>();
 
-		playerHUD->UpdateLivesWidget();
+		playerHUD->UpdateLives();
 	}
 }
 
 void UTDGameInstance::DecrementEnemiesOnMap() {
 	RemainingEnemiesOnMap--;
-	UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
+	//UE_LOG(LogTemp, Warning, TEXT("Enemies remaining: %i"), RemainingEnemiesOnMap);
+
+	// Ditto
+
+	auto& players = GetLocalPlayers();
+	for (size_t i = 0; i < players.Num(); i++) {
+		APlayerController* pCon = players[i]->GetPlayerController(GetWorld());
+		ATDPlayerHUD* playerHUD = pCon->GetHUD<ATDPlayerHUD>();
+
+		playerHUD->UpdateEnemiesRemaining();
+	}
 
 	if (RemainingEnemiesOnMap == 0 && WaveNumber < WavesManager->WaveArray.Num() - 1) {
 		StartWaveTimer();
