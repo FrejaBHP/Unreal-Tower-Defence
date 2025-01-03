@@ -16,11 +16,11 @@ void SBuilderMenuWidget::Construct(const FArguments& InArgs) {
 	GridPanelSquareArray[3].SetNum(3);
 
 	ChildSlot
-	.HAlign(HAlign_Right)
-	.VAlign(VAlign_Bottom)
+	//.HAlign(HAlign_Right)
+	//.VAlign(VAlign_Bottom)
 	[
 		SAssignNew(GridBorderPtr, SBorder)
-		.BorderImage(&brush)
+		.BorderImage(&BlackBrush)
 		.Padding(2.f)
 		.OnMouseButtonDown(this, &SBuilderMenuWidget::IgnoreMouseInput)
 		.OnMouseDoubleClick(this, &SBuilderMenuWidget::IgnoreMouseInput)

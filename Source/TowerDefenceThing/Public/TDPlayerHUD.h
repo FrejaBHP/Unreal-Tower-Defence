@@ -8,7 +8,7 @@
 
 #include "Abilities/TDAbility.h"
 #include "SlateComps/SAbilityTooltip.h"
-#include "SlateComps/SBuilderMenuWidget.h"
+#include "SlateComps/SBottomPanelsWidget.h"
 #include "SlateComps/STopBarWidget.h"
 #include "../TowerDefenceThingPlayerController.h"
 #include "TDPlayerHUD.generated.h"
@@ -30,7 +30,7 @@ public:
 	FSlateFontInfo BigFont;
 
 	TSharedPtr<STopBarWidget> TopBarWidgetPtr;
-	TSharedPtr<SBuilderMenuWidget> BuildContextMenuPtr;
+	TSharedPtr<SBottomPanelsWidget> BottomPanelsWidgetPtr;
 
 	virtual void BeginDestroy() override;
 
@@ -42,6 +42,9 @@ public:
 	void ReceivedButtonInput(EAbilityHandle aHandle);
 	void ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetPosition);
 	void ReceivedButtonLeft();
+
+	void OverrideUnitInStatsPanel(int8 type, FText nameText, FText typeText, const float* stat1, const float* stat2, const float* stat3, const float* stat4) const;
+	void ResetUnitInStatsPanel() const;
 	void OverrideSquareWidgetAbility(int8 x, int8 y, UTDAbility* ability) const;
 	void ResetSquareWidgetData(int8 x, int8 y) const;
 
@@ -52,7 +55,7 @@ protected:
 	virtual void BeginPlay() override;
 
 	void CreateTopBarWidget();
-	void CreateContextMenuWidget();
+	void CreateBottomPanelsWidget();
 	void CreateAbilityTooltipWidget();
 
 	TObjectPtr<ATowerDefenceThingPlayerController> GetPlayerOwner();

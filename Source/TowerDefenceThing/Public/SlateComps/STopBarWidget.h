@@ -3,9 +3,8 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Widgets/SCompoundWidget.h"
-
 #include "Slate/SlateGameResources.h"
+#include "Widgets/SCompoundWidget.h"
 
 /**
  * 

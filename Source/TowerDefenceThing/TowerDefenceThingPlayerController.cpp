@@ -11,7 +11,9 @@
 #include "NiagaraSystem.h"
 #include "NiagaraFunctionLibrary.h"
 
+#include "EnemyUnit.h"
 #include "TowerDefenceThingCharacter.h"
+#include "TowerUnit.h"
 #include "TDPlayerHUD.h"
 
 
@@ -29,6 +31,22 @@ void ATowerDefenceThingPlayerController::BeginPlay() {
 	Super::BeginPlay();
 
 	SelectedPawnPtr = GetPawn();
+}
+
+void ATowerDefenceThingPlayerController::Tick(float DeltaTime) {
+	Super::Tick(DeltaTime);
+
+	//GEngine->ClearOnScreenDebugMessages();
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Green, FString::Printf(TEXT("Selected: %s"), (HasSelectedPawn ? TEXT("True") : TEXT("False"))));
+	//GEngine->AddOnScreenDebugMessage(-1, 1.f, FColor::Purple, FString::Printf(TEXT("Valid pawn: %s"), (SelectedPawnPtr.IsValid() ? TEXT("True") : TEXT("False"))));
+
+	if (HasSelectedPawn && !SelectedPawnPtr.IsValid()) {
+		auto pHUD = GetHUD<ATDPlayerHUD>();
+		pHUD->ResetUnitInStatsPanel();
+
+		HasSelectedPawn = false;
+		SelectedPawnPtr = nullptr;
+	}
 }
 
 void ATowerDefenceThingPlayerController::SetupInputComponent() {
@@ -85,39 +103,43 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 		// If clicked actor implements IClickableUnit, grab it
 		if (tempActor != nullptr && tempActor->Implements<UClickableUnit>()) {
 			SelectedPawnPtr = Cast<APawn>(tempActor);
+			HasSelectedPawn = true;
 			HandleSelectedUnit();
 		}
 	}
 	// If the landscape is clicked and currently selected unit isn't the player unit, select it
-	else if (GetPawn() != SelectedPawnPtr) {
+	else if (GetPawn() != SelectedPawnPtr || !HasSelectedPawn) {
 		SelectedPawnPtr = GetPawn();
+		HasSelectedPawn = true;
 		HandleSelectedUnit();
 	}
 }
 
 // When unit is selected, update HUD to reflect it and show stats + abilities
 void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
-	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr);
+	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr.Get());
 	EUnitType unitType = selectedUnit->GetUnitType();
 
-	/*
-	if (unitType == EUnitType::Tower) {
-		UE_LOG(LogTemp, Warning, TEXT("Tower"));
-	}
-	else if (unitType == EUnitType::Enemy) {
-		UE_LOG(LogTemp, Warning, TEXT("Enemy"));
-	}
-	else if (unitType == EUnitType::Player) {
-		UE_LOG(LogTemp, Warning, TEXT("Player"));
-	}
-	*/
-
-	GetAndConvertAbilitiesToSWD(selectedUnit, unitType);
+	SendUnitDataToHUD(selectedUnit, unitType);
 }
 
-void ATowerDefenceThingPlayerController::GetAndConvertAbilitiesToSWD(IClickableUnit* unit, EUnitType type) {
-	auto& abilities = unit->GetAbilityComponent().Abilities;
+void ATowerDefenceThingPlayerController::SendUnitDataToHUD(IClickableUnit* unit, EUnitType type) {
 	auto pHUD = GetHUD<ATDPlayerHUD>();
+	auto& abilities = unit->GetAbilityComponent().Abilities;
+	FText ftName = FText::FromName(unit->GetUnitName());
+	FText ftType = FText::FromString(*UEnum::GetDisplayValueAsText(unit->GetUnitType()).ToString());
+
+	if (type == EUnitType::Tower) {
+		ITowerUnit* towerUnit = Cast<ITowerUnit>(SelectedPawnPtr.Get());
+		pHUD->OverrideUnitInStatsPanel(0, ftName, ftType, &towerUnit->GetMinDamage(), &towerUnit->GetMaxDamage(), &towerUnit->GetAttackSpeed(), &towerUnit->GetRange());
+	}
+	else if (type == EUnitType::Enemy) {
+		IEnemyUnit* enemyUnit = Cast<IEnemyUnit>(SelectedPawnPtr.Get());
+		pHUD->OverrideUnitInStatsPanel(1, ftName, ftType, &enemyUnit->GetCurrentHealth(), &enemyUnit->GetMaxHealth(), &enemyUnit->GetMovementSpeed(), nullptr);
+	}
+	else if (type == EUnitType::Player) {
+		pHUD->OverrideUnitInStatsPanel(2, ftName, ftType, nullptr, nullptr, nullptr, nullptr);
+	}
 
 	for (size_t i = 0; i < 4; i++) {
 		// MIDLERTIDIG LØSNING PÅ PLADS I HUD. ÆNDR SENERE TIL EN LIDT MERE SOFISTIKERET METODE
@@ -175,7 +197,7 @@ void ATowerDefenceThingPlayerController::OnSetDestinationReleased() {
 
 // Called when an Ability is pressed in the HUD. Has access to the ability's handle for now (should be the ability itself later down the line)
 void ATowerDefenceThingPlayerController::ConsumeHUDButtonInput(EAbilityHandle aHandle) {
-	UTDAbilityComponent& abilityComp = Cast<IClickableUnit>(SelectedPawnPtr)->GetAbilityComponent(); // Pawn is only assigned if interface is implemented, so this is safe
+	UTDAbilityComponent& abilityComp = Cast<IClickableUnit>(SelectedPawnPtr.Get())->GetAbilityComponent(); // Pawn is only assigned if interface is implemented, so this is safe
 	abilityComp.TryCastAbility(aHandle);
 
 	//UE_LOG(LogTemp, Warning, TEXT("Received input, type: %s, id: %i"), *UEnum::GetValueAsString(type), (int)aHandle);

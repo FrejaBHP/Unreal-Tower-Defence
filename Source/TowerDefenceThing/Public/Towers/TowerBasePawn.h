@@ -65,6 +65,11 @@ public:
 	virtual void OnSplashEnemies(TArray<AActor*> enemies) override;
 	virtual void ApplyTowerSplashToEnemy(IEnemyUnit* enemyInterface);
 	virtual float GetSplashRadius() override;
+	const virtual float& GetRange() override;
+	const virtual float& GetMinDamage() override;
+	const virtual float& GetMaxDamage() override;
+	const virtual float& GetAttackSpeed() override;
+
 	virtual TWeakObjectPtr<AActor> GetTarget() override;
 	virtual UTDAbilityComponent& GetAbilityComponent() override;
 	//virtual TArray<UTDAbility*>& GetAbilities() override;

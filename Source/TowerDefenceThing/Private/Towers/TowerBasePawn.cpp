@@ -113,6 +113,22 @@ float ATowerBasePawn::GetSplashRadius() {
 	return AttackAttributeSet->SplashRadius->GetCurrentValue();
 }
 
+const float& ATowerBasePawn::GetRange() {
+	return BaseAttributeSet->Range->CurrentValue;
+}
+
+const float& ATowerBasePawn::GetMinDamage() {
+	return AttackAttributeSet->MinDamage->CurrentValue;
+}
+
+const float& ATowerBasePawn::GetMaxDamage() {
+	return AttackAttributeSet->MaxDamage->CurrentValue;
+}
+
+const float& ATowerBasePawn::GetAttackSpeed() {
+	return BaseAttributeSet->AttackRate->CurrentValue;
+}
+
 void ATowerBasePawn::GetNewTarget() {
 	TArray<AActor*> actorArray;
 	CapsuleComponent->GetOverlappingActors(actorArray);

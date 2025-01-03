@@ -22,4 +22,8 @@ public:
 	virtual void OnHitEnemy(float damage, TWeakObjectPtr<AActor> enemy) = 0;
 	virtual void OnSplashEnemies(TArray<AActor*> enemies) = 0;
 	virtual float GetSplashRadius() = 0;
+	const virtual float& GetRange() = 0;
+	const virtual float& GetMinDamage() = 0;
+	const virtual float& GetMaxDamage() = 0;
+	const virtual float& GetAttackSpeed() = 0;
 };

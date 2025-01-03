@@ -14,8 +14,8 @@ void SContextMenuSquareWidget::Construct(const FArguments& InArgs) {
 	ChildSlot
 	[
 		SNew(SBox)
-		.HeightOverride(96)
-		.WidthOverride(96)
+		.HeightOverride(72)
+		.WidthOverride(72)
 		[
 			SAssignNew(ProgressBarPtr, SProgressBar)
 			.Percent(0.f)

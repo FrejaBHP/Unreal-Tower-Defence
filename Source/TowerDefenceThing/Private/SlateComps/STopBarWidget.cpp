@@ -15,7 +15,7 @@ void STopBarWidget::Construct(const FArguments& InArgs) {
 	BackgroundBrush.DrawAs = ESlateBrushDrawType::Image;
 
 	FSlateFontInfo baseFont = FStyleDefaults::GetFontInfo();
-	baseFont.Size = 20.f;
+	baseFont.Size = 18.f;
 
 	if (TSharedPtr<FSlateGameResources> lockedResources = TDUIResources.Pin()) {
 		BackgroundBrush = *lockedResources->GetBrush("ui_top_Brush");

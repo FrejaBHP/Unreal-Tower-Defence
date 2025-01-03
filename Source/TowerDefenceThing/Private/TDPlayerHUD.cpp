@@ -28,7 +28,7 @@ void ATDPlayerHUD::BeginPlay() {
 	TDUIResources = instance->GetSlateGameResources();
 
 	CreateTopBarWidget();
-	CreateContextMenuWidget();
+	CreateBottomPanelsWidget();
 	CreateAbilityTooltipWidget();
 
 	GetPlayerOwner()->FGoldChangedDelegate.BindUObject(this, &ATDPlayerHUD::UpdateGold);
@@ -141,6 +141,7 @@ void ATDPlayerHUD::ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeom
 		// Always returns a positive offset from its origin out of viewport bounds, since the widget itself insists on existing outside of it
 		const FVector2D tooltipRelativeOffset = vwpWidgetGeo.LocalToAbsolute(AbilityTooltipWidget->GetTickSpaceGeometry().GetLocalPositionAtCoordinates(FVector2D::ZeroVector));
 
+		// Vector at the end is constructed from the fact the tooltip is minimum 600 + border (12 each) units wide
 		const FVector2D realOffsetMaybe = position + tooltipRelativeOffset - FVector2D(600, 72);
 		AbilityTooltipWidget->ConstraintCanvasSlot->SetOffset(realOffsetMaybe);
 
@@ -157,36 +158,20 @@ void ATDPlayerHUD::ReceivedButtonLeft() {
 void ATDPlayerHUD::CreateTopBarWidget() {
 	GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(),
 		SAssignNew(TopBarWidgetPtr, STopBarWidget)
-		.tdUIResources(TDUIResources.ToWeakPtr())
-		.livesPtr(LivesPtr)
-		.remainingPtr(RemainingPtr)
-		.waveNumberPtr(WaveNumberPtr)
+			.tdUIResources(TDUIResources.ToWeakPtr())
+			.livesPtr(LivesPtr)
+			.remainingPtr(RemainingPtr)
+			.waveNumberPtr(WaveNumberPtr)
 		, 10);
 }
 
-void ATDPlayerHUD::CreateContextMenuWidget() {
-	if (TDUIResources.IsValid()) {
-		GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(),
-			SAssignNew(BuildContextMenuPtr, SBuilderMenuWidget)
+void ATDPlayerHUD::CreateBottomPanelsWidget() {
+	GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(),
+		SAssignNew(BottomPanelsWidgetPtr, SBottomPanelsWidget)
 			.tdUIResources(TDUIResources.ToWeakPtr())
 		, 10);
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("UIResources invalid, context menu widget not created"));
-	}
 
-	if (BuildContextMenuPtr.IsValid()) {
-		for (size_t i = 0; i < BuildContextMenuPtr->GridPanelSquareArray.Num(); i++) {
-			for (size_t j = 0; j < BuildContextMenuPtr->GridPanelSquareArray[i].Num(); j++) {
-				BuildContextMenuPtr->GridPanelSquareArray[i][j]->OnClicked.BindUObject(this, &ATDPlayerHUD::ReceivedButtonInput);
-				BuildContextMenuPtr->GridPanelSquareArray[i][j]->OnEntered.BindUObject(this, &ATDPlayerHUD::ReceivedButtonEntered);
-				BuildContextMenuPtr->GridPanelSquareArray[i][j]->OnLeft.BindUObject(this, &ATDPlayerHUD::ReceivedButtonLeft);
-			}
-		}
-	}
-	else {
-		UE_LOG(LogTemp, Error, TEXT("Menu pointer invalid, button widgets not created"));
-	}
+	BottomPanelsWidgetPtr->BindContextMenuWidget(this);
 }
 
 void ATDPlayerHUD::CreateAbilityTooltipWidget() {
@@ -195,12 +180,20 @@ void ATDPlayerHUD::CreateAbilityTooltipWidget() {
 	, 20);
 }
 
+void ATDPlayerHUD::OverrideUnitInStatsPanel(int8 type, FText nameText, FText typeText, const float* stat1, const float* stat2, const float* stat3, const float* stat4) const {
+	BottomPanelsWidgetPtr->BindUnitStatsPanel(type, nameText, typeText, stat1, stat2, stat3, stat4);
+}
+
+void ATDPlayerHUD::ResetUnitInStatsPanel() const {
+	BottomPanelsWidgetPtr->ResetUnitStatsPanel();
+}
+
 void ATDPlayerHUD::OverrideSquareWidgetAbility(int8 x, int8 y, UTDAbility* ability) const {
-	BuildContextMenuPtr->GridPanelSquareArray[x][y]->SetBoundAbility(ability);
+	BottomPanelsWidgetPtr->ContextMenuPtr->GridPanelSquareArray[x][y]->SetBoundAbility(ability);
 }
 
 void ATDPlayerHUD::ResetSquareWidgetData(int8 x, int8 y) const {
-	BuildContextMenuPtr->GridPanelSquareArray[x][y]->SetBoundAbility(nullptr);
+	BottomPanelsWidgetPtr->ContextMenuPtr->GridPanelSquareArray[x][y]->SetBoundAbility(nullptr);
 }
 
 FVector2D ATDPlayerHUD::AbsoluteToViewport(FVector2D& absolutePosition) {
@@ -214,9 +207,11 @@ FVector2D ATDPlayerHUD::AbsoluteToViewport(FVector2D& absolutePosition) {
 }
 
 void ATDPlayerHUD::BeginDestroy() {
-	TDUIResources.Reset();
-	BuildContextMenuPtr.Reset();
+	TopBarWidgetPtr.Reset();
+	BottomPanelsWidgetPtr.Reset();
 	AbilityTooltipWidget.Reset();
+
+	TDUIResources.Reset();
 
 	Super::BeginDestroy();
 }

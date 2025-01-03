@@ -27,6 +27,7 @@ public:
 
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
+	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
 	~SContextMenuSquareWidget();
 
 	virtual void OnMouseEnter(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) override;
@@ -38,8 +39,6 @@ public:
 	void SetImageBrushWithName(FName newBrushName);
 	void SetBoundAbility(UTDAbility* ability);
 	void UpdateCooldown();
-
-	virtual void Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) override;
 
 	FClickedSignature OnClicked;
 	FMouseEnterSignature OnEntered;

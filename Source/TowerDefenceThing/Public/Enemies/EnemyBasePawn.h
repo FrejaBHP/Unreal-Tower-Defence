@@ -39,7 +39,9 @@ public:
 	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 
-	virtual float GetCurrentHealth() override;
+	const virtual float& GetCurrentHealth() override;
+	const virtual float& GetMaxHealth() override;
+	const virtual float& GetMovementSpeed() override;
 	virtual void TakeDamage(int sourcePlayer, float damage) override;
 
 	EUnitType UnitType { EUnitType::Enemy };

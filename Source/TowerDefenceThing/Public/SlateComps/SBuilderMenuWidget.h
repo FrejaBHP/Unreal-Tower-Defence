@@ -25,6 +25,6 @@ public:
 protected:
 	TSharedPtr<SBorder> GridBorderPtr;
 	TSharedPtr<SUniformGridPanel> GridPanelPtr;
-	FSlateColorBrush brush = FSlateColorBrush(FLinearColor::Black);
+	FSlateColorBrush BlackBrush = FSlateColorBrush(FLinearColor::Black);
 	TWeakPtr<FSlateGameResources> tdUIResources;
 };

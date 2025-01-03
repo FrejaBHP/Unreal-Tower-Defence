@@ -32,20 +32,27 @@ public:
 
 	~TDAttribute();
 
+	// Gets the starting value
 	float GetBaseValue() const;
+	// Gets the current value. Use this over the raw property unless you absolutely have to
 	float GetCurrentValue() const;
+	// Gets the minimum value. Use this over the raw property unless you absolutely have to
 	float GetMinValue() const;
+	// Gets the maximum value. Use this over the raw property unless you absolutely have to
 	float GetMaxValue() const;
 
+	// Sets the base value. Use this over the raw property unless you absolutely have to
 	void SetBaseValue(float newBase);
+	// Sets the current value. Use this over the raw property unless you absolutely have to
 	void SetCurrentValue(float newCurrent);
+	// Sets the minimum value. Use this over the raw property unless you absolutely have to
 	void SetMinValue(float newMin);
+	// Sets the maximum value. Use this over the raw property unless you absolutely have to
 	void SetMaxValue(float newMax);
 
 	void Init(float base);
 	void InitMinMax(float base, float min, float max);
 
-protected:
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	float BaseValue;
 
@@ -57,6 +64,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	float MaxValue;
+
+protected:
+	
 
 	UPROPERTY(BlueprintReadOnly, Category = "Attribute")
 	bool IgnoresMinMax;

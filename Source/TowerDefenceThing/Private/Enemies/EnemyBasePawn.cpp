@@ -117,8 +117,16 @@ UTDAbilityComponent& AEnemyBasePawn::GetAbilityComponent() {
 	return *AbilityComponent;
 }
 
-float AEnemyBasePawn::GetCurrentHealth() {
-	return BaseAttributeSet->Health->GetCurrentValue();
+const float& AEnemyBasePawn::GetCurrentHealth() {
+	return BaseAttributeSet->Health->CurrentValue;
+}
+
+const float& AEnemyBasePawn::GetMaxHealth() {
+	return BaseAttributeSet->Health->MaxValue;
+}
+
+const float& AEnemyBasePawn::GetMovementSpeed() {
+	return BaseAttributeSet->Speed->CurrentValue;
 }
 
 void AEnemyBasePawn::TakeDamage(int sourcePlayer, float damage) {

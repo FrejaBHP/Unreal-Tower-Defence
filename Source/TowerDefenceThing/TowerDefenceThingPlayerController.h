@@ -28,6 +28,8 @@ public:
 	ATowerDefenceThingPlayerController();
 	virtual void BeginDestroy() override;
 
+	virtual void Tick(float DeltaTime) override;
+
 	FGoldChangedSignature FGoldChangedDelegate;
 
 	/** Time Threshold to know if it was a short press */
@@ -60,12 +62,13 @@ protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
-	APawn* SelectedPawnPtr = nullptr;
+	TSoftObjectPtr<APawn> SelectedPawnPtr = nullptr;
+	//APawn* SelectedPawnPtr = nullptr;
 
 	int32 PlayerGold { 0 };
 
 	void HandleSelectedUnit();
-	void GetAndConvertAbilitiesToSWD(IClickableUnit* unit, EUnitType type);
+	void SendUnitDataToHUD(IClickableUnit* unit, EUnitType type);
 
 	virtual void SetupInputComponent() override;
 	
@@ -81,8 +84,9 @@ protected:
 
 private:
 	FVector CachedDestination;
-
 	float FollowTime; // For how long it has been pressed
+
+	bool HasSelectedPawn { false };
 };
 
 
