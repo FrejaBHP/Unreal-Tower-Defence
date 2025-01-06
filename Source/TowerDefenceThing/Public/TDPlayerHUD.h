@@ -40,7 +40,7 @@ public:
 	void UpdateGold(const int32 gold) const;
 
 	void ReceivedButtonInput(EAbilityHandle aHandle);
-	void ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetPosition);
+	void ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetGeometry);
 	void ReceivedButtonLeft();
 
 	void OverrideUnitInStatsPanel(int8 type, FText nameText, FText typeText, const float* stat1, const float* stat2, const float* stat3, const float* stat4) const;

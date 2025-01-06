@@ -20,6 +20,7 @@ public:
 
 	//SCanvas::FSlot* CanvasSlot;
 	SConstraintCanvas::FSlot* ConstraintCanvasSlot;
+	TSharedPtr<SBorder> TooltipBorder;
 
 	void SetTooltipAbility(UTDAbility* tdAbility);
 	void ApplyAbilityInfo();

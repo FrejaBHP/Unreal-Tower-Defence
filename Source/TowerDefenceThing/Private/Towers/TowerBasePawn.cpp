@@ -94,39 +94,15 @@ void ATowerBasePawn::OnOverlapBegin(UPrimitiveComponent* CapsComp, AActor* Other
 void ATowerBasePawn::OnOverlapEnd(UPrimitiveComponent* CapsComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) {
 	EnemiesInRange--;
 
+	if (OtherActor == TowerTarget.Get()) {
+		TowerTarget = nullptr;
+	}
+
 	//UE_LOG(LogTemp, Warning, TEXT("Enemy left, now %i in range"), EnemiesInRange);
 }
 
 void ATowerBasePawn::OnSelect() {
 
-}
-
-EUnitType ATowerBasePawn::GetUnitType() {
-	return UnitType;
-}
-
-FName ATowerBasePawn::GetUnitName() {
-	return Name;
-}
-
-float ATowerBasePawn::GetSplashRadius() {
-	return AttackAttributeSet->SplashRadius->GetCurrentValue();
-}
-
-const float& ATowerBasePawn::GetRange() {
-	return BaseAttributeSet->Range->CurrentValue;
-}
-
-const float& ATowerBasePawn::GetMinDamage() {
-	return AttackAttributeSet->MinDamage->CurrentValue;
-}
-
-const float& ATowerBasePawn::GetMaxDamage() {
-	return AttackAttributeSet->MaxDamage->CurrentValue;
-}
-
-const float& ATowerBasePawn::GetAttackSpeed() {
-	return BaseAttributeSet->AttackRate->CurrentValue;
 }
 
 void ATowerBasePawn::GetNewTarget() {
@@ -211,3 +187,32 @@ TArray<UTDAbility*>& ATowerBasePawn::GetAbilities() {
 	return AbilityComponent->Abilities;
 }
 */
+
+
+EUnitType ATowerBasePawn::GetUnitType() {
+	return UnitType;
+}
+
+FName ATowerBasePawn::GetUnitName() {
+	return Name;
+}
+
+float ATowerBasePawn::GetSplashRadius() {
+	return AttackAttributeSet->SplashRadius->GetCurrentValue();
+}
+
+const float& ATowerBasePawn::GetRange() {
+	return BaseAttributeSet->Range->CurrentValue;
+}
+
+const float& ATowerBasePawn::GetMinDamage() {
+	return AttackAttributeSet->MinDamage->CurrentValue;
+}
+
+const float& ATowerBasePawn::GetMaxDamage() {
+	return AttackAttributeSet->MaxDamage->CurrentValue;
+}
+
+const float& ATowerBasePawn::GetAttackSpeed() {
+	return BaseAttributeSet->AttackRate->CurrentValue;
+}

@@ -40,6 +40,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 				SNew(SBorder)
 				.BorderImage(&BlackBrush)
 				.Padding(4.f)
+				.Visibility(EVisibility::HitTestInvisible)
 				.Content()
 				[
 					SNew(SBox)
@@ -160,6 +161,8 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 	];
 }
 
+// Since we're only ticking for one unit per player, performance here isn't a massive concern
+// UpdateUnitStatsPanel() Updates the shown values of the unit's stats every frame by dereferencing the issued pointers
 void SBottomPanelsWidget::Tick(const FGeometry& AllottedGeometry, const double InCurrentTime, const float InDeltaTime) {
 	SCompoundWidget::Tick(AllottedGeometry, InCurrentTime, InDeltaTime);
 	
@@ -168,6 +171,7 @@ void SBottomPanelsWidget::Tick(const FGeometry& AllottedGeometry, const double I
 	}
 }
 
+// When a unit is selected, change the stat description text to match the type
 void SBottomPanelsWidget::BindUnitStatsPanel(int8 type, FText nameText, FText typeText, const float* urs1, const float* urs2, const float* us2, const float* us3) {
 	UnitTypeNum = type;
 
@@ -223,6 +227,7 @@ void SBottomPanelsWidget::UpdateUnitStatsPanel() {
 	}
 }
 
+// Resets textboxes and pointers for when a unit is no longer valid, to avoid dangling pointers and visual issues
 void SBottomPanelsWidget::ResetUnitStatsPanel() {
 	HasAttachedUnit = false;
 
@@ -238,6 +243,7 @@ void SBottomPanelsWidget::ResetUnitStatsPanel() {
 	FUnitStat3Type = FText::GetEmpty();
 }
 
+// Sets up mouse interaction with the Context Menu buttons
 void SBottomPanelsWidget::BindContextMenuWidget(AHUD* hud) const {
 	if (ContextMenuPtr.IsValid()) {
 		ATDPlayerHUD* playerHUD = Cast<ATDPlayerHUD>(hud);

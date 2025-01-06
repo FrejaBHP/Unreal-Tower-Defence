@@ -9,21 +9,19 @@ BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SAbilityTooltip::Construct(const FArguments& InArgs) {
 	FSlateFontInfo baseFont = FStyleDefaults::GetFontInfo();
 	NameFont = baseFont;
-	NameFont.Size = 24.f;
+	NameFont.Size = 16.f;
 
-	SetVisibility(EVisibility::Collapsed);
+	SetVisibility(EVisibility::Hidden);
 	
 	DescriptionFont = baseFont;
-	DescriptionFont.Size = 20.f;
+	DescriptionFont.Size = 14.f;
 
 	ChildSlot
-	.HAlign(EHorizontalAlignment::HAlign_Left)
-	.VAlign(EVerticalAlignment::VAlign_Top)
 	[
 		SNew(SConstraintCanvas)
 		+ SConstraintCanvas::Slot() .AutoSize(true) .Alignment(FVector2D(0, 0)) .Expose(ConstraintCanvasSlot)
 		[
-			SNew(SBorder)
+			SAssignNew(TooltipBorder, SBorder)
 			.BorderImage(&BackgroundBrush)
 			.Padding(12.f)
 			.Content()
@@ -77,13 +75,13 @@ void SAbilityTooltip::Construct(const FArguments& InArgs) {
 					.Text(this, &SAbilityTooltip::GetAbilityCastingType)
 				]
 
-				+ SVerticalBox::Slot() .Padding(0, 10, 0, 0) .AutoHeight()
+				+ SVerticalBox::Slot() .Padding(0, 8, 0, 0) .AutoHeight()
 				[
 					SNew(STextBlock)
 					.Font(DescriptionFont)
 					.ColorAndOpacity(DescriptionTextColour)
-					.WrapTextAt(600)
-					.MinDesiredWidth(600)
+					.WrapTextAt(400)
+					.MinDesiredWidth(400)
 					.Text(this, &SAbilityTooltip::GetAbilityDescription)
 				]
 			]
@@ -132,7 +130,7 @@ FText SAbilityTooltip::GetAbilityDescription() const {
 }
 
 SAbilityTooltip::~SAbilityTooltip() {
-
+	TooltipBorder.Reset();
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

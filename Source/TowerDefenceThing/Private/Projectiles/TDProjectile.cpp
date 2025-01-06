@@ -59,7 +59,7 @@ void ATDProjectile::BeginPlay() {
 void ATDProjectile::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if (Target.IsValid()) {
+	if (!IsPendingKillPending() && Target.IsValid()) {
 		ProjMovementComponent->Velocity = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal() * Speed;
 
 		// Modificeret logik fra bRotationFollowsVelocity, så projektilet vinkles endnu en 90 grader. Får det til ikke at pege op
