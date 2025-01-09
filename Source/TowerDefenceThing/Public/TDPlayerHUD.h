@@ -23,11 +23,7 @@ public:
 	ATDPlayerHUD();
 	virtual void DrawHUD() override;
 
-	//UPROPERTY()
 	FBuildCommandSignature BuildCommandDelegate;
-
-	//const FSlateFontInfo fontinfo = FSlateFontInfo(FPaths::EngineContentDir() / TEXT("Slate/Fonts/Roboto-Medium.ttf"), 36);
-	FSlateFontInfo BigFont;
 
 	TSharedPtr<STopBarWidget> TopBarWidgetPtr;
 	TSharedPtr<SBottomPanelsWidget> BottomPanelsWidgetPtr;

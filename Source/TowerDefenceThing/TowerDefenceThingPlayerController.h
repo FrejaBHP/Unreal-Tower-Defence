@@ -9,6 +9,7 @@
 #include "Abilities/TDAbility.h"
 #include "ClickableUnit.h"
 #include "Input/IMC_TD_Def.h"
+#include "TowerEnums.h"
 #include "TowerDefenceThingPlayerController.generated.h"
 
 /** Forward declaration to improve compiling times */
@@ -52,21 +53,32 @@ public:
 	UPROPERTY(EditAnywhere, Category = Input)
 	UInputAction* RightClickAction;
 
-	void ConsumeHUDButtonInput(EAbilityHandle);
+	// Set in editor
+	UPROPERTY(EditAnywhere, Category = Input)
+	UInputAction* EscKeyboardAction;
+
+	void ConsumeHUDButtonInput(EAbilityHandle aHandle);
+
+	void SwitchMode();
+
+	bool TryPlaceBuilding(ETowerHandle tHandle, FVector location);
 
 	void AddPlayerGold(int32 amount);
 	void RemovePlayerGold(int32 amount);
 	int32 GetPlayerGold() const;
+
+	FVector2D GetNearestCentrePointInWorldGrid(double worldX, double worldY);
 
 protected:
 	/** True if the controlled character should navigate to the mouse cursor. */
 	uint32 bMoveToMouseCursor : 1;
 
 	TSoftObjectPtr<APawn> SelectedPawnPtr = nullptr;
-	//APawn* SelectedPawnPtr = nullptr;
 
 	int32 PlayerGold { 0 };
 
+	void PlaceBuilding(ETowerHandle tHandle, FVector location);
+	void TrySelectBuilder();
 	void HandleSelectedUnit();
 	void SendUnitDataToHUD(IClickableUnit* unit, EUnitType type);
 
@@ -87,6 +99,5 @@ private:
 	float FollowTime; // For how long it has been pressed
 
 	bool HasSelectedPawn { false };
+	bool IsInBuildMode { false };
 };
-
-

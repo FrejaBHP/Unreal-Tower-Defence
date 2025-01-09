@@ -19,6 +19,7 @@ UTDGameInstance::UTDGameInstance() {
 	CatalogueFlipbooks();
 
 	AManager = MakeUnique<AbilityManager>();
+	TManager = MakeUnique<TowerManager>();
 	WavesManager = MakeUnique<WaveManager>();
 }
 

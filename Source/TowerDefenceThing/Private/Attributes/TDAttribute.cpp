@@ -24,7 +24,20 @@ void TDAttribute::SetBaseValue(float newBase) {
 }
 
 void TDAttribute::SetCurrentValue(float newCurrent) {
-	CurrentValue = newCurrent;
+	if (IgnoresMinMax) {
+		CurrentValue = newCurrent;
+		return;
+	}
+	
+	if (newCurrent > MaxValue) {
+		CurrentValue = MaxValue;
+	}
+	else if (newCurrent < MinValue) {
+		CurrentValue = MinValue;
+	}
+	else {
+		CurrentValue = newCurrent;
+	}
 }
 
 void TDAttribute::SetMinValue(float newMin) {

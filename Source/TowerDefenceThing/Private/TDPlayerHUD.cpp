@@ -17,9 +17,6 @@ ATDPlayerHUD::ATDPlayerHUD() {
 void ATDPlayerHUD::BeginPlay() {
 	Super::BeginPlay();
 
-	BigFont = FStyleDefaults::GetFontInfo(); // HOLY SHIT
-	BigFont.Size = 48;
-
 	UTDGameInstance* instance = Cast<UTDGameInstance>(GetGameInstance());
 
 	LivesPtr = &instance->Lives;
@@ -67,21 +64,25 @@ void ATDPlayerHUD::ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeom
 	if (!IsAbilityTooltipActive) {
 		AbilityTooltipWidget->SetTooltipAbility(abilityPointer);
 
+		// The forced extra prepass calculates the desired size of widgets. This is used for calculating the tooltip's approximate size before we move it to get it done in 1 tick
 		AbilityTooltipWidget->MarkPrepassAsDirty();
 		AbilityTooltipWidget->SlatePrepass();
 
-		const FVector2D widgetMiddleAbsolutePosition = widgetGeometry.GetAbsolutePositionAtCoordinates(FVector2D(0.5f, 0.f));
+		// Getting the coordinates for the top middle of the button widget to get a horizontal offset without making vertical offsets more complicated
+		const FVector2D widgetTopMiddleAbsolutePosition = widgetGeometry.GetAbsolutePositionAtCoordinates(FVector2D(0.5f, 0.f));
 
-		// Parent widget, aka the player's game layer, is updated every tick, while the Tooltip widget is not.
-		// This results in the parent always being in lockstep with viewport size, while Tooltip widget will always return the size from the last time it appeared
-		// Therefore the parent widget's tick geometry is used instead to ensure accuracy
-		const FVector2D widgetMiddleLocalPosition = AbilityTooltipWidget->GetParentWidget()->GetTickSpaceGeometry().AbsoluteToLocal(widgetMiddleAbsolutePosition);
+		// The player's game layer, aka the parent widget, is updated every tick, while the Tooltip widget is not
+		// This results in the parent's size always being in lockstep with the viewport's, while Tooltip widget will always return the size from the last time it was drawn
+		// Therefore the parent widget's tick geometry is used instead to ensure the proper and current viewport size is used for calculations
+		// Additionally, the coordinates are translated to the parent's local space to make sure their relative coordinates match up
+		const FVector2D widgetTopMiddleLocalPosition = AbilityTooltipWidget->GetParentWidget()->GetTickSpaceGeometry().AbsoluteToLocal(widgetTopMiddleAbsolutePosition);
 
 		const FVector2D tooltipSize = AbilityTooltipWidget->TooltipBorder->GetDesiredSize();
 		const FVector2D widgetSize = widgetGeometry.GetLocalSize();
 
+		// An offset to centre the tooltip horizontally, then move it up by own height to avoid blocking, plus a small amount to make it hover above the button
 		const FVector2D tooltipOffset { tooltipSize.X / 2, tooltipSize.Y + widgetSize.Y / 4 };
-		const FVector2D finalOffset = widgetMiddleLocalPosition - tooltipOffset;
+		const FVector2D finalOffset = widgetTopMiddleLocalPosition - tooltipOffset;
 
 		AbilityTooltipWidget->ConstraintCanvasSlot->SetOffset(finalOffset);
 

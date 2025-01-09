@@ -45,6 +45,8 @@ private:
 	bool HasAttachedUnit { false };
 	int8 UnitTypeNum;
 
+	FNumberFormattingOptions NumberFormatting;
+
 	const FString DamageString = "Damage:";
 	const FString RangeString = "Range:";
 	const FString AttackSpeedString = "ASpeed:";

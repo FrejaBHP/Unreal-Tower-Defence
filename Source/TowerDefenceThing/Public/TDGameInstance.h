@@ -12,6 +12,7 @@
 #include "EnemySpawner.h"
 #include "FTDUIResources.h"
 #include "SplinePath.h"
+#include "Towers/TowerManager.h"
 #include "WaveManager.h"
 #include "TDGameInstance.generated.h"
 
@@ -41,6 +42,7 @@ public:
 	FRandomStream RandStream;
 
 	TUniquePtr<AbilityManager> AManager { nullptr };
+	TUniquePtr<TowerManager> TManager { nullptr };
 	TUniquePtr<WaveManager> WavesManager { nullptr };
 
 	void DeductFromLivesCounter(int);

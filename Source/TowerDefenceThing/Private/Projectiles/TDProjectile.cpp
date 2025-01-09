@@ -59,15 +59,16 @@ void ATDProjectile::BeginPlay() {
 void ATDProjectile::Tick(float DeltaTime) {
 	Super::Tick(DeltaTime);
 
-	if (!IsPendingKillPending() && Target.IsValid()) {
+	if (Target.IsValid() && IsValid(ProjMovementComponent->UpdatedComponent)) {
 		ProjMovementComponent->Velocity = (Target->GetActorLocation() - GetActorLocation()).GetSafeNormal() * Speed;
 
-		// Modificeret logik fra bRotationFollowsVelocity, så projektilet vinkles endnu en 90 grader. Får det til ikke at pege op
+		// Modified logic from bRotationFollowsVelocity, angling the projecile another 90 degrees down to avoid it pointing upwards
 		FRotator DesiredRotation = ProjMovementComponent->Velocity.Rotation();
 		DesiredRotation.Pitch -= 90.;
 		ProjMovementComponent->UpdatedComponent->SetWorldRotation(DesiredRotation);
 	}
 	else {
+		SetActorTickEnabled(false);
 		Destroy();
 	}
 }
@@ -100,6 +101,8 @@ void ATDProjectile::OnCollideWithTarget() {
 		}
 		else {
 			ProjectileDestroyDelegate.Execute(this);
+
+			SetActorTickEnabled(false);
 			Destroy();
 		}
 	}

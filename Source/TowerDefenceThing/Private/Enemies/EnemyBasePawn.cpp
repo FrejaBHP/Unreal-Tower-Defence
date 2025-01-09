@@ -84,7 +84,7 @@ void AEnemyBasePawn::SetWaveStats(float baseHealth, float baseSpeed, int32 baseB
 	Bounty = baseBounty;
 	float effectiveHealth = baseHealth * HealthMultiplier;
 	BaseAttributeSet->Health->InitMinMax(effectiveHealth, 0.f, effectiveHealth);
-	BaseAttributeSet->Speed->InitMinMax(baseSpeed, 50.f, 400.f); // default is 200
+	BaseAttributeSet->Speed->InitMinMax(baseSpeed, 50.f, 400.f);
 }
 
 void AEnemyBasePawn::SetFlipbook(FString flipbookName) {
@@ -146,5 +146,7 @@ void AEnemyBasePawn::Die() {
 	}
 	EnemyDeathDecrementDelegate.ExecuteIfBound();
 	HealthBarWidgetPtr.Reset();
+
+	SetActorTickEnabled(false);
 	Destroy();
 }

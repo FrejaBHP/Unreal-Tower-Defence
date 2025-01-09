@@ -15,14 +15,16 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 
 	NormalFont = baseFont;
 	NormalFont.Size = 12.f;
+
+	NumberFormatting.MaximumFractionalDigits = 1;
 	
 	ChildSlot
 	.HAlign(EHorizontalAlignment::HAlign_Center)
 	.VAlign(EVerticalAlignment::VAlign_Bottom)
 	[
 		SNew(SBox)
-		.MinDesiredWidth(1200)
-		.MaxDesiredWidth(1800)
+		.MinDesiredWidth(1280)
+		.MaxDesiredWidth(1920)
 		.Content()
 		[
 			SNew(SHorizontalBox)
@@ -82,7 +84,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 								+ SVerticalBox::Slot()
 								[
 									SNew(SHorizontalBox)
-									+ SHorizontalBox::Slot()
+									+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
 									[
 										SNew(STextBlock)
 										.Font(NormalFont)
@@ -97,10 +99,10 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 									]
 								]
 
-								+ SVerticalBox::Slot()
+								+ SVerticalBox::Slot() 
 								[
 									SNew(SHorizontalBox)
-									+ SHorizontalBox::Slot()
+									+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
 									[
 										SNew(STextBlock)
 										.Font(NormalFont)
@@ -118,7 +120,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 								+ SVerticalBox::Slot()
 								[
 									SNew(SHorizontalBox)
-									+ SHorizontalBox::Slot()
+									+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
 									[
 										SNew(STextBlock)
 										.Font(NormalFont)
@@ -198,7 +200,7 @@ void SBottomPanelsWidget::BindUnitStatsPanel(int8 type, FText nameText, FText ty
 			FUnitRangeStatType = FText::GetEmpty();
 			FUnitStat2Type = FText::GetEmpty();
 			FUnitStat3Type = FText::GetEmpty();
-			UE_LOG(LogTemp, Error, TEXT("fug"));
+			UE_LOG(LogTemp, Error, TEXT("Unknown unit type selected"));
 			break;
 	}
 
@@ -287,23 +289,23 @@ FText SBottomPanelsWidget::GetUnitRangeStatValue() const {
 	}
 
 	if (UnitTypeNum == 0) {
-		return FText::Format(INVTEXT("{0} - {1}"), FText::AsNumber(*UnitRangeStat1), FText::AsNumber(*UnitRangeStat2));
+		return FText::Format(INVTEXT("{0} - {1}"), FText::AsNumber(*UnitRangeStat1, &NumberFormatting), FText::AsNumber(*UnitRangeStat2, &NumberFormatting));
 	}
-	return FText::Format(INVTEXT("{0} / {1}"), FText::AsNumber(*UnitRangeStat1), FText::AsNumber(*UnitRangeStat2));
+	return FText::Format(INVTEXT("{0} / {1}"), FText::AsNumber(*UnitRangeStat1, &NumberFormatting), FText::AsNumber(*UnitRangeStat2, &NumberFormatting));
 }
 
 FText SBottomPanelsWidget::GetUnitStat2Value() const {
 	if (!UnitStat2) {
 		return FText::GetEmpty();
 	}
-	return FText::Format(INVTEXT("{0}"), FText::AsNumber(*UnitStat2));
+	return FText::Format(INVTEXT("{0}"), FText::AsNumber(*UnitStat2, &NumberFormatting));
 }
 
 FText SBottomPanelsWidget::GetUnitStat3Value() const {
 	if (!UnitStat3) {
 		return FText::GetEmpty();
 	}
-	return FText::Format(INVTEXT("{0}"), FText::AsNumber(*UnitStat3));
+	return FText::Format(INVTEXT("{0}"), FText::AsNumber(*UnitStat3, &NumberFormatting));
 }
 
 SBottomPanelsWidget::~SBottomPanelsWidget() {
