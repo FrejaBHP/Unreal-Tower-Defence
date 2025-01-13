@@ -44,7 +44,7 @@ ATowerBasePawn::ATowerBasePawn() {
 	if (!SelectionCircleWidgetComponent) {
 		SelectionCircleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Selection Circle"));
 		SelectionCircleWidgetComponent->SetupAttachment(BoxComponent);
-		SelectionCircleWidgetComponent->SetPivot(FVector2D{ 0.5f, 0.5f });
+		SelectionCircleWidgetComponent->SetPivot(FVector2D{ 0.5, 0.5 });
 		FRotator widgetRotator = { 90., 0., 0. };
 		SelectionCircleWidgetComponent->AddRelativeRotation(widgetRotator.Quaternion());
 		SelectionCircleWidgetComponent->SetCastShadow(false);
@@ -79,7 +79,7 @@ void ATowerBasePawn::BeginPlay() {
 		FVector extent = BoxComponent->Bounds.GetBox().GetSize();
 		SelectionCircleWidgetPtr->SetColourGreen();
 
-		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0.f, 0.f, 5.f - extent.Z));
+		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0., 0., 5. - extent.Z));
 		SelectionCircleWidgetComponent->SetDrawSize(FVector2D(extent.X, extent.Y));
 	}
 }

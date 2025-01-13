@@ -65,4 +65,3 @@ void ATDAIController::TDUpdateGoalsForPoint(uint8 index) {
 	lastSplinePoint = index;
 	distanceGoal = SplinePath->SplineComponent->GetDistanceAlongSplineAtSplinePoint(index + 1);
 }
-

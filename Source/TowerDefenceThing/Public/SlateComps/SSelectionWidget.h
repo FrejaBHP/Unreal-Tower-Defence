@@ -22,6 +22,4 @@ public:
 
 private:
 	FSlateColorBrush OutlineBrush = FSlateColorBrush(FLinearColor::Transparent);
-
-	TSharedPtr<SBox> SelectionBox;
 };

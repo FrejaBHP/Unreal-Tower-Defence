@@ -30,8 +30,8 @@ AEnemyBasePawn::AEnemyBasePawn() {
 		PawnMovementComponent = CreateDefaultSubobject<UTDEnemyMovementComponent>(TEXT("Movement"));
 		PawnMovementComponent->UpdatedComponent = RootComponent;
 		PawnMovementComponent->bConstrainToPlane = true;
-		PawnMovementComponent->SetPlaneConstraintNormal(FVector(0.f, 0.f, 1.f));
-		PawnMovementComponent->SetPlaneConstraintOrigin(FVector(0.f, 0.f, 75.f));
+		PawnMovementComponent->SetPlaneConstraintNormal(FVector(0., 0., 1.));
+		PawnMovementComponent->SetPlaneConstraintOrigin(FVector(0., 0., 75.));
 		PawnMovementComponent->bSnapToPlaneAtStart = true;
 	}
 
@@ -44,17 +44,17 @@ AEnemyBasePawn::AEnemyBasePawn() {
 	if (!HealthBarWidgetComponent) {
 		HealthBarWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Health Bar"));
 		HealthBarWidgetComponent->SetupAttachment(CapsuleComponent);
-		HealthBarWidgetComponent->AddRelativeLocation(FVector(0.f, 0.f, 75.f));
+		HealthBarWidgetComponent->AddRelativeLocation(FVector(0., 0., 75.));
 		FRotator widgetRotator = { 0., 180., 0. };
 		HealthBarWidgetComponent->AddRelativeRotation(widgetRotator.Quaternion());
-		HealthBarWidgetComponent->SetDrawSize(FVector2D(75.f, 15.f));
+		HealthBarWidgetComponent->SetDrawSize(FVector2D(75., 15.));
 		HealthBarWidgetComponent->SetCastShadow(false);
 	}
 
 	if (!SelectionCircleWidgetComponent) {
 		SelectionCircleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Selection Circle"));
 		SelectionCircleWidgetComponent->SetupAttachment(CapsuleComponent);
-		SelectionCircleWidgetComponent->SetPivot(FVector2D { 0.5f, 0.5f });
+		SelectionCircleWidgetComponent->SetPivot(FVector2D { 0.5, 0.5 });
 		FRotator widgetRotator = { 90., 0., 0. };
 		SelectionCircleWidgetComponent->AddRelativeRotation(widgetRotator.Quaternion());
 		SelectionCircleWidgetComponent->SetCastShadow(false);
@@ -91,7 +91,7 @@ void AEnemyBasePawn::BeginPlay() {
 		CapsuleComponent->GetScaledCapsuleSize(radius, halfHeight);
 		SelectionCircleWidgetPtr->SetColourRed();
 
-		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0.f, 0.f, 10.f - halfHeight));
+		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0., 0., 10. - halfHeight));
 		SelectionCircleWidgetComponent->SetDrawSize(FVector2D(radius * 2, radius * 2));
 	}
 }

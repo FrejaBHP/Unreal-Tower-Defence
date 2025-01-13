@@ -16,7 +16,7 @@ void SSelectionWidget::Construct(const FArguments& InArgs) {
 		.BorderImage(&OutlineBrush)
 		.Content()
 		[
-			SAssignNew(SelectionBox, SBox)
+			SNew(SBox)
 		]
 	];
 }
@@ -30,7 +30,7 @@ void SSelectionWidget::SetColourGreen() {
 }
 
 SSelectionWidget::~SSelectionWidget() {
-	SelectionBox.Reset();
+	
 }
 
 END_SLATE_FUNCTION_BUILD_OPTIMIZATION

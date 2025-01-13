@@ -28,7 +28,6 @@ ATowerDefenceThingPlayerController::ATowerDefenceThingPlayerController() {
 }
 
 void ATowerDefenceThingPlayerController::BeginPlay() {
-	// Call the base class  
 	Super::BeginPlay();
 
 	SelectedPawnPtr = GetPawn();
@@ -148,7 +147,7 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 
 					FHitResult TowerCheckHit(ForceInit);
 					FVector start { gridLocation.X, gridLocation.Y, staticActorHeight + 0.5 };
-					FVector end { gridLocation.X, gridLocation.Y, staticActorHeight + 75.};
+					FVector end { gridLocation.X, gridLocation.Y, staticActorHeight + 75. };
 					GetWorld()->LineTraceSingleByChannel(TowerCheckHit, start, end, ECollisionChannel::ECC_GameTraceChannel1);
 
 					if (!TowerCheckHit.GetActor()) {
@@ -254,7 +253,7 @@ void ATowerDefenceThingPlayerController::OnSetDestinationReleased() {
 	if (FollowTime <= ShortPressThreshold) {
 		// We move there and spawn some particles
 		UAIBlueprintHelperLibrary::SimpleMoveToLocation(this, CachedDestination);
-		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, CachedDestination, FRotator::ZeroRotator, FVector(1.f, 1.f, 1.f), true, true, ENCPoolMethod::None, true);
+		UNiagaraFunctionLibrary::SpawnSystemAtLocation(this, FXCursor, CachedDestination, FRotator::ZeroRotator, FVector(1., 1., 1.), true, true, ENCPoolMethod::None, true);
 	}
 
 	FollowTime = 0.f;

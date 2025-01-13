@@ -22,7 +22,7 @@ ATowerDefenceThingCharacter::ATowerDefenceThingCharacter() {
 
 	// Configure character movement
 	GetCharacterMovement()->bOrientRotationToMovement = true; // Rotate character to moving direction
-	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
+	GetCharacterMovement()->RotationRate = FRotator(0., 640., 0.);
 	GetCharacterMovement()->bConstrainToPlane = true;
 	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
@@ -31,7 +31,7 @@ ATowerDefenceThingCharacter::ATowerDefenceThingCharacter() {
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when character does
 	CameraBoom->TargetArmLength = 1400.f;
-	CameraBoom->SetWorldRotation(FRotator(-55.f, 0.f, 0.f));
+	CameraBoom->SetWorldRotation(FRotator(-55., 0., 0.));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
 	// Create a camera...
