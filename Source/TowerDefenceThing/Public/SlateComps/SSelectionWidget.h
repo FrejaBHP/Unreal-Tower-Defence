@@ -16,14 +16,12 @@ public:
 
 	/** Constructs this widget with InArgs */
 	void Construct(const FArguments& InArgs);
-	void SetSelectionRadius(float newRadius);
+	void SetColourRed();
+	void SetColourGreen();
 	~SSelectionWidget();
 
 private:
-	FSlateColorBrush GreenBrush = FSlateColorBrush(FLinearColor::Transparent);
+	FSlateColorBrush OutlineBrush = FSlateColorBrush(FLinearColor::Transparent);
 
 	TSharedPtr<SBox> SelectionBox;
-
-	float SelectionRadius { 32.f };
-	void ApplyRadius() const;
 };

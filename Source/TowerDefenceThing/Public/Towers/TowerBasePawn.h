@@ -8,13 +8,14 @@
 #include "PaperSpriteComponent.h"
 #include "Components/BoxComponent.h"
 #include "Components/CapsuleComponent.h"
-
+#include "Components/WidgetComponent.h"
 
 #include "Attributes/TowerBaseTDAttributes.h"
 #include "Attributes/TowerAttackTDAttributes.h"
 #include "Components/TDAbilityComponent.h"
 #include "ClickableUnit.h"
 #include "EnemyUnit.h"
+#include "SlateComps/SSelectionWidget.h"
 #include "TowerUnit.h"
 #include <TDGameInstance.h>
 #include "TowerBasePawn.generated.h"
@@ -99,11 +100,18 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UTDAbilityComponent* AbilityComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	UWidgetComponent* SelectionCircleWidgetComponent;
+
+	TSharedPtr<SSelectionWidget> SelectionCircleWidgetPtr;
+
 	UPROPERTY()
 	UPaperSprite* VisibleSprite = nullptr;
 
 	UPROPERTY()
 	TSoftObjectPtr<UPaperSprite> SpritePtr = nullptr;
+
+	void SetSelectionCircleVisibility(bool doVisible);
 
 protected:
 	// Called when the game starts or when spawned
@@ -116,4 +124,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 	virtual void PossessedBy(AController* NewController);
+
+	void Remove();
 };

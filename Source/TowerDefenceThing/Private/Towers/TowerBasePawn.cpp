@@ -11,7 +11,7 @@ ATowerBasePawn::ATowerBasePawn() {
 	if (!BoxComponent) {
 		BoxComponent = CreateDefaultSubobject<UBoxComponent>(TEXT("Collision"));
 		RootComponent = BoxComponent;
-		BoxComponent->InitBoxExtent(FVector(50., 50., 50.));
+		BoxComponent->InitBoxExtent(FVector(50., 50., 25.));
 		BoxComponent->SetMobility(EComponentMobility::Stationary);
 		BoxComponent->SetCollisionProfileName(FName("TDTower"));
 	}
@@ -41,6 +41,17 @@ ATowerBasePawn::ATowerBasePawn() {
 		AbilityComponent->SetMobility(EComponentMobility::Stationary);
 	}
 
+	if (!SelectionCircleWidgetComponent) {
+		SelectionCircleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Selection Circle"));
+		SelectionCircleWidgetComponent->SetupAttachment(BoxComponent);
+		SelectionCircleWidgetComponent->SetPivot(FVector2D{ 0.5f, 0.5f });
+		FRotator widgetRotator = { 90., 0., 0. };
+		SelectionCircleWidgetComponent->AddRelativeRotation(widgetRotator.Quaternion());
+		SelectionCircleWidgetComponent->SetCastShadow(false);
+
+		SetSelectionCircleVisibility(false);
+	}
+
 	BaseAttributeSet = MakeUnique<TowerBaseTDAttributes>();
 	AttackAttributeSet = MakeUnique<TowerAttackTDAttributes>();
 }
@@ -49,6 +60,7 @@ ATowerBasePawn::ATowerBasePawn() {
 void ATowerBasePawn::BeginPlay() {
 	Super::BeginPlay();
 
+	/*
 	UPlayer* player = GetNetOwningPlayer();
 	if (player) {
 		FName name = player->GetFName();
@@ -56,6 +68,19 @@ void ATowerBasePawn::BeginPlay() {
 	}
 	else {
 		UE_LOG(LogTemp, Warning, TEXT("No player owner"));
+	}
+	*/
+
+	SelectionCircleWidgetComponent->SetSlateWidget(
+		SAssignNew(SelectionCircleWidgetPtr, SSelectionWidget)
+	);
+
+	if (BoxComponent && SelectionCircleWidgetPtr) {
+		FVector extent = BoxComponent->Bounds.GetBox().GetSize();
+		SelectionCircleWidgetPtr->SetColourGreen();
+
+		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0.f, 0.f, 5.f - extent.Z));
+		SelectionCircleWidgetComponent->SetDrawSize(FVector2D(extent.X, extent.Y));
 	}
 }
 
@@ -71,6 +96,17 @@ void ATowerBasePawn::Tick(float DeltaTime) {
 	}
 	else if (EnemiesInRange > 0) {
 		GetNewTarget();
+	}
+}
+
+void ATowerBasePawn::SetSelectionCircleVisibility(bool doVisible) {
+	if (IsValid(SelectionCircleWidgetComponent)) {
+		if (doVisible) {
+			SelectionCircleWidgetComponent->SetVisibility(true);
+		}
+		else {
+			SelectionCircleWidgetComponent->SetVisibility(false);
+		}
 	}
 }
 
@@ -102,11 +138,11 @@ void ATowerBasePawn::OnOverlapEnd(UPrimitiveComponent* CapsComp, AActor* OtherAc
 }
 
 void ATowerBasePawn::OnSelect() {
-
+	SetSelectionCircleVisibility(true);
 }
 
 void ATowerBasePawn::OnDeselect() {
-
+	SetSelectionCircleVisibility(false);
 }
 
 void ATowerBasePawn::GetNewTarget() {
@@ -219,4 +255,11 @@ const float& ATowerBasePawn::GetMaxDamage() {
 
 const float& ATowerBasePawn::GetAttackSpeed() {
 	return BaseAttributeSet->AttackRate->CurrentValue;
+}
+
+void ATowerBasePawn::Remove() {
+	SelectionCircleWidgetPtr.Reset();
+
+	SetActorTickEnabled(false);
+	Destroy();
 }

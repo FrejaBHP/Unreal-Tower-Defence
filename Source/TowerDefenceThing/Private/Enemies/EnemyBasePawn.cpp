@@ -12,7 +12,7 @@ AEnemyBasePawn::AEnemyBasePawn() {
 	if (!CapsuleComponent) {
 		CapsuleComponent = CreateDefaultSubobject<UCapsuleComponent>(TEXT("Collision"));
 		RootComponent = CapsuleComponent;
-		CapsuleComponent->InitCapsuleSize(25.f, 75.0f);
+		CapsuleComponent->InitCapsuleSize(40.f, 75.0f);
 		CapsuleComponent->SetCollisionProfileName(FName("TDUnit"));
 	}
 
@@ -85,14 +85,14 @@ void AEnemyBasePawn::BeginPlay() {
 		SAssignNew(SelectionCircleWidgetPtr, SSelectionWidget)
 	);
 
-	if (CapsuleComponent) {
+	if (CapsuleComponent && SelectionCircleWidgetPtr) {
 		float radius;
 		float halfHeight;
 		CapsuleComponent->GetScaledCapsuleSize(radius, halfHeight);
-		SelectionCircleWidgetPtr->SetSelectionRadius(radius);
+		SelectionCircleWidgetPtr->SetColourRed();
 
 		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0.f, 0.f, 10.f - halfHeight));
-		SelectionCircleWidgetComponent->SetDrawSize(FVector2D(radius * 3.5, radius * 3.5));
+		SelectionCircleWidgetComponent->SetDrawSize(FVector2D(radius * 2, radius * 2));
 	}
 }
 
@@ -186,7 +186,9 @@ void AEnemyBasePawn::Die() {
 		EnemyBountyDelegate.Execute(0, Bounty);
 	}
 	EnemyDeathDecrementDelegate.ExecuteIfBound();
+
 	HealthBarWidgetPtr.Reset();
+	SelectionCircleWidgetPtr.Reset();
 
 	SetActorTickEnabled(false);
 	Destroy();
