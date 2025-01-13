@@ -35,30 +35,6 @@ void ATDPlayerHUD::DrawHUD() {
 	Super::DrawHUD();
 }
 
-TObjectPtr<ATowerDefenceThingPlayerController> ATDPlayerHUD::GetPlayerOwner() {
-	return Cast<ATowerDefenceThingPlayerController>(PlayerOwner);
-}
-
-void ATDPlayerHUD::UpdateLives() const {
-	TopBarWidgetPtr->GetLivesText();
-}
-
-void ATDPlayerHUD::UpdateEnemiesRemaining() const {
-	TopBarWidgetPtr->GetRemainingText();
-}
-
-void ATDPlayerHUD::UpdateWaveNumber() const {
-	TopBarWidgetPtr->GetWaveNumberText();
-}
-
-void ATDPlayerHUD::UpdateGold(const int32 gold) const {
-	TopBarWidgetPtr->SetGoldAmount(gold);
-}
-
-void ATDPlayerHUD::ReceivedButtonInput(EAbilityHandle aHandle) {
-	GetPlayerOwner()->ConsumeHUDButtonInput(aHandle);
-}
-
 // When the mouse cursor enters the geometry of a Context Menu button widget
 void ATDPlayerHUD::ReceivedButtonEntered(UTDAbility* abilityPointer, const FGeometry& widgetGeometry) {
 	if (!IsAbilityTooltipActive) {
@@ -148,6 +124,30 @@ FVector2D ATDPlayerHUD::AbsoluteToViewport(FVector2D& absolutePosition) {
 
 	return vwpPosition;
 	//FVector2D pixelPosition = (vwpPosition / vwpWidgetGeo.GetLocalSize()) * FVector2D(vwpSize.X, vwpSize.Y);
+}
+
+TObjectPtr<ATowerDefenceThingPlayerController> ATDPlayerHUD::GetPlayerOwner() {
+	return Cast<ATowerDefenceThingPlayerController>(PlayerOwner);
+}
+
+void ATDPlayerHUD::UpdateLives() const {
+	TopBarWidgetPtr->GetLivesText();
+}
+
+void ATDPlayerHUD::UpdateEnemiesRemaining() const {
+	TopBarWidgetPtr->GetRemainingText();
+}
+
+void ATDPlayerHUD::UpdateWaveNumber() const {
+	TopBarWidgetPtr->GetWaveNumberText();
+}
+
+void ATDPlayerHUD::UpdateGold(const int32 gold) const {
+	TopBarWidgetPtr->SetGoldAmount(gold);
+}
+
+void ATDPlayerHUD::ReceivedButtonInput(EAbilityHandle aHandle) {
+	GetPlayerOwner()->ConsumeHUDButtonInput(aHandle);
 }
 
 void ATDPlayerHUD::BeginDestroy() {

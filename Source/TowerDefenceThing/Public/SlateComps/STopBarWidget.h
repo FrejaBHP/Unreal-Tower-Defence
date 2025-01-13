@@ -35,11 +35,14 @@ public:
 	FText GetGoldText() const;
 
 private:
+	const float IconSize { 32.f };
+	FSlateBrush LivesBrush;
+	FSlateBrush GoldBrush;
 	FSlateBrush BackgroundBrush;
 	FSlateColorBrush BlackBrush = FSlateColorBrush(FLinearColor::Black);
 	TWeakPtr<FSlateGameResources> TDUIResources;
 
-	float TextPadding { 5.f };
+	const float TextPadding { 8.f };
 	int* Lives;
 	int* Remaining;
 	int* WaveNumber;

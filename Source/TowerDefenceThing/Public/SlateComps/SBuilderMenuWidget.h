@@ -20,11 +20,12 @@ public:
 	~SBuilderMenuWidget();
 
 	TArray<TArray<TSharedPtr<SContextMenuSquareWidget>>> GridPanelSquareArray;
-	FReply IgnoreMouseInput(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent);
 
 protected:
 	TSharedPtr<SBorder> GridBorderPtr;
 	TSharedPtr<SUniformGridPanel> GridPanelPtr;
 	FSlateColorBrush BlackBrush = FSlateColorBrush(FLinearColor::Black);
 	TWeakPtr<FSlateGameResources> tdUIResources;
+
+	FReply IgnoreMouseInput(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent);
 };

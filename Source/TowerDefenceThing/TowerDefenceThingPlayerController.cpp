@@ -153,7 +153,7 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 					GetWorld()->LineTraceSingleByChannel(TowerCheckHit, start, end, ECollisionChannel::ECC_GameTraceChannel1);
 
 					if (!TowerCheckHit.GetActor()) {
-						TryPlaceBuilding(ETowerHandle::BasicTower, FVector{ gridLocation.X, gridLocation.Y, staticActorHeight });
+						TryPlaceBuilding(ETowerHandle::BasicTower, FVector { gridLocation.X, gridLocation.Y, staticActorHeight });
 					}
 				}
 			}
@@ -274,11 +274,11 @@ void ATowerDefenceThingPlayerController::PlaceBuilding(ETowerHandle tHandle, FVe
 FVector2D ATowerDefenceThingPlayerController::GetNearestCentrePointInWorldGrid(double worldX, double worldY) {
 	const int gridSize = 100;
 
-	const int timesHundredX = floor(worldX / gridSize);
-	const int timesHundredY = floor(worldY / gridSize);
+	const int timesGridX = floor(worldX / gridSize);
+	const int timesGridY = floor(worldY / gridSize);
 
-	const double gridX = StaticCast<double>((gridSize * timesHundredX) + gridSize / 2);
-	const double gridY = StaticCast<double>((gridSize * timesHundredY) + gridSize / 2);
+	const double gridX = StaticCast<double>((gridSize * timesGridX) + gridSize / 2);
+	const double gridY = StaticCast<double>((gridSize * timesGridY) + gridSize / 2);
 
 	FVector2D gridVector { gridX, gridY };
 

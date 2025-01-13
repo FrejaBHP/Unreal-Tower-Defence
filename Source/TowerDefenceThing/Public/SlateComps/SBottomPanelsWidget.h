@@ -47,12 +47,12 @@ private:
 
 	FNumberFormattingOptions NumberFormatting;
 
-	const FString DamageString = "Damage:";
-	const FString RangeString = "Range:";
-	const FString AttackSpeedString = "ASpeed:";
-
-	const FString HealthString = "Health:";
-	const FString MovementSpeedString = "MSpeed:";
+	const FName DamageBrushName = "hud_damage_Brush";
+	const FName RangeBrushName = "hud_range_Brush";
+	const FName ASpeedBrushName = "hud_aspeed_Brush";
+	
+	const FName MSpeedBrushName = "hud_mspeed_Brush";
+	const FName HealthBrushName = "hud_health_Brush";
 
 	const float* UnitRangeStat1 { nullptr };
 	const float* UnitRangeStat2 { nullptr };
@@ -61,9 +61,6 @@ private:
 
 	FText FUnitName;
 	FText FUnitType;
-	FText FUnitRangeStatType;
-	FText FUnitStat2Type;
-	FText FUnitStat3Type;
 
 	FText FUnitRangeStat1;
 	FText FUnitRangeStat2;
@@ -72,10 +69,17 @@ private:
 
 	FText GetUnitName() const;
 	FText GetUnitType() const;
-	FText GetUnitRangeStatType() const;
-	FText GetUnitStat2Type() const;
-	FText GetUnitStat3Type() const;
 	FText GetUnitRangeStatValue() const;
 	FText GetUnitStat2Value() const;
 	FText GetUnitStat3Value() const;
+
+	FSlateBrush BUnitRangeStatType;
+	FSlateBrush BUnitStat2Type;
+	FSlateBrush BUnitStat3Type;
+
+	const float StatIconSize { 28.f };
+
+	FReply IgnoreMouseInput(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent);
+	const FSlateBrush* GetImageBrushFromName(FName newBrushName) const;
+	void SetImageBrushWithName(FSlateBrush& brush, FName newBrushName);
 };

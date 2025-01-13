@@ -11,10 +11,10 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 
 	FSlateFontInfo baseFont = FStyleDefaults::GetFontInfo();
 	BigFont = baseFont;
-	BigFont.Size = 14.f;
+	BigFont.Size = 15.f;
 
 	NormalFont = baseFont;
-	NormalFont.Size = 12.f;
+	NormalFont.Size = 13.f;
 
 	NumberFormatting.MaximumFractionalDigits = 1;
 	
@@ -29,7 +29,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 		[
 			SNew(SHorizontalBox)
 			// Left part of the lower HUD (unused)
-			+ SHorizontalBox::Slot() .AutoWidth() //.HAlign(EHorizontalAlignment::HAlign_Left)
+			+ SHorizontalBox::Slot() .AutoWidth()
 			[
 				SNew(SBox)
 				.MinDesiredWidth(308)
@@ -42,114 +42,111 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 				SNew(SBorder)
 				.BorderImage(&BlackBrush)
 				.Padding(4.f)
-				.Visibility(EVisibility::HitTestInvisible)
+				.OnMouseButtonDown(this, &SBottomPanelsWidget::IgnoreMouseInput)
+				.OnMouseDoubleClick(this, &SBottomPanelsWidget::IgnoreMouseInput)
 				.Content()
 				[
-					SNew(SBox)
-					.Content()
+					// VBox responsible for ordering content
+					SNew(SVerticalBox)
+					// Contains name and type of unit
+					+ SVerticalBox::Slot() .Padding(0.f, 10.f) .AutoHeight()
 					[
-						// VBox responsible for ordering content
 						SNew(SVerticalBox)
-						// Contains name and type of unit
-						+ SVerticalBox::Slot() .Padding(0.f, 10.f) .AutoHeight()
+						// Name of unit
+						+ SVerticalBox::Slot() .Padding(0.f, 0.f, 0.f, 4.f) .HAlign(EHorizontalAlignment::HAlign_Center)
+						[
+							SNew(STextBlock)
+							.Font(BigFont)
+							.Text(this, &SBottomPanelsWidget::GetUnitName)
+						]
+						
+						// Title(?) of unit
+						+ SVerticalBox::Slot() .HAlign(EHorizontalAlignment::HAlign_Center)
+						[
+							SNew(STextBlock)
+							.Font(NormalFont)
+							.Text(this, &SBottomPanelsWidget::GetUnitType)
+						]
+					]
+					// End of name and type
+
+					// Contains everything else
+					+ SVerticalBox::Slot() .AutoHeight()
+					[
+						// HBox for ordering stats, etc
+						SNew(SHorizontalBox)
+						// Unit stats
+						+ SHorizontalBox::Slot() .Padding(8.f, 0.f) .FillWidth(1)
 						[
 							SNew(SVerticalBox)
-							// Name of unit
-							+ SVerticalBox::Slot() .Padding(0.f, 0.f, 0.f, 4.f) .HAlign(EHorizontalAlignment::HAlign_Center)
+							+ SVerticalBox::Slot()
 							[
-								SNew(STextBlock)
-								.Font(BigFont)
-								.Text(this, &SBottomPanelsWidget::GetUnitName)
+								SNew(SHorizontalBox)
+								+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
+								[
+									SNew(SImage)
+									.Image(&BUnitRangeStatType)
+									.DesiredSizeOverride(FVector2D { StatIconSize, StatIconSize })
+								]
+									
+								+ SHorizontalBox::Slot() .VAlign(EVerticalAlignment::VAlign_Center)
+								[
+									SNew(STextBlock)
+									.Font(NormalFont)
+									.Text(this, &SBottomPanelsWidget::GetUnitRangeStatValue)
+								]
 							]
-						
-							// Title(?) of unit
-							+ SVerticalBox::Slot() .HAlign(EHorizontalAlignment::HAlign_Center)
+
+							+ SVerticalBox::Slot() 
 							[
-								SNew(STextBlock)
-								.Font(NormalFont)
-								.Text(this, &SBottomPanelsWidget::GetUnitType)
+								SNew(SHorizontalBox)
+								+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
+								[
+									SNew(SImage)
+									.Image(&BUnitStat2Type)
+									.DesiredSizeOverride(FVector2D { StatIconSize, StatIconSize })
+								]
+									
+								+ SHorizontalBox::Slot() .VAlign(EVerticalAlignment::VAlign_Center)
+								[
+									SNew(STextBlock)
+									.Font(NormalFont)
+									.Text(this, &SBottomPanelsWidget::GetUnitStat2Value)
+								]
+							]
+
+							+ SVerticalBox::Slot()
+							[
+								SNew(SHorizontalBox)
+								+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
+								[
+									SNew(SImage)
+									.Image(&BUnitStat3Type)
+									.DesiredSizeOverride(FVector2D { StatIconSize, StatIconSize })
+								]
+									
+								+ SHorizontalBox::Slot() .VAlign(EVerticalAlignment::VAlign_Center)
+								[
+									SNew(STextBlock)
+									.Font(NormalFont)
+									.Text(this, &SBottomPanelsWidget::GetUnitStat3Value)
+								]
 							]
 						]
-						// End of name and type
 
-						// Contains everything else
-						+ SVerticalBox::Slot()
+						// Not sure yet
+						+ SHorizontalBox::Slot() .FillWidth(1)
 						[
-							// HBox for ordering stats, etc
-							SNew(SHorizontalBox)
-							// Unit stats
-							+ SHorizontalBox::Slot() .Padding(8.f, 0.f) .FillWidth(1)
-							[
-								SNew(SVerticalBox)
-								+ SVerticalBox::Slot()
-								[
-									SNew(SHorizontalBox)
-									+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
-									[
-										SNew(STextBlock)
-										.Font(NormalFont)
-										.Text(this, &SBottomPanelsWidget::GetUnitRangeStatType)
-									]
-									
-									+ SHorizontalBox::Slot()
-									[
-										SNew(STextBlock)
-										.Font(NormalFont)
-										.Text(this, &SBottomPanelsWidget::GetUnitRangeStatValue)
-									]
-								]
-
-								+ SVerticalBox::Slot() 
-								[
-									SNew(SHorizontalBox)
-									+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
-									[
-										SNew(STextBlock)
-										.Font(NormalFont)
-										.Text(this, &SBottomPanelsWidget::GetUnitStat2Type)
-									]
-									
-									+ SHorizontalBox::Slot()
-									[
-										SNew(STextBlock)
-										.Font(NormalFont)
-										.Text(this, &SBottomPanelsWidget::GetUnitStat2Value)
-									]
-								]
-
-								+ SVerticalBox::Slot()
-								[
-									SNew(SHorizontalBox)
-									+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 6.f, 0.f) .AutoWidth()
-									[
-										SNew(STextBlock)
-										.Font(NormalFont)
-										.Text(this, &SBottomPanelsWidget::GetUnitStat3Type)
-									]
-									
-									+ SHorizontalBox::Slot()
-									[
-										SNew(STextBlock)
-										.Font(NormalFont)
-										.Text(this, &SBottomPanelsWidget::GetUnitStat3Value)
-									]
-								]
-							]
-
-							// Not sure yet
-							+ SHorizontalBox::Slot() .FillWidth(1)
-							[
-								SNew(SBox)
-							]
-
-							// Inventory?
-							+ SHorizontalBox::Slot() .FillWidth(1)
-							[
-								SNew(SBox)
-							]
+							SNew(SBox)
 						]
-						// End of everything else
+
+						// Inventory?
+						+ SHorizontalBox::Slot() .FillWidth(1)
+						[
+							SNew(SBox)
+						]
 					]
+					// End of everything else
 				]
 			]
 
@@ -161,6 +158,8 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 			]
 		]
 	];
+
+	ResetUnitStatsPanel();
 }
 
 // Since we're only ticking for one unit per player, performance here isn't a massive concern
@@ -179,27 +178,27 @@ void SBottomPanelsWidget::BindUnitStatsPanel(int8 type, FText nameText, FText ty
 
 	switch (UnitTypeNum) {
 		case 0: // If unit is a tower
-			FUnitRangeStatType = FText::FromString(*DamageString);
-			FUnitStat2Type = FText::FromString(*AttackSpeedString);
-			FUnitStat3Type = FText::FromString(*RangeString);
+			SetImageBrushWithName(BUnitRangeStatType, DamageBrushName);
+			SetImageBrushWithName(BUnitStat2Type, ASpeedBrushName);
+			SetImageBrushWithName(BUnitStat3Type, RangeBrushName);
 			break;
 
 		case 1: // If unit is an enemy
-			FUnitRangeStatType = FText::FromString(*HealthString);
-			FUnitStat2Type = FText::FromString(*MovementSpeedString);
-			FUnitStat3Type = FText::GetEmpty();
+			SetImageBrushWithName(BUnitRangeStatType, HealthBrushName);
+			SetImageBrushWithName(BUnitStat2Type, MSpeedBrushName);
+			SetImageBrushWithName(BUnitStat3Type, FName(""));
 			break;
 
 		case 2: // If unit is a player
-			FUnitRangeStatType = FText::GetEmpty();
-			FUnitStat2Type = FText::GetEmpty();
-			FUnitStat3Type = FText::GetEmpty();
+			SetImageBrushWithName(BUnitRangeStatType, FName(""));
+			SetImageBrushWithName(BUnitStat2Type, FName(""));
+			SetImageBrushWithName(BUnitStat3Type, FName(""));
 			break;
 	
 		default: // Hopefully should never happen, but clears just in case
-			FUnitRangeStatType = FText::GetEmpty();
-			FUnitStat2Type = FText::GetEmpty();
-			FUnitStat3Type = FText::GetEmpty();
+			SetImageBrushWithName(BUnitRangeStatType, FName(""));
+			SetImageBrushWithName(BUnitStat2Type, FName(""));
+			SetImageBrushWithName(BUnitStat3Type, FName(""));
 			UE_LOG(LogTemp, Error, TEXT("Unknown unit type selected"));
 			break;
 	}
@@ -240,9 +239,10 @@ void SBottomPanelsWidget::ResetUnitStatsPanel() {
 
 	FUnitName = FText::GetEmpty();
 	FUnitType = FText::GetEmpty();
-	FUnitRangeStatType = FText::GetEmpty();
-	FUnitStat2Type = FText::GetEmpty();
-	FUnitStat3Type = FText::GetEmpty();
+
+	SetImageBrushWithName(BUnitRangeStatType, FName(""));
+	SetImageBrushWithName(BUnitStat2Type, FName(""));
+	SetImageBrushWithName(BUnitStat3Type, FName(""));
 }
 
 // Sets up mouse interaction with the Context Menu buttons
@@ -263,24 +263,32 @@ void SBottomPanelsWidget::BindContextMenuWidget(AHUD* hud) const {
 	}
 }
 
+const FSlateBrush* SBottomPanelsWidget::GetImageBrushFromName(FName newBrushName) const {
+	if (TSharedPtr<FSlateGameResources> lockedResources = TDUIResources.Pin()) {
+		if (newBrushName != FName("")) {
+			return lockedResources->GetBrush(newBrushName);
+		}
+		return lockedResources->GetBrush(FName("empty_Brush"));
+	}
+	else {
+		return &BUnitRangeStatType;
+	}
+}
+
+void SBottomPanelsWidget::SetImageBrushWithName(FSlateBrush& brush, FName newBrushName) {
+	brush = *GetImageBrushFromName(newBrushName);
+}
+
+FReply SBottomPanelsWidget::IgnoreMouseInput(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent) {
+	return FReply::Handled();
+}
+
 FText SBottomPanelsWidget::GetUnitName() const {
 	return FUnitName;
 }
 
 FText SBottomPanelsWidget::GetUnitType() const {
 	return FUnitType;
-}
-
-FText SBottomPanelsWidget::GetUnitRangeStatType() const {
-	return FUnitRangeStatType;
-}
-
-FText SBottomPanelsWidget::GetUnitStat2Type() const {
-	return FUnitStat2Type;
-}
-
-FText SBottomPanelsWidget::GetUnitStat3Type() const {
-	return FUnitStat3Type;
 }
 
 FText SBottomPanelsWidget::GetUnitRangeStatValue() const {

@@ -13,15 +13,21 @@ void STopBarWidget::Construct(const FArguments& InArgs) {
 	WaveNumber = InArgs._waveNumberPtr;
 
 	BackgroundBrush.DrawAs = ESlateBrushDrawType::Image;
+	BlackBrush.DrawAs = ESlateBrushDrawType::RoundedBox;
+	BlackBrush.OutlineSettings.Width = 2.f;
 
 	FSlateFontInfo baseFont = FStyleDefaults::GetFontInfo();
 	baseFont.Size = 18.f;
 
 	if (TSharedPtr<FSlateGameResources> lockedResources = TDUIResources.Pin()) {
 		BackgroundBrush = *lockedResources->GetBrush("ui_top_Brush");
+		LivesBrush = *lockedResources->GetBrush("ui_lives_Brush");
+		GoldBrush = *lockedResources->GetBrush("ui_gold_Brush");
 	}
 	else {
-		BackgroundBrush = *lockedResources->GetBrush("empty_Brush");
+		BackgroundBrush = BlackBrush;
+		LivesBrush = BlackBrush;
+		GoldBrush = BlackBrush;
 	}
 
 	ChildSlot
@@ -48,14 +54,26 @@ void STopBarWidget::Construct(const FArguments& InArgs) {
 					.Padding(TextPadding * 2, TextPadding)
 					.Content()
 					[
-						SNew(STextBlock)
-						.Font(baseFont)
-						.Text(this, &STopBarWidget::GetLivesText)
+						SNew(SHorizontalBox)
+						+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 8.f, 0.f) .AutoWidth()
+						[
+							SNew(SImage)
+							.Image(&LivesBrush)
+							.DesiredSizeOverride(FVector2D { IconSize, IconSize })
+
+						]
+
+						+ SHorizontalBox::Slot() .AutoWidth() .VAlign(EVerticalAlignment::VAlign_Center)
+						[
+							SNew(STextBlock)
+							.Font(baseFont)
+							.Text(this, &STopBarWidget::GetLivesText)
+						]
 					]
 				]
 
 				// Wave Counter
-				+ SHorizontalBox::Slot() .FillWidth(1.f) .HAlign(HAlign_Center)
+				+ SHorizontalBox::Slot() .FillWidth(1.f) .HAlign(HAlign_Center) .VAlign(EVerticalAlignment::VAlign_Center)
 				[
 					SNew(SBorder)
 					.BorderImage(&BlackBrush)
@@ -69,7 +87,7 @@ void STopBarWidget::Construct(const FArguments& InArgs) {
 				]
 				
 				// Enemies Remaining Counter
-				+ SHorizontalBox::Slot() .FillWidth(1.f) .HAlign(HAlign_Center)
+				+ SHorizontalBox::Slot() .FillWidth(1.f) .HAlign(HAlign_Center) .VAlign(EVerticalAlignment::VAlign_Center)
 				[
 					SNew(SBorder)
 					.BorderImage(&BlackBrush)
@@ -89,16 +107,28 @@ void STopBarWidget::Construct(const FArguments& InArgs) {
 			[
 				SNew(SHorizontalBox)
 				// Gold Counter
-				+ SHorizontalBox::Slot() .AutoWidth() .HAlign(HAlign_Left)
+				+ SHorizontalBox::Slot() .AutoWidth() .HAlign(HAlign_Left) .VAlign(EVerticalAlignment::VAlign_Center)
 				[
 					SNew(SBorder)
 					.BorderImage(&BlackBrush)
 					.Padding(TextPadding * 2, TextPadding)
 					.Content()
 					[
-						SNew(STextBlock)
-						.Font(baseFont)
-						.Text(this, &STopBarWidget::GetGoldText)
+						SNew(SHorizontalBox)
+						+ SHorizontalBox::Slot() .Padding(0.f, 0.f, 8.f, 0.f) .AutoWidth()
+						[
+							SNew(SImage)
+							.Image(&GoldBrush)
+							.DesiredSizeOverride(FVector2D { IconSize, IconSize })
+
+						]
+
+						+ SHorizontalBox::Slot() .AutoWidth() .VAlign(EVerticalAlignment::VAlign_Center)
+						[
+							SNew(STextBlock)
+							.Font(baseFont)
+							.Text(this, &STopBarWidget::GetGoldText)
+						]
 					]
 				]
 			]
@@ -113,7 +143,7 @@ void STopBarWidget::SetGoldAmount(int gold) {
 }
 
 FText STopBarWidget::GetLivesText() const {
-	return FText::Format(INVTEXT("Lives: {0}"), FText::AsNumber(*Lives));
+	return FText::Format(INVTEXT("{0}"), FText::AsNumber(*Lives));
 }
 
 FText STopBarWidget::GetRemainingText() const {
@@ -125,7 +155,7 @@ FText STopBarWidget::GetWaveNumberText() const {
 }
 
 FText STopBarWidget::GetGoldText() const {
-	return FText::Format(INVTEXT("Gold: {0}"), FText::AsNumber(Gold));
+	return FText::Format(INVTEXT("{0}"), FText::AsNumber(Gold));
 }
 
 STopBarWidget::~STopBarWidget() {
