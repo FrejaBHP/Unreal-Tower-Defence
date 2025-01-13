@@ -12,10 +12,10 @@
 #include "NiagaraFunctionLibrary.h"
 
 #include "EnemyUnit.h"
-#include "TowerDefenceThingCharacter.h"
-#include "TowerUnit.h"
 #include <TDGameInstance.h>
 #include "TDPlayerHUD.h"
+#include "TowerDefenceThingCharacter.h"
+#include "TowerUnit.h"
 
 
 DEFINE_LOG_CATEGORY(LogTemplateCharacter);
@@ -108,9 +108,6 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 		bool bHitSuccessful = GetHitResultUnderCursor(ECollisionChannel::ECC_GameTraceChannel1, true, Hit);
 
 		if (bHitSuccessful) {
-			auto clickedLocation = Hit.ImpactPoint;
-			FVector2D gridLocation = GetNearestCentrePointInWorldGrid(clickedLocation.X, clickedLocation.Y);
-
 			AActor* tempActor = Hit.GetActor();
 
 			// If clicked actor implements IClickableUnit, grab it
