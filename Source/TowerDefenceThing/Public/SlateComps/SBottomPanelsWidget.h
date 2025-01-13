@@ -38,6 +38,7 @@ private:
 	FSlateColor WhiteTextColour = FSlateColor(FLinearColor::White);
 	FSlateFontInfo BigFont;
 	FSlateFontInfo NormalFont;
+	const float StatIconSize{ 28.f };
 
 	FSlateColorBrush BlackBrush = FSlateColorBrush(FLinearColor::Black);
 	TWeakPtr<FSlateGameResources> TDUIResources;
@@ -76,8 +77,6 @@ private:
 	FSlateBrush BUnitRangeStatType;
 	FSlateBrush BUnitStat2Type;
 	FSlateBrush BUnitStat3Type;
-
-	const float StatIconSize { 28.f };
 
 	FReply IgnoreMouseInput(const FGeometry& MyGeometry, const FPointerEvent& MouseEvent);
 	const FSlateBrush* GetImageBrushFromName(FName newBrushName) const;

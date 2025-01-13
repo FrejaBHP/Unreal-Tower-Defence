@@ -7,14 +7,25 @@
 
 BEGIN_SLATE_FUNCTION_BUILD_OPTIMIZATION
 void SAbilityTooltip::Construct(const FArguments& InArgs) {
+	TDUIResources = InArgs._tdUIResources;
+
 	FSlateFontInfo baseFont = FStyleDefaults::GetFontInfo();
 	NameFont = baseFont;
 	NameFont.Size = 16.f;
 
-	SetVisibility(EVisibility::Hidden);
-	
 	DescriptionFont = baseFont;
 	DescriptionFont.Size = 14.f;
+
+	SetVisibility(EVisibility::Hidden);
+
+	if (TSharedPtr<FSlateGameResources> lockedResources = TDUIResources.Pin()) {
+		ManaCostBrush = *lockedResources->GetBrush("hud_manacost_Brush");
+		CooldownBrush = *lockedResources->GetBrush("hud_cooldown_Brush");
+	}
+	else {
+		ManaCostBrush = BackgroundBrush;
+		CooldownBrush = BackgroundBrush;
+	}
 
 	ChildSlot
 	[
@@ -49,7 +60,14 @@ void SAbilityTooltip::Construct(const FArguments& InArgs) {
 					+ SHorizontalBox::Slot() .HAlign(HAlign_Right)
 					[
 						SNew(SHorizontalBox)
-						+ SHorizontalBox::Slot() .HAlign(HAlign_Right) .Padding(0, 0, 24, 0)
+						+ SHorizontalBox::Slot() .Padding(0, 0, 5, 0)
+						[
+							SNew(SImage)
+							.Image(&ManaCostBrush)
+							.DesiredSizeOverride(FVector2D { IconSize, IconSize })
+						]
+
+						+ SHorizontalBox::Slot() .VAlign(VAlign_Center) .Padding(0, 0, 15, 0)
 						[
 							SNew(STextBlock)
 							.Font(DescriptionFont)
@@ -57,7 +75,14 @@ void SAbilityTooltip::Construct(const FArguments& InArgs) {
 							.Text(this, &SAbilityTooltip::GetAbilityCost)
 						]
 
-						+ SHorizontalBox::Slot() .HAlign(HAlign_Right)
+						+ SHorizontalBox::Slot() .Padding(0, 0, 5, 0)
+						[
+							SNew(SImage)
+							.Image(&CooldownBrush)
+							.DesiredSizeOverride(FVector2D { IconSize, IconSize })
+						]
+
+						+ SHorizontalBox::Slot() .VAlign(VAlign_Center)
 						[
 							SNew(STextBlock)
 							.Font(DescriptionFont)
@@ -99,8 +124,8 @@ void SAbilityTooltip::ApplyAbilityInfo() {
 		AbilityName = FText::FromName(Ability->AbilityName);
 		AbilityTarget = FText::Format(INVTEXT("Target: {0}"), FText::FromString(*UEnum::GetDisplayValueAsText(Ability->AbilityTarget).ToString()));
 		AbilityCastingType = FText::Format(INVTEXT("Casting type: {0}"), FText::FromString(*UEnum::GetDisplayValueAsText(Ability->AbilityCast).ToString()));
-		AbilityCost = FText::Format(INVTEXT("Cost: {0}"), FText::AsNumber(Ability->Cost));
-		AbilityCooldown = FText::Format(INVTEXT("CD: {0}"), FText::AsNumber(Ability->Cooldown));
+		AbilityCost = FText::Format(INVTEXT("{0}"), FText::AsNumber(Ability->Cost));
+		AbilityCooldown = FText::Format(INVTEXT("{0}"), FText::AsNumber(Ability->Cooldown));
 		AbilityDescription = Ability->GetAbilityDescription();
 	}
 }
@@ -130,6 +155,7 @@ FText SAbilityTooltip::GetAbilityDescription() const {
 }
 
 SAbilityTooltip::~SAbilityTooltip() {
+	TDUIResources.Reset();
 	TooltipBorder.Reset();
 }
 

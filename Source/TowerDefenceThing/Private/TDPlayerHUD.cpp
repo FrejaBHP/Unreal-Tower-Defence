@@ -97,6 +97,7 @@ void ATDPlayerHUD::CreateBottomPanelsWidget() {
 void ATDPlayerHUD::CreateAbilityTooltipWidget() {
 	GEngine->GameViewport->AddViewportWidgetForPlayer(GetOwningPlayerController()->GetLocalPlayer(),
 		SAssignNew(AbilityTooltipWidget, SAbilityTooltip)
+			.tdUIResources(TDUIResources.ToWeakPtr())
 	, 20);
 }
 

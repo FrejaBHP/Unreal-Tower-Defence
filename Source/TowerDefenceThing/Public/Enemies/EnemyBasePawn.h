@@ -7,15 +7,16 @@
 #include "GameFramework/Pawn.h"
 #include <PaperFlipbook.h>
 #include <PaperFlipbookComponent.h>
-#include <TDGameInstance.h>
+#include "Components/WidgetComponent.h"
 
 #include "Attributes/EnemyBaseTDAttributes.h"
 #include "ClickableUnit.h"
 #include "Components/TDEnemyMovementComponent.h"
 #include "Components/TDAbilityComponent.h"
-#include "Components/WidgetComponent.h"
 #include "EnemyUnit.h"
 #include "SlateComps/SEnemyHealthBar.h"
+#include "SlateComps/SSelectionWidget.h"
+#include <TDGameInstance.h>
 #include "EnemyBasePawn.generated.h"
 
 DECLARE_DELEGATE(FEnemyDeathDecrementSignature);
@@ -36,6 +37,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnSelect() override;
+	virtual void OnDeselect() override;
 	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 
@@ -66,7 +68,11 @@ public:
 	UPROPERTY(VisibleAnywhere)
 	UWidgetComponent* HealthBarWidgetComponent;
 
+	UPROPERTY(VisibleAnywhere)
+	UWidgetComponent* SelectionCircleWidgetComponent;
+
 	TSharedPtr<SEnemyHealthBar> HealthBarWidgetPtr;
+	TSharedPtr<SSelectionWidget> SelectionCircleWidgetPtr;
 	
 	UPROPERTY()
 	TSoftObjectPtr<UPaperFlipbook> FlipbookPtr = nullptr;
@@ -79,7 +85,7 @@ public:
 
 	void SetWaveStats(float baseHealth, float baseSpeed, int32 baseBounty);
 	void SetFlipbook(FString flipbookName);
-
+	void SetSelectionCircleVisibility(bool doVisible);
 
 protected:
 	// Called when the game starts or when spawned

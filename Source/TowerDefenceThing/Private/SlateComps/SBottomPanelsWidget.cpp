@@ -19,8 +19,8 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 	NumberFormatting.MaximumFractionalDigits = 1;
 	
 	ChildSlot
-	.HAlign(EHorizontalAlignment::HAlign_Center)
-	.VAlign(EVerticalAlignment::VAlign_Bottom)
+	.HAlign(HAlign_Center)
+	.VAlign(VAlign_Bottom)
 	[
 		SNew(SBox)
 		.MinDesiredWidth(1280)
@@ -37,7 +37,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 			]
 
 			// Middle part of the lower HUD (selected unit panel)
-			+ SHorizontalBox::Slot() .HAlign(EHorizontalAlignment::HAlign_Fill)
+			+ SHorizontalBox::Slot() .HAlign(HAlign_Fill)
 			[
 				SNew(SBorder)
 				.BorderImage(&BlackBrush)
@@ -53,7 +53,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 					[
 						SNew(SVerticalBox)
 						// Name of unit
-						+ SVerticalBox::Slot() .Padding(0.f, 0.f, 0.f, 4.f) .HAlign(EHorizontalAlignment::HAlign_Center)
+						+ SVerticalBox::Slot() .Padding(0.f, 0.f, 0.f, 4.f) .HAlign(HAlign_Center)
 						[
 							SNew(STextBlock)
 							.Font(BigFont)
@@ -61,7 +61,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 						]
 						
 						// Title(?) of unit
-						+ SVerticalBox::Slot() .HAlign(EHorizontalAlignment::HAlign_Center)
+						+ SVerticalBox::Slot() .HAlign(HAlign_Center)
 						[
 							SNew(STextBlock)
 							.Font(NormalFont)
@@ -89,7 +89,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 									.DesiredSizeOverride(FVector2D { StatIconSize, StatIconSize })
 								]
 									
-								+ SHorizontalBox::Slot() .VAlign(EVerticalAlignment::VAlign_Center)
+								+ SHorizontalBox::Slot() .VAlign(VAlign_Center)
 								[
 									SNew(STextBlock)
 									.Font(NormalFont)
@@ -107,7 +107,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 									.DesiredSizeOverride(FVector2D { StatIconSize, StatIconSize })
 								]
 									
-								+ SHorizontalBox::Slot() .VAlign(EVerticalAlignment::VAlign_Center)
+								+ SHorizontalBox::Slot() .VAlign(VAlign_Center)
 								[
 									SNew(STextBlock)
 									.Font(NormalFont)
@@ -125,7 +125,7 @@ void SBottomPanelsWidget::Construct(const FArguments& InArgs) {
 									.DesiredSizeOverride(FVector2D { StatIconSize, StatIconSize })
 								]
 									
-								+ SHorizontalBox::Slot() .VAlign(EVerticalAlignment::VAlign_Center)
+								+ SHorizontalBox::Slot() .VAlign(VAlign_Center)
 								[
 									SNew(STextBlock)
 									.Font(NormalFont)

@@ -9,7 +9,7 @@ void SEnemyHealthBar::Construct(const FArguments& InArgs) {
 	ChildSlot
 	[
 		SNew(SBorder)
-		.BorderImage(&brush)
+		.BorderImage(&BlackBrush)
 		.Padding(3.f)
 		.Content()
 		[

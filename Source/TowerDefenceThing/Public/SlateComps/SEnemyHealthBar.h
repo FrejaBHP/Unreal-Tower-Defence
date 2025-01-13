@@ -21,7 +21,7 @@ public:
 
 protected:
 	TSharedPtr<SProgressBar> ProgressBarPtr;
-	FSlateColorBrush brush = FSlateColorBrush(FLinearColor::Black);
+	FSlateColorBrush BlackBrush = FSlateColorBrush(FLinearColor::Black);
 
 	float CurrentHealth { 0.f };
 	float MaxHealth { 0.f };

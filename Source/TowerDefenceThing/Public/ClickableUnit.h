@@ -27,6 +27,7 @@ class TOWERDEFENCETHING_API IClickableUnit {
 	// Add interface functions to this class. This is the class that will be inherited to implement this interface.
 public:
 	virtual void OnSelect() = 0;
+	virtual void OnDeselect() = 0;
 	virtual EUnitType GetUnitType() = 0;
 	virtual FName GetUnitName() = 0;
 	virtual UTDAbilityComponent& GetAbilityComponent() = 0;

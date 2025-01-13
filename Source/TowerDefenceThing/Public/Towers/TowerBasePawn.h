@@ -58,6 +58,7 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	virtual void OnSelect() override;
+	virtual void OnDeselect() override;
 	virtual EUnitType GetUnitType() override;
 	virtual FName GetUnitName() override;
 

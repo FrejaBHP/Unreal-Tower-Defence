@@ -115,6 +115,8 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 
 			// If clicked actor implements IClickableUnit, grab it
 			if (tempActor != nullptr && tempActor->Implements<UClickableUnit>()) {
+				TryDeselectLastUnit();
+
 				SelectedPawnPtr = Cast<APawn>(tempActor);
 				HasSelectedPawn = true;
 				HandleSelectedUnit();
@@ -164,6 +166,8 @@ void ATowerDefenceThingPlayerController::OnSelectInput() {
 // If currently selected unit isn't the player unit, select it
 void ATowerDefenceThingPlayerController::TrySelectBuilder() {
 	if (GetPawn() != SelectedPawnPtr || !HasSelectedPawn) {
+		TryDeselectLastUnit();
+
 		SelectedPawnPtr = GetPawn();
 		HasSelectedPawn = true;
 		HandleSelectedUnit();
@@ -175,7 +179,16 @@ void ATowerDefenceThingPlayerController::HandleSelectedUnit() {
 	IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr.Get());
 	EUnitType unitType = selectedUnit->GetUnitType();
 
+	selectedUnit->OnSelect();
+
 	SendUnitDataToHUD(selectedUnit, unitType);
+}
+
+void ATowerDefenceThingPlayerController::TryDeselectLastUnit() {
+	if (SelectedPawnPtr.IsValid()) {
+		IClickableUnit* selectedUnit = Cast<IClickableUnit>(SelectedPawnPtr.Get());
+		selectedUnit->OnDeselect();
+	}
 }
 
 void ATowerDefenceThingPlayerController::SendUnitDataToHUD(IClickableUnit* unit, EUnitType type) {

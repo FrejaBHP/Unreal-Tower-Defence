@@ -105,6 +105,10 @@ void ATowerBasePawn::OnSelect() {
 
 }
 
+void ATowerBasePawn::OnDeselect() {
+
+}
+
 void ATowerBasePawn::GetNewTarget() {
 	TArray<AActor*> actorArray;
 	CapsuleComponent->GetOverlappingActors(actorArray);

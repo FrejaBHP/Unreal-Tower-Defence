@@ -60,6 +60,10 @@ void ATowerDefenceThingCharacter::OnSelect() {
 
 }
 
+void ATowerDefenceThingCharacter::OnDeselect() {
+
+}
+
 EUnitType ATowerDefenceThingCharacter::GetUnitType() {
 	return UnitType;
 }

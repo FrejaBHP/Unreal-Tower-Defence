@@ -79,6 +79,7 @@ protected:
 
 	void PlaceBuilding(ETowerHandle tHandle, FVector location);
 	void TrySelectBuilder();
+	void TryDeselectLastUnit();
 	void HandleSelectedUnit();
 	void SendUnitDataToHUD(IClickableUnit* unit, EUnitType type);
 

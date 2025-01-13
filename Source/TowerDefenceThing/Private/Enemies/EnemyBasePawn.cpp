@@ -51,6 +51,17 @@ AEnemyBasePawn::AEnemyBasePawn() {
 		HealthBarWidgetComponent->SetCastShadow(false);
 	}
 
+	if (!SelectionCircleWidgetComponent) {
+		SelectionCircleWidgetComponent = CreateDefaultSubobject<UWidgetComponent>(TEXT("Selection Circle"));
+		SelectionCircleWidgetComponent->SetupAttachment(CapsuleComponent);
+		SelectionCircleWidgetComponent->SetPivot(FVector2D { 0.5f, 0.5f });
+		FRotator widgetRotator = { 90., 0., 0. };
+		SelectionCircleWidgetComponent->AddRelativeRotation(widgetRotator.Quaternion());
+		SelectionCircleWidgetComponent->SetCastShadow(false);
+
+		SetSelectionCircleVisibility(false);
+	}
+
 	BaseAttributeSet = MakeUnique<EnemyBaseTDAttributes>();
 
 	AIControllerClass = ATDAIController::StaticClass();
@@ -60,6 +71,7 @@ AEnemyBasePawn::AEnemyBasePawn() {
 // Called when the game starts or when spawned
 void AEnemyBasePawn::BeginPlay() {
 	Super::BeginPlay();
+
 	HealthBarWidgetComponent->SetSlateWidget(
 		SAssignNew(HealthBarWidgetPtr, SEnemyHealthBar)
 	);
@@ -67,6 +79,20 @@ void AEnemyBasePawn::BeginPlay() {
 	if (BaseAttributeSet->Health->GetMaxValue() != 0.f) {
 		HealthBarWidgetPtr->SetMaxHealth(BaseAttributeSet->Health->GetMaxValue());
 		HealthBarWidgetPtr->SetHealth(BaseAttributeSet->Health->GetCurrentValue());
+	}
+
+	SelectionCircleWidgetComponent->SetSlateWidget(
+		SAssignNew(SelectionCircleWidgetPtr, SSelectionWidget)
+	);
+
+	if (CapsuleComponent) {
+		float radius;
+		float halfHeight;
+		CapsuleComponent->GetScaledCapsuleSize(radius, halfHeight);
+		SelectionCircleWidgetPtr->SetSelectionRadius(radius);
+
+		SelectionCircleWidgetComponent->AddRelativeLocation(FVector(0.f, 0.f, 10.f - halfHeight));
+		SelectionCircleWidgetComponent->SetDrawSize(FVector2D(radius * 3.5, radius * 3.5));
 	}
 }
 
@@ -102,7 +128,22 @@ void AEnemyBasePawn::SetFlipbook(FString flipbookName) {
 }
 
 void AEnemyBasePawn::OnSelect() {
-	
+	SetSelectionCircleVisibility(true);
+}
+
+void AEnemyBasePawn::OnDeselect() {
+	SetSelectionCircleVisibility(false);
+}
+
+void AEnemyBasePawn::SetSelectionCircleVisibility(bool doVisible) {
+	if (IsValid(SelectionCircleWidgetComponent)) {
+		if (doVisible) {
+			SelectionCircleWidgetComponent->SetVisibility(true);
+		}
+		else {
+			SelectionCircleWidgetComponent->SetVisibility(false);
+		}
+	}
 }
 
 EUnitType AEnemyBasePawn::GetUnitType() {

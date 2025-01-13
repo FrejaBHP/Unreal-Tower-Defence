@@ -15,6 +15,8 @@ void STopBarWidget::Construct(const FArguments& InArgs) {
 	BackgroundBrush.DrawAs = ESlateBrushDrawType::Image;
 	BlackBrush.DrawAs = ESlateBrushDrawType::RoundedBox;
 	BlackBrush.OutlineSettings.Width = 2.f;
+	BlackBrush.OutlineSettings.RoundingType = ESlateBrushRoundingType::FixedRadius;
+	BlackBrush.OutlineSettings.CornerRadii = FVector4 { 20.f, 20.f, 20.f, 20.f };
 
 	FSlateFontInfo baseFont = FStyleDefaults::GetFontInfo();
 	baseFont.Size = 18.f;
